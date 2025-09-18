@@ -1,0 +1,133 @@
+body { 
+    background-color: #FFF3E0; 
+    font-family: 'Montserrat', sans-serif; 
+}
+.container { 
+    max-width: 1200px; 
+    margin-top: 30px; 
+    margin-bottom: 30px; 
+}
+.factura-card { 
+    background-color: #fff; 
+    border-radius: 10px; 
+    padding: 30px; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+}
+.factura-header { 
+    border-bottom: 2px solid #FF4081; 
+    padding-bottom: 20px; 
+    margin-bottom: 20px; 
+}
+.factura-title { 
+    color: #FF4081; 
+    font-weight: 700; 
+}
+.factura-subtitle { 
+    color: #7C4DFF; 
+    font-size: 1.2rem; 
+    margin-top: 15px; 
+    border-bottom: 1px dashed #ccc; 
+    padding-bottom: 8px; 
+}
+.success-icon { 
+    font-size: 40px; 
+    color: #4CAF50; 
+    margin-right: 15px; 
+}
+.error-icon { 
+    font-size: 72px; 
+    text-align: center; 
+    color: #F44336; 
+    margin-bottom: 20px; 
+}
+.fecha-info { 
+    background-color: #f9f9f9; 
+    padding: 15px; 
+    border-radius: 5px; 
+    margin-bottom: 20px; 
+}
+.tabla-productos th { 
+    background-color: #FF4081; 
+    color: white; 
+}
+.tabla-productos tbody tr:hover { 
+    background-color: #f5f5f5; 
+}
+.total-row { 
+    font-weight: bold; 
+    background-color: #f0f0f0; 
+}
+.garantia-item, .cliente-item { 
+    background-color: #f9f9f9; 
+    padding: 10px 15px; 
+    border-radius: 5px; 
+    margin-bottom: 8px; 
+}
+.garantia-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-left: 10px;
+}
+.garantia-si {
+    background-color: #4CAF50;
+    color: white;
+}
+.garantia-no {
+    background-color: #FF9800;
+    color: white;
+}
+.btn-custom { 
+    background-color: #FF4081; 
+    border: none; 
+    color: white; 
+}
+.btn-custom:hover { 
+    background-color: #7C4DFF; 
+    color: white; 
+}
+.error-card { 
+    background-color: #fff; 
+    border-radius: 10px; 
+    padding: 30px; 
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+}
+.error-title { 
+    color: #F44336; 
+    text-align: center; 
+    margin-bottom: 30px; 
+}
+.error-message { 
+    background-color: #FFEBEE; 
+    padding: 15px; 
+    border-radius: 5px; 
+    margin-bottom: 20px; 
+}
+.footer-print {
+    border-top: 1px dashed #ccc;
+    margin-top: 30px;
+    padding-top: 20px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #666;
+}
+@media print {
+    .no-print {
+        display: none;
+    }
+    body {
+        background-color: white;
+    }
+    .container {
+        max-width: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    .factura-card {
+        box-shadow: none;
+        border: none;
+    }
+}

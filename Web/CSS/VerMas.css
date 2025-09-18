@@ -1,0 +1,222 @@
+/* Paleta de colores basada en el logo y el estilo existente */
+:root {
+    --primary-pink: #FF3DA1;    /* Rosa/magenta vibrante del logo */
+    --secondary-teal: #32D9B5;  /* Verde turquesa del logo */
+    --accent-yellow: #FFD62A;   /* Amarillo del logo */
+    --light-bg: #FFF8FD;        /* Fondo claro con toque rosa */
+    --text-color: #4A3F55;      /* Texto principal oscuro pero suave */
+    --border-color: #E5E0F0;    /* Borde claro */
+    --shadow-color: rgba(255, 61, 161, 0.15); /* Sombra basada en el rosa */
+    --success-green: #21752c;
+    --error-red: #e63946;
+}
+
+body {
+    background: linear-gradient(135deg, var(--primary-pink), var(--text-color));
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    margin: 0;
+    font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.detalle-card {
+    background-color: rgb(248, 224, 247);
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px var(--shadow-color);
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto;
+    border: 2px solid var(--border-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.detalle-card::before {
+    content: "";
+    position: absolute;
+    top: -30px;
+    right: -30px;
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle at center, 
+                            var(--accent-yellow) 10%,
+                            var(--secondary-teal) 45%);
+    opacity: 0.15;
+    border-radius: 50%;
+    z-index: 0;
+}
+
+.detalle-card::after {
+    content: "";
+    position: absolute;
+    bottom: -30px;
+    left: -30px;
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle at center, 
+                            var(--secondary-teal) 10%,
+                            var(--primary-pink) 45%);
+    opacity: 0.15;
+    border-radius: 50%;
+    z-index: 0;
+}
+
+/* Estilos para el título de detalles */
+.detalle-card h2 {
+    font-size: 1.8rem;
+    color: var(--primary-pink);
+    font-family: 'Montserrat', Arial, sans-serif;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.5);
+    position: relative;
+    z-index: 1;
+    padding-bottom: 12px;
+    border-bottom: 2px solid rgba(255, 61, 161, 0.2);
+}
+
+/* Estilos para la lista de detalles */
+.detalle-card ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+}
+
+.detalle-card li {
+    padding: 14px 18px;
+    margin-bottom: 10px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 12px;
+    border-left: 4px solid var(--secondary-teal);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.detalle-card li:hover {
+    background-color: rgba(255, 255, 255, 0.9);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.08);
+}
+
+.detalle-card li strong {
+    color: var(--text-color);
+    font-weight: 600;
+    min-width: 140px;
+    font-size: 0.95rem;
+}
+
+/* Estilos para campos específicos con colores */
+.detalle-card li:nth-child(odd) {
+    border-left-color: var(--primary-pink);
+}
+
+.detalle-card li:nth-child(even) {
+    border-left-color: var(--secondary-teal);
+}
+
+/* Estilos para el botón de volver */
+.volver-btn {
+    margin-top: 1.8rem;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+}
+
+.volver-btn button {
+    background: linear-gradient(135deg, var(--secondary-teal), #3AECBE);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(50, 217, 181, 0.25);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.volver-btn button:hover {
+    background: linear-gradient(135deg, #3AECBE, var(--secondary-teal));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(50, 217, 181, 0.35);
+}
+
+.volver-btn i {
+    font-size: 1.1rem;
+}
+
+/* Estilos para mensajes de error */
+p[style*="color: red"] {
+    color: var(--error-red) !important;
+    background-color: rgba(230, 57, 70, 0.1);
+    padding: 12px;
+    border-radius: 8px;
+    margin: 1rem 0;
+    font-size: 1rem;
+    border-left: 4px solid var(--error-red);
+    position: relative;
+    z-index: 1;
+    text-align: center;
+}
+
+/* Estilos responsivos */
+@media (max-width: 576px) {
+    .detalle-card {
+        padding: 1.8rem;
+    }
+    
+    .detalle-card h2 {
+        font-size: 1.5rem;
+    }
+    
+    .detalle-card li {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 12px 15px;
+    }
+    
+    .detalle-card li strong {
+        margin-bottom: 5px;
+    }
+    
+    .volver-btn button {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Estilos adicionales para campos específicos */
+.detalle-card li:has(strong:contains("Activo")) {
+    border-left-color: var(--success-green);
+}
+
+/* Cuando el valor de Activo es "Inactivo" */
+.detalle-card li:has(strong:contains("Activo")):contains("Inactivo") {
+    border-left-color: var(--error-red);
+}
+
+/* Estilos para valores numéricos como precios */
+.detalle-card li:has(strong:contains("Precio")) {
+    border-left-color: var(--accent-yellow);
+    font-weight: 600;
+}
+
+/* Estilos para fechas */
+.detalle-card li:has(strong:contains("Fecha")) {
+    border-left-color: #9c89b8;
+}

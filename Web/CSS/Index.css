@@ -1,0 +1,280 @@
+:root {
+    --primary-carnival: #FF4081;       
+    --secondary-carnival: #1DE9B6;     
+    --accent-carnival: #FFEA00;        
+    --background-carnival: #FFF3E0;    
+    --text-dark: #2C3E50;              
+    --carnival-purple: #7C4DFF;        
+    --carnival-orange: #FF6D00;        
+    --carnival-green: #0e537a;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--background-carnival);
+    color: var(--text-dark);
+}
+
+.site-header {
+    background: linear-gradient(135deg, var(--carnival-green), var(--secondary-carnival));
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.navbar {
+    padding: 0.75rem 0;
+}
+
+.navbar-nav .nav-link {
+    color: white !important;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin: 0 10px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 0.5rem 1rem !important;
+}
+
+.navbar-nav .nav-link:hover {
+    background: var(--accent-carnival);
+    color: var(--text-dark) !important;
+    transform: scale(1.05);
+}
+
+/* Hero Section with Carnival Vibrancy */
+.hero {
+    background: linear-gradient(
+        135deg, 
+        var(--primary-carnival), 
+        var(--carnival-purple)
+    );
+    color: white;
+    padding: 6rem 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+        circle at top right, 
+        var(--carnival-orange), 
+        var(--secondary-carnival)
+    );
+    opacity: 0.3;
+    z-index: 1;
+}
+
+.hero-title {
+    color: var(--accent-carnival);
+    font-family: 'Racing Sans One', cursive;
+    font-size: 3.5rem;
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+    position: relative;
+    z-index: 2;
+}
+
+.hero-text {
+    color: white;
+    max-width: 700px;
+    margin: 1rem auto;
+    position: relative;
+    z-index: 2;
+}
+
+/* Features Section with Carnival Colors */
+.features {
+    background: linear-gradient(
+        45deg, 
+        var(--background-carnival), 
+        #FFF8E1
+    );
+    padding: 4rem 0;
+}
+
+.feature-box {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    border: 3px solid transparent;
+    border-image: linear-gradient(
+        to right, 
+        var(--primary-carnival), 
+        var(--secondary-carnival)
+    ) 1;
+}
+
+.feature-box:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+.feature-icon {
+    color: var(--primary-carnival);
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.feature-box:hover .feature-icon {
+    transform: rotate(360deg);
+}
+
+/* Mission, Vision, Values Section */
+.mission-vision-values {
+    background: linear-gradient(
+        45deg, 
+        #a9e692,
+        #a9e692
+    );
+    padding: 4rem 0;
+}
+
+.mission-card {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    border-image: linear-gradient(
+        to right, 
+        var(--carnival-purple), 
+        var(--carnival-orange)
+    ) 1;
+}
+
+.mission-card:hover {
+    transform: scale(1.05);
+    background-color: var(--background-carnival);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+/* Footer with Carnival Energy *//* Estilos mejorados para el footer */
+.footer-section {
+    background: linear-gradient(135deg, var(--carnival-green), var(--secondary-carnival));
+    color: white;
+    padding: 3rem 0 1rem;
+    font-family: 'Montserrat', sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+.footer-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: 30px 30px;
+    opacity: 0.3;
+    z-index: 1;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    position: relative;
+    z-index: 2;
+}
+
+.footer-brand-section {
+    padding-right: 2rem;
+}
+
+.footer-brand {
+    color: var(--accent-carnival);
+    font-family: 'Racing Sans One', cursive;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    position: relative;
+    display: inline-block;
+}
+
+.footer-brand::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(to right, var(--primary-carnival), var(--accent-carnival));
+    border-radius: 3px;
+}
+
+.footer-text {
+    color: rgba(255,255,255,0.9);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+}
+
+.social-links {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.social-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    color: white;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.social-icon:hover {
+    background: var(--accent-carnival);
+    color: var(--text-dark);
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.footer-copyright {
+    text-align: center;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.7);
+    font-size: 0.85rem;
+    position: relative;
+    z-index: 2;
+}
+
+/* Efectos de confeti para el footer */
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: var(--primary-carnival);
+    opacity: 0.7;
+    animation: fall 5s linear infinite;
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(100vh) rotate(360deg);
+    }
+}
+
