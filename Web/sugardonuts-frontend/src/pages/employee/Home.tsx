@@ -1,6 +1,7 @@
 import React from "react";
 
-const Dashboard: React.FC = () => {
+
+const Home: React.FC = () => {
   return (
     <div>
       <h1>Dashboard — SugarDonuts</h1>
@@ -20,4 +21,4 @@ const Dashboard: React.FC = () => {
   );
 };
 
-export default Dashboard;
+export default Home;
