@@ -1,12 +1,13 @@
 // src/pages/ManagerDashboard.tsx
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import SidebarManager from "../components/SidebarManager";
-import HeaderManager from "../components/Header";
+import Header from "../components/Header";
 import { authService, type Empleado } from "../services/api";
 
-const ManagerDashboard: React.FC = () => {
+const ManagerDashboard = () => {
   const navigate = useNavigate();
+  const [workMode, setWorkMode] = useState(false);
   const [empleado, setEmpleado] = useState<Empleado | null>(null);
 
   useEffect(() => {
@@ -25,13 +26,21 @@ const ManagerDashboard: React.FC = () => {
   if (!empleado) return null;
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      <SidebarManager />
+    <div className="flex min-h-screen">
+      <SidebarManager workMode={workMode} />
       
       {/* Contenedor principal */}
       <div className="flex-1 flex flex-col">
-        <HeaderManager nombreCompleto={empleado.NombreCompleto} />
-        <main className="flex-1 p-6 overflow-auto">
+        <Header 
+          nombreCompleto={empleado.NombreCompleto} 
+          workMode={workMode}
+          setWorkMode={setWorkMode}
+        />
+        <main className={`flex-1 p-6 overflow-auto transition-colors duration-300 ${
+          workMode 
+            ? 'bg-gray-50' 
+            : 'bg-gradient-to-br from-pink-50 via-white to-amber-50'
+        }`}>
           <Outlet />
         </main>
       </div>
