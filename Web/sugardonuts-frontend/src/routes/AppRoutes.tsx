@@ -32,6 +32,7 @@ export default function AppRoutes() {
             </PrivateRoute>
           }
         >
+          <Route path="home" element={<HomeM />} />
           <Route path="ventas" element={<VentasM />} />
           <Route path="reservas" element={<Reservas />} />
           <Route path="productos" element={<Productos />} />
