@@ -1,7 +1,7 @@
 // src/pages/ManagerDashboard.tsx
 import React, { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import Header from "../components/Header";
+import Header from "../components/HeaderEmp";
 import SidebarEmployee from "../components/SidebarEmployee";
 import { authService, type Empleado } from "../services/api";
 
@@ -25,9 +25,8 @@ const EmployeeDashboard: React.FC = () => {
   if (!empleado) return null;
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen">
       <SidebarEmployee />
-      {/* Contenedor principal */}
       <div className="flex-1 flex flex-col">
         <Header nombreCompleto={empleado.NombreCompleto} />
         <main className="flex-1 p-6 overflow-auto">
