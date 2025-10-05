@@ -32,10 +32,6 @@ const SidebarManager = ({ workMode = false }: SidebarManagerProps) => {
     navigate('/log-in');
   };
 
-  const getInitials = (nombre: string, apellido: string) => {
-    return `${nombre.charAt(0)}${apellido.charAt(0)}`.toUpperCase();
-  };
-
   const menuItems = [
     { to: "/manager/home", icon: Home, label: "Dashboard" },
     { to: "/manager/ventas", icon: ShoppingCart, label: "Ventas" },

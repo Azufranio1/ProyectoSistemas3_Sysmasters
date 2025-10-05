@@ -1,13 +1,14 @@
-import { Search, Settings, Palette, Calendar, Clock } from "lucide-react";
+import { Search, Settings, Palette, Calendar, LocateFixedIcon } from "lucide-react";
 import { useState, useEffect } from "react";
 
 interface HeaderProps {
   nombreCompleto: string;
+  nombreSucursal: string;
   workMode: boolean;
   setWorkMode: (mode: boolean) => void;
 }
 
-const Header = ({ nombreCompleto, workMode, setWorkMode }: HeaderProps) => {
+const Header = ({ nombreCompleto, nombreSucursal, workMode, setWorkMode }: HeaderProps) => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -47,6 +48,10 @@ const Header = ({ nombreCompleto, workMode, setWorkMode }: HeaderProps) => {
             <div className="flex items-center gap-1">
               <Calendar className="w-4 h-4" />
               <span className="capitalize">{formatDate(currentTime)}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <LocateFixedIcon className="w-4 h-4" />
+              <span className="capitalize">{nombreSucursal}</span>
             </div>
           </div>
         </div>
@@ -97,14 +102,6 @@ const Header = ({ nombreCompleto, workMode, setWorkMode }: HeaderProps) => {
               <div className="absolute -top-1 right-4 w-2 h-2 bg-gray-900 transform rotate-45"></div>
             </div>
           </div>
-
-          {/* Configuración */}
-          <button 
-            className="p-3 hover:bg-white/50 rounded-full transition-colors"
-            title="Configuración"
-          >
-            <Settings className="w-5 h-5 text-gray-600" />
-          </button>
 
           {/* Separador */}
           <div className="w-px h-8 bg-gray-300 mx-2"></div>

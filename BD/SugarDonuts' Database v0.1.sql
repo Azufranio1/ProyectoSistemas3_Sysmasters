@@ -12,13 +12,15 @@ CREATE TABLE Sucursal (
 
 CREATE TABLE Empleado(
     EmpleadoID varchar(10) not null primary key,
+    SucursalID varchar(10) not null,
     CI int(10) not null,
     Nombre varchar(50) not null,
     Apellido varchar(50) not null,
     FechaContrato date not null,
     FechaNacimiento date not null,
     Activo boolean not null default 0,
-    Habilitado boolean not null default 1
+    Habilitado boolean not null default 1,
+    FOREIGN KEY (SucursalID) REFERENCES Sucursal(SucursalID)
 );
 
 CREATE TABLE UsuarioEmp (
@@ -73,14 +75,19 @@ CREATE TABLE DetalleVenta(
     FOREIGN KEY (ProductoID) REFERENCES Producto(ProductoID)
 );
 
-INSERT INTO Empleado (EmpleadoID, CI, Nombre, Apellido, FechaContrato, FechaNacimiento, Activo, Habilitado) 
-VALUES ('MGR-001', 12345678, 'Azu', 'Ninsial', '2025-08-15', '1992-04-18', 1, 1);
 
+INSERT INTO Sucursal (SucursalID, HoraApertura, Departamento, Zona, HoraCierre)
+VALUES ('SUC-001', '08:00', 'La Paz', 'Sopocachi', '19:00');
+INSERT INTO Sucursal (SucursalID, HoraApertura, Departamento, Zona, HoraCierre)
+VALUES ('SUC-002', '08:00', 'La Paz', 'Miraflores', '19:00');
+
+
+INSERT INTO Empleado (EmpleadoID, CI, Nombre, Apellido, FechaContrato, FechaNacimiento, Activo, Habilitado, SucursalID) 
+VALUES ('MGR-001', 12345678, 'Azu', 'Ninsial', '2025-08-15', '1992-04-18', 1, 1, 'SUC-001');
 INSERT INTO UsuarioEmp (EmpleadoID, Usuario, Correo, Keyword, CodRecuperacion, Habilitado) 
 VALUES ('MGR-001', 'AzuMGR', 'azumgr@sugardonuts.com', '$2y$10$ETWi3mZz0fXhCiPYluGn.uCkNmdYLCzMW/W0YXgxoHRHYTeyBwJcG', 123456, 1);
 
-INSERT INTO Empleado (EmpleadoID, CI, Nombre, Apellido, FechaContrato, FechaNacimiento, Activo, Habilitado) 
-VALUES ('EMP-001', 12345678, 'Azuf', 'Ninsial', '2025-08-15', '1992-04-18', 1, 1);
-
+INSERT INTO Empleado (EmpleadoID, CI, Nombre, Apellido, FechaContrato, FechaNacimiento, Activo, Habilitado, SucursalID) 
+VALUES ('EMP-001', 12345678, 'Azuf', 'Ninsial', '2025-08-15', '1992-04-18', 1, 1, 'SUC-001');
 INSERT INTO UsuarioEmp (EmpleadoID, Usuario, Correo, Keyword, CodRecuperacion, Habilitado) 
 VALUES ('EMP-001', 'AzuEMP', 'azuemp@sugardonuts.com', '$2y$10$ETWi3mZz0fXhCiPYluGn.uCkNmdYLCzMW/W0YXgxoHRHYTeyBwJcG', 123456, 1);
