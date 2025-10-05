@@ -1,8 +1,8 @@
 const API_URL = 'http://localhost/sugardonuts-api';
 
-// Interfaces
 export interface Empleado {
   EmpleadoID: string;
+  SucursalID?: string;
   Usuario: string;
   Correo: string;
   Nombre: string;
@@ -13,6 +13,7 @@ export interface Empleado {
   FechaNacimiento?: string;
   Activo?: boolean;
   Habilitado?: boolean;
+  NombreSucursal?: string;
 }
 
 export interface AuthResponse {
@@ -51,6 +52,14 @@ export const authService = {
 
 // Servicio de Empleados
 export const empleadoService = {
+  getAll: async (sucursalID?: string) => {
+    const url = sucursalID 
+      ? `${API_URL}/empleados.php?sucursal=${encodeURIComponent(sucursalID)}`
+      : `${API_URL}/empleados.php`;
+    const response = await fetch(url);
+    return response.json();
+  },
+
   getByCorreo: async (correo: string) => {
     const response = await fetch(`${API_URL}/empleados.php?correo=${encodeURIComponent(correo)}`);
     return response.json();
@@ -61,8 +70,42 @@ export const empleadoService = {
     return response.json();
   },
 
-  getAll: async () => {
-    const response = await fetch(`${API_URL}/empleados.php`);
+  create: async (empleado: Partial<Empleado>) => {
+    const response = await fetch(`${API_URL}/empleados.php`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(empleado)
+    });
+    return response.json();
+  },
+
+  update: async (empleadoID: string, data: Partial<Empleado>) => {
+    const response = await fetch(`${API_URL}/empleados.php`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ EmpleadoID: empleadoID, ...data })
+    });
+    return response.json();
+  },
+
+  toggleActivo: async (empleadoID: string, nuevoEstado: boolean) => {
+    const response = await fetch(`${API_URL}/empleados.php`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        EmpleadoID: empleadoID, 
+        cambiarActivo: nuevoEstado ? 1 : 0 
+      })
+    });
+    return response.json();
+  },
+
+  delete: async (empleadoID: string) => {
+    const response = await fetch(`${API_URL}/empleados.php`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ EmpleadoID: empleadoID })
+    });
     return response.json();
   }
 };

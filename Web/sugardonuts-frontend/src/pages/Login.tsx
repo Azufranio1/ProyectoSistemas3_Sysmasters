@@ -52,11 +52,11 @@ export default function LogIn() {
 
       if (result.success) {
         const storage = recordarme ? localStorage : sessionStorage;
-        storage.setItem('token', result.token);
+        storage.setItem('token', result.token ?? '');
         storage.setItem('empleado', JSON.stringify(result.empleado));
         recordarme ? localStorage.setItem('recordarCorreo', correo) : localStorage.removeItem('recordarCorreo');
 
-        redirectByRole(result.empleado);
+        redirectByRole(result.empleado ?? null);
       } else {
         setError(result.error || 'Error al iniciar sesión');
       }
