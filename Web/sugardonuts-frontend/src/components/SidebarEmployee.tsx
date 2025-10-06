@@ -24,7 +24,7 @@ const SidebarEmployee = () => {
   };
 
   const menuItems = [
-    { to: "/employee/home", icon: Home, label: "Dashboard" },
+    { to: "/employee/home", icon: Home, label: "Home" },
     { to: "/employee/ventas", icon: ShoppingCart, label: "Ventas" }];
 
   return (
