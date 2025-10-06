@@ -24,9 +24,9 @@ export default function LogIn() {
   const redirectByRole = (empleado: Empleado | null) => {
     if (!empleado) return navigate('/');
     const id = empleado.EmpleadoID;
-    if (id.startsWith('MGR-')) return navigate('/manager');
-    if (id.startsWith('EMP-')) return navigate('/employee');
-    if (id.startsWith('CLI-')) return navigate('/client');
+    if (id.startsWith('MGR-')) return navigate('/manager/Home');
+    if (id.startsWith('EMP-')) return navigate('/employee/Home');
+    if (id.startsWith('CLI-')) return navigate('/client/Home');
     return navigate('/');
   };
 

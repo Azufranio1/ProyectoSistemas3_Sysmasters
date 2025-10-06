@@ -33,7 +33,7 @@ const SidebarManager = ({ workMode = false }: SidebarManagerProps) => {
   };
 
   const menuItems = [
-    { to: "/manager/home", icon: Home, label: "Dashboard" },
+    { to: "/manager/home", icon: Home, label: "Home" },
     { to: "/manager/ventas", icon: ShoppingCart, label: "Ventas" },
     { to: "/manager/reservas", icon: Calendar, label: "Reservas" },
     { to: "/manager/productos", icon: Package, label: "Productos" },
