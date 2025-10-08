@@ -10,7 +10,7 @@ import {
   LogOut,
   ChevronRight 
 } from "lucide-react";
-import { authService, type Empleado } from "../services/api";
+import { authService, type Empleado } from "../services/Emp-Auth";
 import logo from "../Resources/imgs/SugarDonutsTD.png";
 import { useState, useEffect } from "react";
 

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { Search, Trash2Icon, UserPlus, Edit, Trash2, Power, CheckCircle, XCircle, Loader2 } from 'lucide-react';
-import { empleadoService, authService, type Empleado } from '../../services/api';
+import { empleadoService, authService, type Empleado } from '../../services/Emp-Auth';
 
 
 export default function Empleados() {

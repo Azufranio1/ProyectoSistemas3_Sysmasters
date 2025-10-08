@@ -3,7 +3,7 @@ import { Mail, Lock, AlertCircle, Loader2 } from 'lucide-react';
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../Resources/imgs/SugarDonutsTD.png";
 import donitas from "../Resources/imgs/donitas-bg.png";
-import { authService, type Empleado } from '../services/api';
+import { authService, type Empleado } from '../services/Emp-Auth';
 
 export default function LogIn() {
   const navigate = useNavigate();
