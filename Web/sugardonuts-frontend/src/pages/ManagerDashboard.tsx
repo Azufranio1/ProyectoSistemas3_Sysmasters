@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import SidebarManager from "../components/SidebarManager";
 import Header from "../components/Header";
-import { authService, type Empleado } from "../services/api";
+import { authService, type Empleado } from "../services/Emp-Auth";
 
 const ManagerDashboard = () => {
   const navigate = useNavigate();

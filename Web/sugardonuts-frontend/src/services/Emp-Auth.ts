@@ -24,10 +24,9 @@ export interface AuthResponse {
   message?: string;
 }
 
-// Servicio de Autenticación
 export const authService = {
   login: async (correo: string, password: string): Promise<AuthResponse> => {
-    const response = await fetch(`${API_URL}/auth.php`, {
+    const response = await fetch(`${API_URL}/auth-emp.php`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'login', correo, password })
@@ -103,6 +102,15 @@ export const empleadoService = {
   delete: async (empleadoID: string) => {
     const response = await fetch(`${API_URL}/empleados.php`, {
       method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ EmpleadoID: empleadoID })
+    });
+    return response.json();
+  },
+
+  recover: async (empleadoID: string) => {
+    const response = await fetch(`${API_URL}/empleados.php`, {
+      method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ EmpleadoID: empleadoID })
     });

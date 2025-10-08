@@ -1,6 +1,6 @@
 import React, { type JSX } from 'react';
 import { Navigate } from 'react-router-dom';
-import { authService, type Empleado } from '../services/api';
+import { authService, type Empleado } from '../services/Emp-Auth';
 
 interface PrivateRouteProps {
   children: JSX.Element;

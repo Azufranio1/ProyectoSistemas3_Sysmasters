@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { Sprout, HeartHandshake, Award, MapPin, Phone, Mail, Instagram, Facebook, Clock, Users, TrendingUp, Sparkles, LayoutDashboard, Menu, X, LogOut } from 'lucide-react';
 import logo from "../Resources/imgs/SugarDonutsTD.png";
-import { authService, type Empleado } from '../services/api';
+import { authService, type Empleado } from '../services/Emp-Auth';
 
 export default function Index() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

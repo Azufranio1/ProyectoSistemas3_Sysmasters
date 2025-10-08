@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import Header from "../components/HeaderEmp";
 import SidebarEmployee from "../components/SidebarEmployee";
-import { authService, type Empleado } from "../services/api";
+import { authService, type Empleado } from "../services/Emp-Auth";
 
 const EmployeeDashboard: React.FC = () => {
   const navigate = useNavigate();
