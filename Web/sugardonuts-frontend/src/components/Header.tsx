@@ -1,4 +1,4 @@
-import { Search, Settings, Palette, Calendar, LocateFixedIcon } from "lucide-react";
+import { Search, Palette, Calendar, LocateFixedIcon } from "lucide-react";
 import { useState, useEffect } from "react";
 
 interface HeaderProps {

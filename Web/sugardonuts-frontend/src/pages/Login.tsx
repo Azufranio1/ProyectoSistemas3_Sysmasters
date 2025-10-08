@@ -113,7 +113,7 @@ export default function LogIn() {
               <label className="block text-sm font-semibold text-gray-700 mb-2">Contraseña</label>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"/>
-                <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••"
+                <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="tu contraseña"
                   disabled={loading}
                   className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-pink-400 focus:ring-4 focus:ring-pink-100 transition-all outline-none disabled:bg-gray-100 disabled:cursor-not-allowed"
                   onKeyDown={e => e.key==='Enter' && handleSubmit(e)}

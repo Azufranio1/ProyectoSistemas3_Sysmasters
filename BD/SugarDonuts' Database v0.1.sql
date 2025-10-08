@@ -49,8 +49,9 @@ CREATE TABLE Categoria(
 CREATE TABLE Producto(
     ProductoID varchar(10) not null primary key,
     CategoriaID varchar(10) not null,
-    PrecioUnitario int not null,
     Nombre varchar(100) not null,
+    Descripcion varchar(255) null,
+    PrecioUnitario int not null,
     Habilitado boolean not null default 1,
     FOREIGN KEY (CategoriaID) REFERENCES Categoria(CategoriaID)
 );
@@ -75,13 +76,13 @@ CREATE TABLE DetalleVenta(
     FOREIGN KEY (ProductoID) REFERENCES Producto(ProductoID)
 );
 
-
+-- Inserciones para Sucursal
 INSERT INTO Sucursal (SucursalID, HoraApertura, Departamento, Zona, HoraCierre)
 VALUES ('SUC-001', '08:00', 'La Paz', 'Sopocachi', '19:00');
 INSERT INTO Sucursal (SucursalID, HoraApertura, Departamento, Zona, HoraCierre)
 VALUES ('SUC-002', '08:00', 'La Paz', 'Miraflores', '19:00');
 
-
+-- Inserciones para Empleado y Usuarios
 INSERT INTO Empleado (EmpleadoID, CI, Nombre, Apellido, FechaContrato, FechaNacimiento, Activo, Habilitado, SucursalID) 
 VALUES ('MGR-001', 12345678, 'Azu', 'Ninsial', '2025-08-15', '1992-04-18', 1, 1, 'SUC-001');
 INSERT INTO UsuarioEmp (EmpleadoID, Usuario, Correo, Keyword, CodRecuperacion, Habilitado) 
@@ -91,3 +92,14 @@ INSERT INTO Empleado (EmpleadoID, CI, Nombre, Apellido, FechaContrato, FechaNaci
 VALUES ('EMP-001', 12345678, 'Azuf', 'Ninsial', '2025-08-15', '1992-04-18', 1, 1, 'SUC-001');
 INSERT INTO UsuarioEmp (EmpleadoID, Usuario, Correo, Keyword, CodRecuperacion, Habilitado) 
 VALUES ('EMP-001', 'AzuEMP', 'azuemp@sugardonuts.com', '$2y$10$ETWi3mZz0fXhCiPYluGn.uCkNmdYLCzMW/W0YXgxoHRHYTeyBwJcG', 123456, 1);
+
+-- Inserciones para Producto y Categoria
+INSERT INTO Categoria (CategoriaID, Categoria) VALUES ('CAT-001', 'Donas');
+INSERT INTO Categoria (CategoriaID, Categoria) VALUES ('CAT-002', 'Bebidas');
+INSERT INTO Categoria (CategoriaID, Categoria) VALUES ('CAT-003', 'Cafés');
+
+INSERT INTO Producto (ProductoID, CategoriaID, Nombre, Descripcion, PrecioUnitario) 
+VALUES 
+('PRD-001', 'CAT-001', 'Choco Sugar', 'Cubierta de chocolate negro con un irresistible roseado de Choco-Ruby.', 7),
+('PRD-002', 'CAT-001', 'Choco Oreo', 'Cubierta con un glaseado cremoso coronada con trocitos crujientes de galleta Oreo.', 7),
+('PRD-003', 'CAT-001', 'Choco Café', 'Cubierta de un aromático glaseado de café combinado con un toque robusto de chocolate.', 7);
