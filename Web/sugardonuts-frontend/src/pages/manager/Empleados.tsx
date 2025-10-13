@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, useNavigate} from 'react-router-dom';
 import { Search, Trash2Icon, UserPlus, Edit, Trash2, Power, CheckCircle, XCircle, Loader2 } from 'lucide-react';
 import { empleadoService, authService, type Empleado } from '../../services/Emp-Auth';
 
@@ -20,6 +20,8 @@ export default function Empleados() {
   useEffect(() => {
     filterEmpleados();
   }, [searchTerm, empleados]);
+
+  const navigate = useNavigate();
 
   const loadEmpleados = async () => {
     setLoading(true);
@@ -123,7 +125,7 @@ export default function Empleados() {
             workMode
               ? 'bg-gray-600 hover:bg-gray-700'
               : 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700'
-          }`}>
+          }`} onClick={() => navigate('/manager/papelera-empleados')}>
             <Trash2Icon className="w-5 h-5" />
             Papelera
           </button>

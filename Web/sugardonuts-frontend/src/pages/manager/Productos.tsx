@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useOutletContext } from 'react-router-dom';
-import { Search, Trash2Icon, PackagePlus, Edit, Trash2, Power, CheckCircle, XCircle, Loader2, DollarSign, Tag } from 'lucide-react';
+import { useOutletContext, useNavigate } from 'react-router-dom';
+import { Search, Trash2Icon, PackagePlus, Edit, Trash2, Power, CheckCircle, XCircle, Loader2, Tag } from 'lucide-react';
 import { productoService, type Producto } from '../../services/Prod-DetVenta';
 
 export default function Productos() {
@@ -18,6 +18,8 @@ export default function Productos() {
   useEffect(() => {
     filterProductos();
   }, [searchTerm, productos]);
+
+  const navigate = useNavigate();
 
   const loadProductos = async () => {
     setLoading(true);
@@ -123,7 +125,7 @@ export default function Productos() {
             workMode
               ? 'bg-gray-600 hover:bg-gray-700'
               : 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700'
-          }`}>
+          }`} onClick={() => navigate('/manager/papelera-productos')}>
             <Trash2Icon className="w-5 h-5" />
             Papelera
           </button>
@@ -213,7 +215,6 @@ export default function Productos() {
                       </div>
                       <div>
                         <p className="text-gray-500 flex items-center gap-1">
-                          <DollarSign className="w-4 h-4" />
                           Precio
                         </p>
                         <p className="font-bold text-green-600 text-lg">{formatPrice(producto.PrecioUnitario)}</p>

@@ -13,6 +13,8 @@ import Productos from "../pages/manager/Productos";
 import Empleados from "../pages/manager/Empleados";
 import Sucursal from "../pages/manager/Sucursal";
 import Reportes from "../pages/manager/Reportes";
+import PapeleraEmpleados from "../pages/manager/PapeleraEmpleados";
+import PapeleraProductos from "../pages/manager/PapeleraProductos";
 
 import EmployeeDashboard from "../pages/EmployeeDashboard";
 import HomeE from "../pages/employee/Home";
@@ -39,6 +41,8 @@ export default function AppRoutes() {
           <Route path="empleado" element={<Empleados />} />
           <Route path="sucursal" element={<Sucursal />} />
           <Route path="reportes" element={<Reportes />} />
+          <Route path="papelera-empleados" element={<PapeleraEmpleados />} />
+          <Route path="papelera-productos" element={<PapeleraProductos />} />
         </Route>
 
         <Route
