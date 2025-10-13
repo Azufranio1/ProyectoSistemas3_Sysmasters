@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useOutletContext, useNavigate } from 'react-router-dom';
-import { Search, Trash2Icon, PackagePlus, Edit, Trash2, Power, CheckCircle, XCircle, Loader2, Tag } from 'lucide-react';
+import { Search, Trash2Icon, PackagePlus, Edit, Trash2, Power, CheckCircle, XCircle, RotateCcw, Loader2, Tag } from 'lucide-react';
 import { productoService, type Producto } from '../../services/Prod-DetVenta';
+import { getCategoryIcon } from '../../utils/categoryIcons';
 
 export default function Productos() {
   const { workMode } = useOutletContext<{ workMode: boolean }>();
@@ -123,6 +124,14 @@ export default function Productos() {
           </button>
           <button className={`flex items-center gap-2 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl transform hover:scale-105 ${
             workMode
+              ? 'bg-gray-700 hover:bg-gray-800'
+              : 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700'
+          }`} onClick={loadProductos}>
+            <RotateCcw className="w-5 h-5" />
+            Actualizar
+          </button>
+          <button className={`flex items-center gap-2 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl transform hover:scale-105 ${
+            workMode
               ? 'bg-gray-600 hover:bg-gray-700'
               : 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700'
           }`} onClick={() => navigate('/manager/papelera-productos')}>
@@ -184,7 +193,7 @@ export default function Productos() {
                       ? 'bg-gray-600'
                       : 'bg-gradient-to-br from-amber-400 to-orange-500'
                   }`}>
-                    <span className="text-white text-3xl">🍩</span>
+                    <span className="text-white text-3xl">{getCategoryIcon(producto.CategoriaNombre)}</span>
                   </div>
                   
                   <div className="flex-1">

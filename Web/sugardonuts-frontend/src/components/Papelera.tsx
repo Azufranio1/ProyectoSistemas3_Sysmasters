@@ -146,18 +146,6 @@ export default function Papelera({
         </button>
       </div>
 
-      {/* Advertencia */}
-      <div className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-4 flex items-start gap-3">
-        <AlertTriangle className="w-6 h-6 text-yellow-600 flex-shrink-0 mt-0.5" />
-        <div>
-          <p className="font-semibold text-yellow-800">Elementos en papelera</p>
-          <p className="text-sm text-yellow-700">
-            Los elementos aquí pueden ser restaurados o eliminados permanentemente. 
-            La eliminación permanente no se puede deshacer.
-          </p>
-        </div>
-      </div>
-
       {/* Error Message */}
       {error && (
         <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4 flex items-center gap-3">
