@@ -69,6 +69,11 @@ export const empleadoService = {
     return response.json();
   },
 
+  getDeleted: async () => {
+    const response = await fetch(`${API_URL}/empleados.php?deleted=true`);
+    return response.json();
+  },
+
   create: async (empleado: Partial<Empleado>) => {
     const response = await fetch(`${API_URL}/empleados.php`, {
       method: 'POST',
@@ -111,6 +116,15 @@ export const empleadoService = {
   recover: async (empleadoID: string) => {
     const response = await fetch(`${API_URL}/empleados.php`, {
       method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ EmpleadoID: empleadoID })
+    });
+    return response.json();
+  },
+
+  permanentDelete: async (empleadoID: string) => {
+    const response = await fetch(`${API_URL}/empleados.php?permanent=true`, {
+      method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ EmpleadoID: empleadoID })
     });

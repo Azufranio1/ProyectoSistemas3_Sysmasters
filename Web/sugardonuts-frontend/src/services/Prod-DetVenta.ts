@@ -21,6 +21,11 @@ export const productoService = {
     return response.json();
   },
 
+  getDeleted: async () => {
+    const response = await fetch(`${API_URL}/productos.php?deleted=true`);
+    return response.json();
+  },
+
   create: async (producto: Partial<Producto>) => {
     const response = await fetch(`${API_URL}/productos.php`, {
       method: 'POST',
@@ -53,6 +58,24 @@ export const productoService = {
 
   delete: async (productoID: string) => {
     const response = await fetch(`${API_URL}/productos.php`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ProductoID: productoID })
+    });
+    return response.json();
+  },
+
+  recover: async (productoID: string) => {
+    const response = await fetch(`${API_URL}/productos.php`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ProductoID: productoID})
+    });
+    return response.json();
+  },
+
+  permanentDelete: async (productoID: string) => {
+    const response = await fetch(`${API_URL}/productos.php?permanent=true`, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ProductoID: productoID })
