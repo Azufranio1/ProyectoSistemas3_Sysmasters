@@ -2,6 +2,7 @@ import { useOutletContext } from 'react-router-dom';
 import Papelera from '../../components/Papelera';
 import { productoService } from '../../services/Prod-DetVenta';
 import { DollarSign, Tag } from 'lucide-react';
+import { getCategoryIcon } from '../../utils/categoryIcons';
 
 export default function PapeleraProductos() {
   const { workMode } = useOutletContext<{ workMode: boolean }>();
@@ -20,9 +21,13 @@ export default function PapeleraProductos() {
 
   const renderProductoDetails = (producto: any) => (
     <div className="flex items-center gap-4">
-      <div className="w-20 h-20 bg-gray-400 rounded-2xl flex items-center justify-center shadow-lg">
-        <span className="text-white text-3xl">🍩</span>
-      </div>
+      <div className={`w-20 h-20 rounded-2xl flex items-center justify-center shadow-lg transition-colors duration-300 ${
+                          workMode
+                            ? 'bg-gray-600'
+                            : 'bg-gradient-to-br from-amber-400 to-orange-500'
+                        }`}>
+                          <span className="text-white text-3xl">{getCategoryIcon(producto.CategoriaNombre)}</span>
+                        </div>
       <div className="flex-1">
         <h3 className="text-xl font-bold text-gray-800">{producto.Nombre}</h3>
         {producto.Descripcion && (

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useOutletContext, useNavigate} from 'react-router-dom';
-import { Search, Trash2Icon, UserPlus, Edit, Trash2, Power, CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import { Search, Trash2Icon, UserPlus, Edit, Trash2, Power, CheckCircle, XCircle, RotateCcw, Loader2 } from 'lucide-react';
 import { empleadoService, authService, type Empleado } from '../../services/Emp-Auth';
 
 
@@ -120,6 +120,14 @@ export default function Empleados() {
           }`}>
             <UserPlus className="w-5 h-5" />
             Nuevo Empleado
+          </button>
+          <button className={`flex items-center gap-2 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl transform hover:scale-105 ${
+            workMode
+              ? 'bg-gray-700 hover:bg-gray-800'
+              : 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700'
+          }`} onClick={loadEmpleados}>
+            <RotateCcw className="w-5 h-5" />
+            Actualizar
           </button>
           <button className={`flex items-center gap-2 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl transform hover:scale-105 ${
             workMode

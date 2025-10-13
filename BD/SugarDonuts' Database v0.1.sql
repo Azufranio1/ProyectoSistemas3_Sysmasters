@@ -95,8 +95,11 @@ VALUES ('EMP-001', 'AzuEMP', 'azuemp@sugardonuts.com', '$2y$10$ETWi3mZz0fXhCiPYl
 
 -- Inserciones para Producto y Categoria
 INSERT INTO Categoria (CategoriaID, Categoria) VALUES ('CAT-001', 'Donas');
-INSERT INTO Categoria (CategoriaID, Categoria) VALUES ('CAT-002', 'Bebidas');
+INSERT INTO Categoria (CategoriaID, Categoria) VALUES ('CAT-002', 'Café');
 INSERT INTO Categoria (CategoriaID, Categoria) VALUES ('CAT-003', 'Sandwiches');
+INSERT INTO Categoria (CategoriaID, Categoria) VALUES ('CAT-004', 'Té');
+INSERT INTO Categoria (CategoriaID, Categoria) VALUES ('CAT-005', 'Batidos');
+
 
 INSERT INTO Producto (ProductoID, CategoriaID, Nombre, Descripcion, PrecioUnitario) 
 VALUES 
