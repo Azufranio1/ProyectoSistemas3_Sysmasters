@@ -1,4 +1,3 @@
-// /utils/categoryIcons
 export const getCategoryIcon = (categoryName?: string): string => {
   if (!categoryName) return '🍩'; // Default
 
