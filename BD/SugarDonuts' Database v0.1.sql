@@ -76,6 +76,30 @@ CREATE TABLE DetalleVenta(
     FOREIGN KEY (ProductoID) REFERENCES Producto(ProductoID)
 );
 
+CREATE TABLE Reserva(
+    ReservaID VARCHAR(10) NOT NULL PRIMARY KEY,
+    ClienteID VARCHAR(10) NOT NULL,
+    EmpleadoID VARCHAR(10) NULL,
+    FechaReserva DATETIME NOT NULL,
+    FechaRecogida DATETIME NOT NULL,
+    Estado ENUM('Pendiente', 'Confirmada', 'Lista', 'Entregada', 'Cancelada') NOT NULL DEFAULT 'Pendiente',
+    Total INT NOT NULL,
+    Observaciones TEXT NULL,
+    Habilitado BOOLEAN NOT NULL DEFAULT 1,
+    FOREIGN KEY (ClienteID) REFERENCES Cliente(ClienteID),
+    FOREIGN KEY (EmpleadoID) REFERENCES Empleado(EmpleadoID)
+);
+
+CREATE TABLE DetalleReserva(
+    ReservaID VARCHAR(10) NOT NULL,
+    ProductoID VARCHAR(10) NOT NULL,
+    Cantidad INT NOT NULL,
+    Subtotal INT NOT NULL,
+    PRIMARY KEY (ReservaID, ProductoID),
+    FOREIGN KEY (ReservaID) REFERENCES Reserva(ReservaID) ON DELETE CASCADE,
+    FOREIGN KEY (ProductoID) REFERENCES Producto(ProductoID)
+);
+
 -- Inserciones para Sucursal
 INSERT INTO Sucursal (SucursalID, HoraApertura, Departamento, Zona, HoraCierre)
 VALUES ('SUC-001', '08:00', 'La Paz', 'Sopocachi', '19:00');
@@ -106,3 +130,16 @@ VALUES
 ('PRD-001', 'CAT-001', 'Choco Sugar', 'Cubierta de chocolate negro con un irresistible roseado de Choco-Ruby.', 7),
 ('PRD-002', 'CAT-001', 'Choco Oreo', 'Cubierta con un glaseado cremoso coronada con trocitos crujientes de galleta Oreo.', 7),
 ('PRD-003', 'CAT-001', 'Choco Café', 'Cubierta de un aromático glaseado de café combinado con un toque robusto de chocolate.', 7);
+
+
+-- Ejemplo cliente
+INSERT INTO Cliente (ClienteID, Nombre, Apellido, CINIT, Habilitado) 
+VALUES ('CLI-001', 'Juan', 'Pérez', 123456789012, 1);
+
+INSERT INTO Reserva (ReservaID, ClienteID, EmpleadoID, FechaReserva, FechaRecogida, Estado, Total, Observaciones, Habilitado)
+VALUES ('RES001', 'CLI-001', 'EMP-001', '2025-10-14 10:00:00', '2025-10-15 14:00:00', 'Pendiente', 14, 'Sin azúcar extra', 1);
+
+INSERT INTO DetalleReserva (ReservaID, ProductoID, Cantidad, Subtotal)
+VALUES 
+('RES001', 'PRD-001', 1, 7),
+('RES001', 'PRD-002', 1, 7);
