@@ -51,7 +51,7 @@ CREATE TABLE Producto(
     CategoriaID varchar(10) not null,
     Nombre varchar(100) not null,
     Descripcion varchar(255) null,
-    PrecioUnitario int not null,
+    PrecioUnitario decimal not null,
     Habilitado boolean not null default 1,
     FOREIGN KEY (CategoriaID) REFERENCES Categoria(CategoriaID)
 );
@@ -63,6 +63,7 @@ CREATE TABLE Venta(
     FechaVenta date not null,
     Descuento int not null,
     Total int not null,
+    Archivada boolean not null default 1,
     FOREIGN KEY (EmpleadoID) REFERENCES Empleado(EmpleadoID),
     FOREIGN KEY (ClienteID) REFERENCES Cliente(ClienteID)
 );
