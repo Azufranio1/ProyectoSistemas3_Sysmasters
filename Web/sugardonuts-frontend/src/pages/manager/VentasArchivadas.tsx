@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useOutletContext, useNavigate } from 'react-router-dom';
-import { Search, Archive, ChevronDown, ChevronUp, Calendar, User, DollarSign, Package, Loader2 } from 'lucide-react';
+import { Search, ArchiveRestore, Notebook, ChevronDown, ChevronUp, Calendar, User, DollarSign, Package, Loader2 } from 'lucide-react';
 import { ventaService, type Venta } from '../../services/Venta';
 
-export default function Ventas() {
+export default function VentasMAr() {
   const { workMode } = useOutletContext<{ workMode: boolean }>();
   const navigate = useNavigate();
   const [ventas, setVentas] = useState<Venta[]>([]);
@@ -27,7 +27,7 @@ export default function Ventas() {
     setLoading(true);
     setError('');
     try {
-      const result = await ventaService.getAll();
+      const result = await ventaService.getArchivadas();
       if (result.success) {
         setVentas(result.data);
         setFilteredVentas(result.data);
@@ -80,10 +80,10 @@ export default function Ventas() {
   };
 
   const handleArchivar = async (ventaID: string) => {
-    if (!confirm('¿Estás seguro de archivar esta venta?')) return;
+    if (!confirm('¿Estás seguro de desarchivar esta venta?')) return;
 
     try {
-      const result = await ventaService.toggleArchivada(ventaID, true);
+      const result = await ventaService.toggleArchivada(ventaID, false);
       if (result.success) {
         loadVentas();
       } else {
@@ -121,20 +121,20 @@ export default function Ventas() {
       {/* Header */}
       <div className="flex justify-between items-center flex-wrap gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-800">Gestión de Ventas</h1>
+          <h1 className="text-3xl font-bold text-gray-800">Gestión de Ventas Archivadas</h1>
           <p className="text-gray-600 mt-1">Historial de ventas realizadas</p>
         </div>
         <div className="flex gap-3">
           <button 
-            onClick={() => navigate('/manager/ventas-archivadas')}
+            onClick={() => navigate('/manager/ventas')}
             className={`flex items-center gap-2 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl transform hover:scale-105 ${
               workMode
                 ? 'bg-gray-600 hover:bg-gray-700'
                 : 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700'
             }`}
           >
-            <Archive className="w-5 h-5" />
-            Archivadas
+            <Notebook className="w-5 h-5" />
+            Ventas Activas
           </button>
         </div>
       </div>
@@ -257,7 +257,7 @@ export default function Ventas() {
                       className="p-3 bg-amber-100 hover:bg-amber-200 text-amber-600 rounded-xl transition-all"
                       title="Archivar"
                     >
-                      <Archive className="w-5 h-5" />
+                      <ArchiveRestore className="w-5 h-5" />
                     </button>
                   </div>
                 </div>

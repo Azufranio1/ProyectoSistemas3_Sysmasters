@@ -3,6 +3,8 @@ import { useOutletContext, useNavigate } from 'react-router-dom';
 import { Search, Trash2Icon, PackagePlus, Edit, Trash2, Power, CheckCircle, XCircle, RotateCcw, Loader2, Tag } from 'lucide-react';
 import { productoService, type Producto } from '../../services/Prod-DetVenta';
 import { getCategoryIcon } from '../../utils/categoryIcons';
+import Modal from '../../components/Modal';
+import FormularioProducto from '../../components/FormularioProducto';
 
 export default function Productos() {
   const { workMode } = useOutletContext<{ workMode: boolean }>();
@@ -11,6 +13,11 @@ export default function Productos() {
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  
+  const [showModal, setShowModal] = useState(false);
+  const [editingProducto, setEditingProducto] = useState<Producto | null>(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadProductos();
@@ -19,8 +26,6 @@ export default function Productos() {
   useEffect(() => {
     filterProductos();
   }, [searchTerm, productos]);
-
-  const navigate = useNavigate();
 
   const loadProductos = async () => {
     setLoading(true);
@@ -55,6 +60,27 @@ export default function Productos() {
       prod.PrecioUnitario.toString().includes(term)
     );
     setFilteredProductos(filtered);
+  };
+
+  // Funciones para manejar el modal
+  const handleOpenCreate = () => {
+    setEditingProducto(null);
+    setShowModal(true);
+  };
+
+  const handleOpenEdit = (producto: Producto) => {
+    setEditingProducto(producto);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setEditingProducto(null);
+  };
+
+  const handleSuccess = () => {
+    handleCloseModal();
+    loadProductos();
   };
 
   const handleToggleHabilitado = async (productoID: string, currentState: boolean) => {
@@ -114,27 +140,36 @@ export default function Productos() {
           <p className="text-gray-600 mt-1">Administra el catálogo de productos</p>
         </div>
         <div className="flex gap-3">
-          <button className={`flex items-center gap-2 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl transform hover:scale-105 ${
-            workMode
-              ? 'bg-gray-700 hover:bg-gray-800'
-              : 'bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700'
-          }`}>
+          <button 
+            onClick={handleOpenCreate}
+            className={`flex items-center gap-2 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl transform hover:scale-105 ${
+              workMode
+                ? 'bg-gray-700 hover:bg-gray-800'
+                : 'bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700'
+            }`}
+          >
             <PackagePlus className="w-5 h-5" />
             Nuevo Producto
           </button>
-          <button className={`flex items-center gap-2 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl transform hover:scale-105 ${
-            workMode
-              ? 'bg-gray-700 hover:bg-gray-800'
-              : 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700'
-          }`} onClick={loadProductos}>
+          <button 
+            onClick={loadProductos}
+            className={`flex items-center gap-2 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl transform hover:scale-105 ${
+              workMode
+                ? 'bg-gray-700 hover:bg-gray-800'
+                : 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700'
+            }`}
+          >
             <RotateCcw className="w-5 h-5" />
             Actualizar
           </button>
-          <button className={`flex items-center gap-2 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl transform hover:scale-105 ${
-            workMode
-              ? 'bg-gray-600 hover:bg-gray-700'
-              : 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700'
-          }`} onClick={() => navigate('/manager/papelera-productos')}>
+          <button 
+            onClick={() => navigate('/manager/papelera-productos')}
+            className={`flex items-center gap-2 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl transform hover:scale-105 ${
+              workMode
+                ? 'bg-gray-600 hover:bg-gray-700'
+                : 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700'
+            }`}
+          >
             <Trash2Icon className="w-5 h-5" />
             Papelera
           </button>
@@ -253,6 +288,7 @@ export default function Productos() {
                   </button>
 
                   <button
+                    onClick={() => handleOpenEdit(producto)}
                     className="p-3 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-xl transition-all"
                     title="Editar"
                   >
@@ -272,6 +308,19 @@ export default function Productos() {
           ))
         )}
       </div>
+
+      {/* Modal con formulario */}
+      <Modal
+        isOpen={showModal}
+        onClose={handleCloseModal}
+        title={editingProducto ? 'Editar Producto' : 'Nuevo Producto'}
+      >
+        <FormularioProducto
+          producto={editingProducto}
+          onSuccess={handleSuccess}
+          onCancel={handleCloseModal}
+        />
+      </Modal>
     </div>
   );
 }
