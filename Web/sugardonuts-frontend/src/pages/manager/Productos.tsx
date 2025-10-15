@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useOutletContext, useNavigate } from 'react-router-dom';
 import { Search, Trash2Icon, PackagePlus, Edit, Trash2, Power, CheckCircle, XCircle, RotateCcw, Loader2, Tag } from 'lucide-react';
 import { productoService, type Producto } from '../../services/Prod-DetVenta';
-import { getCategoryIcon } from '../../utils/categoryIcons';
+import { getCategoryIcon } from '../../utils/CategoryIcons';
 import Modal from '../../components/Modal';
 import FormularioProducto from '../../components/FormularioProducto';
 
