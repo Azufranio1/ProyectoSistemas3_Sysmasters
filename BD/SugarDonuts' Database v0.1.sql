@@ -77,6 +77,30 @@ CREATE TABLE DetalleVenta(
     FOREIGN KEY (ProductoID) REFERENCES Producto(ProductoID)
 );
 
+CREATE TABLE Reserva(
+    ReservaID VARCHAR(10) NOT NULL PRIMARY KEY,
+    ClienteID VARCHAR(10) NOT NULL,
+    EmpleadoID VARCHAR(10) NULL,
+    FechaReserva DATETIME NOT NULL,
+    FechaRecogida DATETIME NOT NULL,
+    Estado ENUM('Pendiente', 'Confirmada', 'Lista', 'Entregada', 'Cancelada') NOT NULL DEFAULT 'Pendiente',
+    Total INT NOT NULL,
+    Observaciones TEXT NULL,
+    Habilitado BOOLEAN NOT NULL DEFAULT 1,
+    FOREIGN KEY (ClienteID) REFERENCES Cliente(ClienteID),
+    FOREIGN KEY (EmpleadoID) REFERENCES Empleado(EmpleadoID)
+);
+
+CREATE TABLE DetalleReserva(
+    ReservaID VARCHAR(10) NOT NULL,
+    ProductoID VARCHAR(10) NOT NULL,
+    Cantidad INT NOT NULL,
+    Subtotal INT NOT NULL,
+    PRIMARY KEY (ReservaID, ProductoID),
+    FOREIGN KEY (ReservaID) REFERENCES Reserva(ReservaID) ON DELETE CASCADE,
+    FOREIGN KEY (ProductoID) REFERENCES Producto(ProductoID)
+);
+
 -- Inserciones para Sucursal
 INSERT INTO Sucursal (SucursalID, HoraApertura, Departamento, Zona, HoraCierre)
 VALUES ('SUC-001', '08:00', 'La Paz', 'Sopocachi', '19:00');
@@ -107,3 +131,39 @@ VALUES
 ('PRD-001', 'CAT-001', 'Choco Sugar', 'Cubierta de chocolate negro con un irresistible roseado de Choco-Ruby.', 7),
 ('PRD-002', 'CAT-001', 'Choco Oreo', 'Cubierta con un glaseado cremoso coronada con trocitos crujientes de galleta Oreo.', 7),
 ('PRD-003', 'CAT-001', 'Choco Café', 'Cubierta de un aromático glaseado de café combinado con un toque robusto de chocolate.', 7);
+
+-- ------------------------
+-- Inserciones para Clientes
+INSERT INTO Cliente (ClienteID, Nombre, Apellido, CINIT, Habilitado)
+VALUES 
+('CLI-001', 'María', 'Flores', 8569345, 1),
+('CLI-002', 'Carlos', 'Gutiérrez', 9246831, 1);
+
+-- Inserciones para Ventas
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES
+('VNT-001', 'EMP-001', 'CLI-001', '2025-10-15', 0, 28, 0),
+('VNT-002', 'EMP-001', 'CLI-002', '2025-10-15', 2, 26, 0);
+
+-- Inserciones para DetalleVenta
+-- Venta 1 (VNT-001): 2 productos, total 28
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-001', 'PRD-001', 2, 14),
+('VNT-001', 'PRD-002', 2, 14);
+
+-- Venta 2 (VNT-002): 2 productos, total 26 con descuento aplicado aparte
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-002', 'PRD-002', 1, 7),
+('VNT-002', 'PRD-003', 3, 21);
+
+-- ------------------------
+
+INSERT INTO Reserva (ReservaID, ClienteID, EmpleadoID, FechaReserva, FechaRecogida, Estado, Total, Observaciones, Habilitado)
+VALUES ('RES001', 'CLI-001', 'EMP-001', '2025-10-14 10:00:00', '2025-10-15 14:00:00', 'Pendiente', 14, 'Sin azúcar extra', 1);
+
+INSERT INTO DetalleReserva (ReservaID, ProductoID, Cantidad, Subtotal)
+VALUES 
+('RES-001', 'PRD-001', 1, 7),
+('RES-001', 'PRD-002', 1, 7);
