@@ -1,132 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Calendar, Clock, User, Package, CheckCircle, XCircle, AlertCircle, Loader2, Eye, Plus, X } from 'lucide-react';
-
-// ============= SERVICIO API =============
-const API_URL = 'http://localhost/sugardonuts-api';
-
-type EstadoReserva = 'Pendiente' | 'Confirmada' | 'Lista' | 'Entregada' | 'Cancelada';
-
-interface DetalleReserva {
-  ProductoID: string;
-  ProductoNombre?: string;
-  CategoriaNombre?: string;
-  PrecioUnitario?: number;
-  Cantidad: number;
-  Subtotal: number;
-}
-
-interface Reserva {
-  ReservaID: string;
-  ClienteID: string;
-  ClienteNombre?: string;
-  EmpleadoID?: string;
-  EmpleadoNombre?: string;
-  FechaReserva: string;
-  FechaRecogida: string;
-  Estado: EstadoReserva;
-  Total: number;
-  Observaciones?: string;
-  Detalles?: DetalleReserva[];
-}
-
-interface CreateReservaData {
-  ClienteID: string;
-  EmpleadoID?: string;
-  FechaRecogida: string;
-  Observaciones?: string;
-  Detalles: Array<{
-    ProductoID: string;
-    Cantidad: number;
-    Subtotal: number;
-  }>;
-}
-
-interface Producto {
-  ProductoID: string;
-  Nombre: string;
-  CategoriaID: string;
-  CategoriaNombre: string;
-  PrecioUnitario: number;
-}
-
-interface Cliente {
-  ClienteID: string;
-  Nombre: string;
-  Apellido: string;
-}
-
-class ReservaService {
-  private baseUrl = `${API_URL}/reservas.php`;
-
-  async getAll(): Promise<{ success: boolean; data?: Reserva[]; error?: string }> {
-    try {
-      const response = await fetch(this.baseUrl);
-      return await response.json();
-    } catch (error) {
-      console.error('Error al obtener reservas:', error);
-      return { success: false, error: 'Error de conexión' };
-    }
-  }
-
-  async getByEstado(estado: EstadoReserva): Promise<{ success: boolean; data?: Reserva[]; error?: string }> {
-    try {
-      const response = await fetch(`${this.baseUrl}?estado=${estado}`);
-      return await response.json();
-    } catch (error) {
-      return { success: false, error: 'Error de conexión' };
-    }
-  }
-
-  async getById(reservaID: string): Promise<{ success: boolean; data?: Reserva; error?: string }> {
-    try {
-      const response = await fetch(`${this.baseUrl}?id=${reservaID}`);
-      return await response.json();
-    } catch (error) {
-      return { success: false, error: 'Error de conexión' };
-    }
-  }
-
-  async create(data: CreateReservaData): Promise<{ success: boolean; ReservaID?: string; error?: string; message?: string }> {
-    try {
-      const response = await fetch(this.baseUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-      return await response.json();
-    } catch (error) {
-      return { success: false, error: 'Error de conexión' };
-    }
-  }
-
-  async updateEstado(reservaID: string, estado: EstadoReserva, empleadoID?: string): Promise<{ success: boolean; error?: string; message?: string }> {
-    try {
-      const response = await fetch(this.baseUrl, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ReservaID: reservaID, Estado: estado, EmpleadoID: empleadoID })
-      });
-      return await response.json();
-    } catch (error) {
-      return { success: false, error: 'Error de conexión' };
-    }
-  }
-
-  async cancel(reservaID: string): Promise<{ success: boolean; error?: string; message?: string }> {
-    try {
-      const response = await fetch(this.baseUrl, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ReservaID: reservaID })
-      });
-      return await response.json();
-    } catch (error) {
-      return { success: false, error: 'Error de conexión' };
-    }
-  }
-}
-
-const reservaService = new ReservaService();
+import { reservaService, type Reserva, type EstadoReserva } from '../../services/Reservas';
 
 // ============= COMPONENTE PRINCIPAL =============
 export default function ReservasGestion() {
@@ -366,14 +240,6 @@ export default function ReservasGestion() {
                           <p className="font-semibold text-gray-800">{formatFecha(reserva.FechaReserva)}</p>
                         </div>
                       </div>
-
-                      {reserva.Observaciones && (
-                        <div className="mt-3 p-3 bg-amber-50 border-l-4 border-amber-400 rounded">
-                          <p className="text-sm text-amber-800">
-                            <strong>Observaciones:</strong> {reserva.Observaciones}
-                          </p>
-                        </div>
-                      )}
                     </div>
 
                     <div className="flex flex-col gap-2 ml-4">
@@ -514,13 +380,6 @@ export default function ReservasGestion() {
                     </div>
                   </div>
                 )}
-
-                {selectedReserva.Observaciones && (
-                  <div className="bg-amber-50 border-2 border-amber-200 rounded-xl p-4">
-                    <h3 className="font-bold text-amber-800 mb-2">Observaciones</h3>
-                    <p className="text-amber-700">{selectedReserva.Observaciones}</p>
-                  </div>
-                )}
               </div>
             </div>
           </div>
@@ -547,7 +406,6 @@ export default function ReservasGestion() {
 function ModalCrearReserva({ onClose, onSuccess }: { onClose: () => void; onSuccess: () => void }) {
   const [clienteID, setClienteID] = useState('');
   const [fechaRecogida, setFechaRecogida] = useState('');
-  const [observaciones, setObservaciones] = useState('');
   const [productos, setProductos] = useState<Array<{ ProductoID: string; Cantidad: number; Precio: number }>>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -589,7 +447,6 @@ function ModalCrearReserva({ onClose, onSuccess }: { onClose: () => void; onSucc
     const result = await reservaService.create({
       ClienteID: clienteID,
       FechaRecogida: fechaRecogida,
-      Observaciones: observaciones,
       Detalles: detalles
     });
 
@@ -640,17 +497,6 @@ function ModalCrearReserva({ onClose, onSuccess }: { onClose: () => void; onSucc
               onChange={(e) => setFechaRecogida(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
               required
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-700 font-semibold mb-2">Observaciones</label>
-            <textarea
-              value={observaciones}
-              onChange={(e) => setObservaciones(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
-              rows={3}
-              placeholder="Instrucciones especiales..."
             />
           </div>
 
