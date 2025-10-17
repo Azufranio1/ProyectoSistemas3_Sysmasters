@@ -8,6 +8,7 @@ import PrivateRoute from '../components/PrivateRoute';
 import ManagerDashboard from "../pages/ManagerDashboard";
 import HomeM from "../pages/manager/Home";
 import VentasM from "../pages/manager/Ventas";
+import VentasMAr from "../pages/manager/VentasArchivadas";
 import Reservas from "../pages/manager/Reservas";
 import Productos from "../pages/manager/Productos";
 import Empleados from "../pages/manager/Empleados";
@@ -19,6 +20,7 @@ import PapeleraProductos from "../pages/manager/PapeleraProductos";
 import EmployeeDashboard from "../pages/EmployeeDashboard";
 import HomeE from "../pages/employee/Home";
 import VentasE from "../pages/employee/Ventas";
+
 
 
 export default function AppRoutes() {
@@ -36,6 +38,7 @@ export default function AppRoutes() {
         >
           <Route path="home" element={<HomeM />} />
           <Route path="ventas" element={<VentasM />} />
+          <Route path="ventas-archivadas" element={<VentasMAr />} />
           <Route path="reservas" element={<Reservas />} />
           <Route path="productos" element={<Productos />} />
           <Route path="empleado" element={<Empleados />} />

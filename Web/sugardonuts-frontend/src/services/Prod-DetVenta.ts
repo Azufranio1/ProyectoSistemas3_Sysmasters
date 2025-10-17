@@ -10,6 +10,11 @@ export interface Producto {
   Habilitado?: boolean;
 }
 
+export interface Categoria {
+  CategoriaID: string;
+  Nombre: string;
+}
+
 export const productoService = {
   getAll: async () => {
     const response = await fetch(`${API_URL}/productos.php`);
@@ -80,6 +85,13 @@ export const productoService = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ProductoID: productoID })
     });
+    return response.json();
+  }
+};
+
+export const categoriaService = {
+  getAll: async () => {
+    const response = await fetch(`${API_URL}/categorias.php`);
     return response.json();
   }
 };
