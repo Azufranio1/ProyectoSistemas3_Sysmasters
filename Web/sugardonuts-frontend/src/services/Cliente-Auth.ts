@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost/sugardonuts-api';
+const API_URL = 'http://localhost/SugarDonuts-API';
 
 export interface Cliente {
     ClienteID?: string;
@@ -16,62 +16,95 @@ export interface AuthResponse {
     message?: string;
 }
 
-export const authService = {
-    login: async (cinit: string, password: string): Promise<AuthResponse> => {
-        const response = await fetch(`${API_URL}/cliente-auth.php`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'login', cinit, password })
-        });
-        return response.json();
-    }
-};
-
 export const clienteService = {
-    getAll: async (): Promise<Cliente[]> => {
-        const response = await fetch(`${API_URL}/clientes.php`);
-        return response.json();
+    // Obtener todos los clientes
+    getAll: async (): Promise<{ success: boolean; clientes?: Cliente[]; error?: string }> => {
+        try {
+            const response = await fetch(`${API_URL}/clientes.php`);
+            const data = await response.json();
+            return data;
+        } catch (err) {
+            console.error(err);
+            return { success: false, error: "Error de conexión al obtener clientes" };
+        }
     },
 
+    // Obtener un cliente por ID
     getById: async (clienteID: string): Promise<Cliente | null> => {
-        const response = await fetch(`${API_URL}/clientes.php?id=${encodeURIComponent(clienteID)}`);
-        const clientes = await response.json();
-        return clientes.length > 0 ? clientes[0] : null;
+        try {
+            const response = await fetch(`${API_URL}/clientes.php?id=${encodeURIComponent(clienteID)}`);
+            const data = await response.json();
+            if (data.success && data.clientes && data.clientes.length > 0) {
+                return data.clientes[0];
+            }
+            return null;
+        } catch (err) {
+            console.error(err);
+            return null;
+        }
     },
 
-    create: async (cliente: Required<Cliente>) => {
-        const response = await fetch(`${API_URL}/clientes.php`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'create', ...cliente })
-        });
-        return response.json();
+    // Crear un nuevo cliente
+    create: async (cliente: Required<Cliente>): Promise<{ success: boolean; cliente?: Cliente; error?: string }> => {
+        try {
+            const response = await fetch(`${API_URL}/clientes.php`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'create', ...cliente })
+            });
+            const data = await response.json();
+            return data;
+        } catch (err) {
+            console.error(err);
+            return { success: false, error: "Error de conexión al registrar cliente" };
+        }
     },
 
-    update: async (clienteID: string, cliente: Partial<Cliente>) => {
-        const response = await fetch(`${API_URL}/clientes.php`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'update', ClienteID: clienteID, ...cliente })
-        });
-        return response.json();
+    // Actualizar un cliente existente
+    update: async (clienteID: string, cliente: Partial<Cliente>): Promise<{ success: boolean; cliente?: Cliente; error?: string }> => {
+        try {
+            const response = await fetch(`${API_URL}/clientes.php`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'update', ClienteID: clienteID, ...cliente })
+            });
+            const data = await response.json();
+            return data;
+        } catch (err) {
+            console.error(err);
+            return { success: false, error: "Error de conexión al actualizar cliente" };
+        }
     },
 
-    delete: async (clienteID: string) => {
-        const response = await fetch(`${API_URL}/clientes.php`, {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'delete', ClienteID: clienteID })
-        });
-        return response.json();
+    // Eliminar un cliente
+    delete: async (clienteID: string): Promise<{ success: boolean; error?: string }> => {
+        try {
+            const response = await fetch(`${API_URL}/clientes.php`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'delete', ClienteID: clienteID })
+            });
+            const data = await response.json();
+            return data;
+        } catch (err) {
+            console.error(err);
+            return { success: false, error: "Error de conexión al eliminar cliente" };
+        }
     },
 
-    recover: async (clienteID: string) => {
-        const response = await fetch(`${API_URL}/clientes.php`, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'recover', ClienteID: clienteID })
-        });
-        return response.json();
+    // Recuperar un cliente eliminado
+    recover: async (clienteID: string): Promise<{ success: boolean; error?: string }> => {
+        try {
+            const response = await fetch(`${API_URL}/clientes.php`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'recover', ClienteID: clienteID })
+            });
+            const data = await response.json();
+            return data;
+        } catch (err) {
+            console.error(err);
+            return { success: false, error: "Error de conexión al recuperar cliente" };
+        }
     }
 };
