@@ -255,7 +255,7 @@ export default function Empleados() {
                     className="p-3 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-xl transition-all"
                     title="Editar"
                   >
-                    <Edit className="w-5 h-5" />
+                    <Edit className="w-5 h-5" /> (Coming Soon)
                   </button>
 
                   <button

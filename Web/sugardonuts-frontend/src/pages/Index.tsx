@@ -104,7 +104,7 @@ export default function Index() {
       <section id="up"></section>
 
       {/* HEADER MEJORADO CON SESIÓN */}
-      <header className="fixed w-full bg-white/95 backdrop-blur-sm shadow-lg z-50 border-b-4 border-pink-400">
+      <header className="fixed w-full bg-white/95 backdrop-blur-sm shadow-lg z-50 border-b-4 border-pink-400 z-50">
         <nav className="flex justify-between items-center px-6 md:px-8 py-3 max-w-7xl mx-auto">
           <Link to="/" className="group">
             <img 
@@ -536,7 +536,7 @@ export default function Index() {
 
       {/* ENCUÉNTRANOS CON MAPA */}
       <section id="locations" className="py-24 bg-gradient-to-b from-white to-pink-50">
-        <div className="max-w-7xl mx-auto px-6">
+        <div className="max-w-7xl mx-auto px-6 relative z-0">
           <div className="text-center mb-16">
             <h3 className="text-5xl font-extrabold text-gray-800 mb-4">Encuéntranos</h3>
             <div className="w-24 h-1 bg-gradient-to-r from-pink-500 to-amber-500 mx-auto rounded-full"></div>

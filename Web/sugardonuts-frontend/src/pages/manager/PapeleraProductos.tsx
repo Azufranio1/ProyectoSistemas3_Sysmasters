@@ -2,7 +2,7 @@ import { useOutletContext } from 'react-router-dom';
 import Papelera from '../../components/Papelera';
 import { productoService } from '../../services/Prod-DetVenta';
 import { DollarSign, Tag } from 'lucide-react';
-import { getCategoryIcon } from '../../utils/categoryIcons';
+import { getCategoryIcon } from '../../utils/CategoryIcons';
 
 export default function PapeleraProductos() {
   const { workMode } = useOutletContext<{ workMode: boolean }>();

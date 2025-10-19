@@ -33,7 +33,7 @@ CREATE TABLE Sucursal (
 CREATE TABLE Empleado(
     EmpleadoID varchar(10) not null primary key,
     SucursalID varchar(10) not null,
-    CI int(10) not null,
+    CI int not null,
     Nombre varchar(50) not null,
     Apellido varchar(50) not null,
     FechaContrato date not null,
@@ -48,7 +48,7 @@ CREATE TABLE UsuarioEmp (
     Usuario varchar(50) not null,
     Correo varchar(50) not null,
     Keyword varchar(100) not null,
-    CodRecuperacion int(8) not null,
+    CodRecuperacion int not null,
     Habilitado boolean not null default 1,
     FOREIGN KEY (EmpleadoID) REFERENCES Empleado(EmpleadoID)
 );
@@ -57,7 +57,7 @@ CREATE TABLE Cliente(
     ClienteID varchar(10) not null primary key,
     Nombre varchar(50) not null,
     Apellido varchar(50) not null,
-    CINIT int(12) not null,
+    CINIT int not null,
     Habilitado boolean not null default 1
 );
 
@@ -73,6 +73,7 @@ CREATE TABLE Producto(
     Descripcion varchar(255) null,
     PrecioUnitario decimal not null,
     Habilitado boolean not null default 1,
+    -- UltimaActualizacion DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (CategoriaID) REFERENCES Categoria(CategoriaID)
 );
 
@@ -103,7 +104,7 @@ CREATE TABLE Reserva(
     EmpleadoID VARCHAR(10) NULL,
     FechaReserva DATETIME NOT NULL,
     FechaRecogida DATETIME NOT NULL,
-    Estado ENUM('Pendiente', 'Confirmada', 'Lista', 'Entregada', 'Cancelada') NOT NULL DEFAULT 'Pendiente',
+    Estado VARCHAR(20) NOT NULL DEFAULT 'Pendiente' CHECK (Estado IN ('Pendiente', 'Confirmada', 'Lista', 'Entregada', 'Cancelada')),
     Total INT NOT NULL,
     Archivada BOOLEAN NOT NULL DEFAULT 0,
     Habilitado BOOLEAN NOT NULL DEFAULT 1,
