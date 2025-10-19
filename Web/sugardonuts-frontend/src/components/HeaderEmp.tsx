@@ -6,8 +6,6 @@ interface HeaderProps {
 }
 
 const Header = ({ nombreCompleto }: HeaderProps) => {
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {

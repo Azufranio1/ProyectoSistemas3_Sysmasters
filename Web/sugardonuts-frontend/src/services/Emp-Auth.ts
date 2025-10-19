@@ -37,15 +37,21 @@ export const authService = {
   logout: () => {
     localStorage.removeItem('token');
     localStorage.removeItem('empleado');
+    localStorage.removeItem('recordarCorreo');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('empleado');
   },
 
   getCurrentEmpleado: (): Empleado | null => {
-    const empleadoStr = localStorage.getItem('empleado');
+    let empleadoStr = localStorage.getItem('empleado');
+    if (!empleadoStr) {
+      empleadoStr = sessionStorage.getItem('empleado');
+    }
     return empleadoStr ? JSON.parse(empleadoStr) : null;
   },
 
   isAuthenticated: (): boolean => {
-    return !!localStorage.getItem('token');
+    return !!(localStorage.getItem('token') || sessionStorage.getItem('token'));
   }
 };
 

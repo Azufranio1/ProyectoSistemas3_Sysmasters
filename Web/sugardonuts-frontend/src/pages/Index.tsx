@@ -499,10 +499,10 @@ export default function Index() {
               <h4 className="text-xl font-bold mb-4 text-amber-400">Síguenos</h4>
               <div className="flex gap-4">
                 <a href="#" className="bg-pink-600 p-3 rounded-full hover:bg-pink-700 transition-colors">
-                  <Instagram className="w-6 h-6" />
+                  <Instagram className="w-6 h-6" /> (Coming soon)
                 </a>
                 <a href="#" className="bg-blue-600 p-3 rounded-full hover:bg-blue-700 transition-colors">
-                  <Facebook className="w-6 h-6" />
+                  <Facebook className="w-6 h-6" /> (Coming soon)
                 </a>
               </div>
             </div>
