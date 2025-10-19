@@ -119,7 +119,7 @@ export default function Empleados() {
               : 'bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700'
           }`}>
             <UserPlus className="w-5 h-5" />
-            Nuevo Empleado
+            Nuevo Empleado (Coming Soon)
           </button>
           <button className={`flex items-center gap-2 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl transform hover:scale-105 ${
             workMode

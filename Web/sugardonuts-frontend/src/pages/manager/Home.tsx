@@ -9,14 +9,14 @@ const Home: React.FC = () => {
       {/* Encabezado */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-800 mb-2">
-          Panel general — <span className="text-pink-600">SugarDonuts</span>
+          Panel general — <span className={`${workMode ? 'text-gray-800' : 'text-pink-600'}`}>SugarDonuts</span>
         </h1>
       </div>
 
       {/* Tarjetas principales */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {/* Ventas de hoy */}
-        <div className={`bg-white rounded-2xl shadow-md p-5 border-t-4 ${workMode ? 'border-gray-400' : 'border-pink-400'} hover:shadow-lg transition-shadow duration-300`}>
+        <div className={`bg-white rounded-2xl shadow-md p-5 border-t-4 ${workMode ? 'text-gray-800' : 'border-pink-400'} hover:shadow-lg transition-shadow duration-300`}>
           <div className="flex justify-between items-center">
             <div>
               <p className="text-sm text-gray-500">Ventas hoy</p>
@@ -28,7 +28,7 @@ const Home: React.FC = () => {
         </div>
 
         {/* Pedidos pendientes */}
-        <div className={`bg-white rounded-2xl shadow-md p-5 border-t-4 ${workMode ? 'border-gray-400' : 'border-amber-400'} hover:shadow-lg transition-shadow duration-300`}>
+        <div className={`bg-white rounded-2xl shadow-md p-5 border-t-4 ${workMode ? 'text-gray-800' : 'border-amber-400'} hover:shadow-lg transition-shadow duration-300`}>
           <div className="flex justify-between items-center">
             <div>
               <p className="text-sm text-gray-500">Pedidos pendientes</p>
@@ -40,7 +40,7 @@ const Home: React.FC = () => {
         </div>
 
         {/* Clientes activos */}
-                <div className={`bg-white rounded-2xl shadow-md p-5 border-t-4 ${workMode ? 'border-gray-400' : 'border-rose-400'} hover:shadow-lg transition-shadow duration-300`}>
+                <div className={`bg-white rounded-2xl shadow-md p-5 border-t-4 ${workMode ? 'text-gray-800' : 'border-rose-400'} hover:shadow-lg transition-shadow duration-300`}>
 
           <div className="flex justify-between items-center">
             <div>
@@ -53,7 +53,7 @@ const Home: React.FC = () => {
         </div>
 
         {/* Ganancia mensual */}
-                <div className={`bg-white rounded-2xl shadow-md p-5 border-t-4 ${workMode ? 'border-gray-400' : 'border-green-400'} hover:shadow-lg transition-shadow duration-300`}>
+                <div className={`bg-white rounded-2xl shadow-md p-5 border-t-4 ${workMode ? 'text-gray-800' : 'border-green-400'} hover:shadow-lg transition-shadow duration-300`}>
 
           <div className="flex justify-between items-center">
             <div>

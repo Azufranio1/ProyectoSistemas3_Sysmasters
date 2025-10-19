@@ -1,6 +1,26 @@
-DROP DATABASE IF EXISTS SugarDonuts;
-CREATE DATABASE SugarDonuts;
-USE SugarDonuts;
+-- DROP DATABASE IF EXISTS SugarDonuts;
+-- CREATE DATABASE SugarDonuts;
+-- USE SugarDonuts;
+
+DROP TABLE IF EXISTS DetalleReserva;
+DROP TABLE IF EXISTS Reserva;
+DROP TABLE IF EXISTS DetalleVenta;
+DROP TABLE IF EXISTS Venta;
+DROP TABLE IF EXISTS Producto;
+DROP TABLE IF EXISTS Categoria;
+DROP TABLE IF EXISTS Cliente;
+DROP TABLE IF EXISTS UsuarioEmp;
+DROP TABLE IF EXISTS Empleado;
+DROP TABLE IF EXISTS Sucursal;
+
+
+
+
+
+
+
+
+
 
 CREATE TABLE Sucursal (
     SucursalID VARCHAR(10) PRIMARY KEY NOT NULL,
@@ -24,7 +44,7 @@ CREATE TABLE Empleado(
 );
 
 CREATE TABLE UsuarioEmp (
-    EmpleadoID varchar(10) not null unique primary key,
+    EmpleadoID varchar(10) not null primary key,
     Usuario varchar(50) not null,
     Correo varchar(50) not null,
     Keyword varchar(100) not null,
@@ -118,6 +138,26 @@ VALUES ('EMP-001', 12345678, 'Azuf', 'Ninsial', '2025-08-15', '1992-04-18', 1, 1
 INSERT INTO UsuarioEmp (EmpleadoID, Usuario, Correo, Keyword, CodRecuperacion, Habilitado) 
 VALUES ('EMP-001', 'AzuEMP', 'azuemp@sugardonuts.com', '$2y$10$ETWi3mZz0fXhCiPYluGn.uCkNmdYLCzMW/W0YXgxoHRHYTeyBwJcG', 123456, 1);
 
+INSERT INTO Empleado (EmpleadoID, CI, Nombre, Apellido, FechaContrato, FechaNacimiento, Activo, Habilitado, SucursalID) 
+VALUES ('MGR-002', 23456789, 'Alexandra', 'Mamani', '2025-08-16', '1992-05-26', 1, 1, 'SUC-001');
+INSERT INTO UsuarioEmp (EmpleadoID, Usuario, Correo, Keyword, CodRecuperacion, Habilitado) 
+VALUES ('MGR-002', 'AleMGR', 'aledun@sugardonuts.com', '$2y$10$QEAiiONHkXyXuPmm.noyjOpK4MuUJh5HkjAsSe.2KHli6wZjs8HD6', 170524, 1);
+
+INSERT INTO Empleado (EmpleadoID, CI, Nombre, Apellido, FechaContrato, FechaNacimiento, Activo, Habilitado, SucursalID) 
+VALUES ('EMP-002', 23456789, 'Alexandra', 'Mamani', '2025-08-16', '1992-05-26', 1, 1, 'SUC-001');
+INSERT INTO UsuarioEmp (EmpleadoID, Usuario, Correo, Keyword, CodRecuperacion, Habilitado) 
+VALUES ('EMP-002', 'AleEMP', 'aledune@sugardonuts.com', '$2y$10$QEAiiONHkXyXuPmm.noyjOpK4MuUJh5HkjAsSe.2KHli6wZjs8HD6', 170524, 1);
+
+INSERT INTO Empleado (EmpleadoID, CI, Nombre, Apellido, FechaContrato, FechaNacimiento, Activo, Habilitado, SucursalID) 
+VALUES ('MGR-003', 34567890, 'Mateo', 'Torrez', '2025-08-16', '1992-05-26', 1, 1, 'SUC-001');
+INSERT INTO UsuarioEmp (EmpleadoID, Usuario, Correo, Keyword, CodRecuperacion, Habilitado) 
+VALUES ('MGR-003', 'TaptoMGR', 'taptomax@sugardonuts.com', '$2y$10$HCnLMk6ERv0tY8bV/.f/tugVI3lYkFf8zfJHd/kFsrFX0LR0wF9GC', 123456, 1);
+
+INSERT INTO Empleado (EmpleadoID, CI, Nombre, Apellido, FechaContrato, FechaNacimiento, Activo, Habilitado, SucursalID) 
+VALUES ('EMP-003', 34567890, 'Mateo', 'Torrez', '2025-08-16', '1992-05-26', 1, 1, 'SUC-001');
+INSERT INTO UsuarioEmp (EmpleadoID, Usuario, Correo, Keyword, CodRecuperacion, Habilitado) 
+VALUES ('EMP-003', 'TaptoEMP', 'taptomaxe@sugardonuts.com', '$2y$10$HCnLMk6ERv0tY8bV/.f/tugVI3lYkFf8zfJHd/kFsrFX0LR0wF9GC', 123456, 1);
+
 -- Inserciones para Producto y Categoria
 INSERT INTO Categoria (CategoriaID, Categoria) VALUES ('CAT-001', 'Donas');
 INSERT INTO Categoria (CategoriaID, Categoria) VALUES ('CAT-002', 'Café');
@@ -161,7 +201,7 @@ VALUES
 -- ------------------------
 
 INSERT INTO Reserva (ReservaID, ClienteID, EmpleadoID, FechaReserva, FechaRecogida, Estado, Total, Observaciones, Habilitado)
-VALUES ('RES001', 'CLI-001', 'EMP-001', '2025-10-14 10:00:00', '2025-10-15 14:00:00', 'Pendiente', 14, 'Sin azúcar extra', 1);
+VALUES ('RES-001', 'CLI-001', 'EMP-001', '2025-10-14 10:00:00', '2025-10-15 14:00:00', 'Pendiente', 14, 'Sin azúcar extra', 1);
 
 INSERT INTO DetalleReserva (ReservaID, ProductoID, Cantidad, Subtotal)
 VALUES 
