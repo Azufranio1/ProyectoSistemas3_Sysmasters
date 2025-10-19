@@ -12,7 +12,7 @@ interface CartItem {
   PrecioUnitario: number;
 }
 
-export default function Ventas(): JSX.Element {
+export default function Ventas(): React.ReactElement {
   const [productos, setProductos] = useState<Producto[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -136,15 +136,15 @@ export default function Ventas(): JSX.Element {
       }));
 
      const payload = {
-  EmpleadoID,
-  ClienteID: selectedCliente.ClienteID,
-  Descuento: 0,
-  items: cart.map(i => ({
-    ProductoID: i.ProductoID,
-    Cantidad: i.quantity,
-    PrecioUnitario: i.PrecioUnitario
-  }))
-};
+      EmpleadoID,
+      ClienteID: selectedCliente!.ClienteID,
+      Descuento: 0,
+      items: cart.map(i => ({
+        ProductoID: i.ProductoID,
+        Cantidad: i.quantity,
+        PrecioUnitario: i.PrecioUnitario
+      }))
+    };
 
       console.log("Payload enviado:", payload);
 

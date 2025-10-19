@@ -1,3 +1,3 @@
 export default function Reportes() {
-  return <p>Reportes</p>;
+  return <p>Página de Reportes (Coming Soon)</p>;
 }

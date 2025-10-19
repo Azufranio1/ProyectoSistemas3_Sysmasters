@@ -65,7 +65,7 @@ export default function Papelera({
       return;
     }
 
-    const term = searchTerm.toLowerCase();
+    const term = searchTerm.toLowerCase().trim();
     const filtered = items.filter(item => {
       const itemName = getItemName(item).toLowerCase();
       const itemId = getItemId(item).toLowerCase();
@@ -162,7 +162,7 @@ export default function Papelera({
             type="text"
             placeholder="Buscar en papelera..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => setSearchTerm(e.target.value.replace(/\s+/g, ' '))}
             className={`w-full pl-12 pr-4 py-3 border-2 rounded-xl focus:ring-4 transition-all outline-none ${
               workMode
                 ? 'border-gray-300 focus:border-gray-600 focus:ring-gray-200'

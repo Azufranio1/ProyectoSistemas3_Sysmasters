@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useOutletContext, useNavigate } from 'react-router-dom';
-import { Search, Trash2Icon, PackagePlus, Edit, Trash2, Power, CheckCircle, XCircle, RotateCcw, Loader2, Tag } from 'lucide-react';
+import { Search, Trash2Icon, PackagePlus, Edit, Trash2, CheckCircle, XCircle, RotateCcw, Loader2, Tag } from 'lucide-react';
 import { productoService, type Producto } from '../../services/Prod-DetVenta';
 import { getCategoryIcon } from '../../utils/CategoryIcons';
 import Modal from '../../components/Modal';
@@ -52,11 +52,12 @@ export default function Productos() {
       return;
     }
 
-    const term = searchTerm.toLowerCase();
+    const term = searchTerm.toLowerCase().trim();
     const filtered = productos.filter(prod => 
       prod.Nombre.toLowerCase().includes(term) ||
       prod.ProductoID.toLowerCase().includes(term) ||
       prod.CategoriaNombre?.toLowerCase().includes(term) ||
+      prod.Descripcion?.toLowerCase().includes(term) ||
       prod.PrecioUnitario.toString().includes(term)
     );
     setFilteredProductos(filtered);
@@ -83,26 +84,8 @@ export default function Productos() {
     loadProductos();
   };
 
-  const handleToggleHabilitado = async (productoID: string, currentState: boolean) => {
-    if (!confirm(`¿Estás seguro de ${currentState ? 'deshabilitar' : 'habilitar'} este producto?`)) {
-      return;
-    }
-
-    try {
-      const result = await productoService.toggleHabilitado(productoID, !currentState);
-      if (result.success) {
-        loadProductos();
-      } else {
-        alert(result.error || 'Error al cambiar estado');
-      }
-    } catch (err) {
-      alert('Error de conexión');
-      console.error(err);
-    }
-  };
-
   const handleDelete = async (productoID: string) => {
-    if (!confirm('¿Estás seguro de eliminar este producto? Esta acción no se puede deshacer.')) {
+    if (!confirm('¿Estás seguro de eliminar este producto?')) {
       return;
     }
 
@@ -192,7 +175,7 @@ export default function Productos() {
             type="text"
             placeholder="Buscar por nombre, ID, descripción, categoría o precio..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => setSearchTerm(e.target.value.replace(/\s+/g, ' '))}
             className={`w-full pl-12 pr-4 py-3 border-2 rounded-xl focus:ring-4 transition-all outline-none ${
               workMode
                 ? 'border-gray-300 focus:border-gray-600 focus:ring-gray-200'
@@ -269,23 +252,18 @@ export default function Productos() {
                           {producto.CategoriaNombre || 'Sin categoría'}
                         </p>
                       </div>
+                      <div>
+                        <p className="text-gray-500">Descripción</p>
+                        <p className="font-semibold text-gray-800">
+                          {producto.Descripcion || 'Sin Descripción'}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Acciones */}
                 <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => handleToggleHabilitado(producto.ProductoID, producto.Habilitado || false)}
-                    className={`p-3 rounded-xl transition-all ${
-                      producto.Habilitado
-                        ? 'bg-gray-100 hover:bg-gray-200 text-gray-600'
-                        : 'bg-green-100 hover:bg-green-200 text-green-600'
-                    }`}
-                    title={producto.Habilitado ? 'Deshabilitar' : 'Habilitar'}
-                  >
-                    <Power className="w-5 h-5" />
-                  </button>
 
                   <button
                     onClick={() => handleOpenEdit(producto)}
