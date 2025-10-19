@@ -16,6 +16,11 @@ export interface Categoria {
 }
 
 export const productoService = {
+  /*checkUpdates: async () => {
+    const response = await fetch(`${API_URL}/productos.php?update=true`);
+    return response.json();
+  },*/
+
   getAll: async () => {
     const response = await fetch(`${API_URL}/productos.php`);
     return response.json();
