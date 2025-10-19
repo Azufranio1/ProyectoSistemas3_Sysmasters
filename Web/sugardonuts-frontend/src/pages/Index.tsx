@@ -3,11 +3,78 @@ import { Link } from "react-router-dom";
 import { Sprout, HeartHandshake, Award, MapPin, Phone, Mail, Instagram, Facebook, Clock, Users, TrendingUp, Sparkles, LayoutDashboard, Menu, X, LogOut } from 'lucide-react';
 import logo from "../Resources/imgs/SugarDonutsTD.png";
 import { authService, type Empleado } from '../services/Emp-Auth';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+
+// ===== CONFIGURACIÓN DE LEAFLET =====
+// Solucionar problema de iconos por defecto de Leaflet
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
+
+// Icono personalizado para las sucursales (dona)
+const donutIcon = new L.Icon({
+  iconUrl: 'data:image/svg+xml;utf8,' + encodeURIComponent(`
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40">
+      <defs>
+        <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+          <feOffset dx="0" dy="2" result="offsetblur"/>
+          <feComponentTransfer>
+            <feFuncA type="linear" slope="0.3"/>
+          </feComponentTransfer>
+          <feMerge>
+            <feMergeNode/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+      <circle cx="20" cy="20" r="16" fill="#ec4899" stroke="#fff" stroke-width="2" filter="url(#shadow)"/>
+      <circle cx="20" cy="20" r="6" fill="#fff"/>
+      <circle cx="14" cy="14" r="2" fill="#fbbf24"/>
+      <circle cx="26" cy="14" r="2" fill="#fbbf24"/>
+      <circle cx="20" cy="26" r="2" fill="#fbbf24"/>
+      <circle cx="14" cy="22" r="1.5" fill="#f472b6"/>
+      <circle cx="26" cy="22" r="1.5" fill="#f472b6"/>
+    </svg>
+  `),
+  iconSize: [40, 40],
+  iconAnchor: [20, 40],
+  popupAnchor: [0, -40]
+});
 
 export default function Index() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [empleado, setEmpleado] = useState<Empleado | null>(null);
   const [showUserMenu, setShowUserMenu] = useState(false);
+
+  // ===== DATOS DE LAS SUCURSALES =====
+  const sucursales = [
+    {
+      id: 1,
+      nombre: "Sucursal Central",
+      direccion: "Z/Miraflores, Av. Saavedra, entre Villalobos y Díaz Romero, La Paz",
+      telefono: "+591 2 234 5678",
+      horario: "Lun - Dom: 8:00 AM - 8:00 PM",
+      lat: -16.502111,
+      lng: -68.122417,
+      color: "pink"
+    },
+    {
+      id: 2,
+      nombre: "Sucursal Secundaria",
+      direccion: "Z/Sopocachi, c. Andrés Muñoz, frente a la Universidad Nuestra Señora de La Paz, La Paz",
+      telefono: "+591 2 876 5432",
+      horario: "Lun - Dom: 9:00 AM - 7:00 PM",
+      lat: -16.512069,
+      lng: -68.128732,
+      color: "amber"
+    }
+  ];
 
   useEffect(() => {
     // Verificar si hay sesión activa
@@ -462,6 +529,100 @@ export default function Index() {
                   <p className="text-gray-700 text-lg">Lun - Dom: 9:00 AM - 7:00 PM</p>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ENCUÉNTRANOS CON MAPA */}
+      <section id="locations" className="py-24 bg-gradient-to-b from-white to-pink-50">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <h3 className="text-5xl font-extrabold text-gray-800 mb-4">Encuéntranos</h3>
+            <div className="w-24 h-1 bg-gradient-to-r from-pink-500 to-amber-500 mx-auto rounded-full"></div>
+            <p className="text-xl text-gray-600 mt-6">Visítanos en nuestras sucursales</p>
+          </div>
+
+          {/* Tarjetas de sucursales */}
+          <div className="grid md:grid-cols-2 gap-8 mb-16">
+            {sucursales.map((sucursal) => (
+              <div 
+                key={sucursal.id}
+                className={`bg-white shadow-2xl rounded-2xl overflow-hidden hover:shadow-${sucursal.color}-200 transition-all transform hover:-translate-y-2`}
+              >
+                <div className={`bg-gradient-to-r from-${sucursal.color}-500 to-${sucursal.color}-600 p-6 text-white`}>
+                  <div className="flex items-center gap-3 mb-2">
+                    <MapPin className="w-8 h-8" />
+                    <h4 className="text-2xl font-bold">{sucursal.nombre}</h4>
+                  </div>
+                </div>
+                <div className="p-8 space-y-4">
+                  <div className="flex items-start gap-3">
+                    <MapPin className={`w-6 h-6 text-${sucursal.color}-500 flex-shrink-0 mt-1`} />
+                    <p className="text-gray-700 text-lg">{sucursal.direccion}</p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Phone className="w-6 h-6 text-green-500" />
+                    <p className="text-gray-700 text-lg">{sucursal.telefono}</p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Clock className={`w-6 h-6 text-${sucursal.color === 'pink' ? 'amber' : 'pink'}-500`} />
+                    <p className="text-gray-700 text-lg">{sucursal.horario}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* ===== MAPA INTERACTIVO ===== */}
+          <div className="bg-white shadow-2xl rounded-2xl overflow-hidden">
+            <div className="bg-gradient-to-r from-pink-500 to-amber-500 p-6 text-white">
+              <div className="flex items-center justify-center gap-3">
+                <MapPin className="w-8 h-8" />
+                <h4 className="text-2xl font-bold">Ubicación en el Mapa</h4>
+              </div>
+            </div>
+            <div className="h-96 relative">
+              <MapContainer
+                center={[-16.5155, -68.1253]}
+                zoom={14}
+                className="h-full w-full"
+                scrollWheelZoom={false}
+              >
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                {sucursales.map((sucursal) => (
+                  <Marker
+                    key={sucursal.id}
+                    position={[sucursal.lat, sucursal.lng]}
+                    icon={donutIcon}
+                  >
+                    <Popup>
+                      <div className="p-2">
+                        <h5 className="font-bold text-lg mb-2 text-pink-600">
+                          {sucursal.nombre}
+                        </h5>
+                        <p className="text-sm text-gray-700 mb-2">
+                          📍 {sucursal.direccion}
+                        </p>
+                        <p className="text-sm text-gray-700 mb-1">
+                          📞 {sucursal.telefono}
+                        </p>
+                        <p className="text-sm text-gray-700">
+                          🕐 {sucursal.horario}
+                        </p>
+                      </div>
+                    </Popup>
+                  </Marker>
+                ))}
+              </MapContainer>
+            </div>
+            <div className="bg-gray-50 p-4 text-center">
+              <p className="text-gray-600 text-sm">
+                🍩 Haz clic en los marcadores para ver más información de cada sucursal
+              </p>
             </div>
           </div>
         </div>
