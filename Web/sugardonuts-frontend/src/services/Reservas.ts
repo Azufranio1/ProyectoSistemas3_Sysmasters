@@ -21,7 +21,7 @@ export interface Reserva {
   FechaRecogida: string;
   Estado: EstadoReserva;
   Total: number;
-  Observaciones?: string;
+  Archivada: boolean;
   Detalles?: DetalleReserva[];
 }
 
@@ -29,7 +29,6 @@ export interface CreateReservaData {
   ClienteID: string;
   EmpleadoID?: string;
   FechaRecogida: string;
-  Observaciones?: string;
   Detalles: Array<{
     ProductoID: string;
     Cantidad: number;
@@ -116,23 +115,6 @@ class ReservaService {
     }
   }
 
-  // Actualizar observaciones
-  async updateObservaciones(
-    reservaID: string, 
-    observaciones: string
-  ): Promise<ApiResponse<null>> {
-    try {
-      const response = await fetch(this.baseUrl, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ReservaID: reservaID, Observaciones: observaciones })
-      });
-      return await response.json();
-    } catch (error) {
-      console.error('Error al actualizar observaciones:', error);
-      return { success: false, error: 'Error de conexión' };
-    }
-  }
 
   // Cancelar reserva
   async cancel(reservaID: string): Promise<ApiResponse<null>> {

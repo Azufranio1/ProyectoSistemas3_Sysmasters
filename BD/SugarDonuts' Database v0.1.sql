@@ -83,7 +83,7 @@ CREATE TABLE Venta(
     FechaVenta date not null,
     Descuento int not null,
     Total int not null,
-    Archivada boolean not null default 1,
+    Archivada boolean not null default 0,
     FOREIGN KEY (EmpleadoID) REFERENCES Empleado(EmpleadoID),
     FOREIGN KEY (ClienteID) REFERENCES Cliente(ClienteID)
 );
@@ -105,7 +105,7 @@ CREATE TABLE Reserva(
     FechaRecogida DATETIME NOT NULL,
     Estado ENUM('Pendiente', 'Confirmada', 'Lista', 'Entregada', 'Cancelada') NOT NULL DEFAULT 'Pendiente',
     Total INT NOT NULL,
-    Observaciones TEXT NULL,
+    Archivada BOOLEAN NOT NULL DEFAULT 0,
     Habilitado BOOLEAN NOT NULL DEFAULT 1,
     FOREIGN KEY (ClienteID) REFERENCES Cliente(ClienteID),
     FOREIGN KEY (EmpleadoID) REFERENCES Empleado(EmpleadoID)
@@ -200,8 +200,8 @@ VALUES
 
 -- ------------------------
 
-INSERT INTO Reserva (ReservaID, ClienteID, EmpleadoID, FechaReserva, FechaRecogida, Estado, Total, Observaciones, Habilitado)
-VALUES ('RES-001', 'CLI-001', 'EMP-001', '2025-10-14 10:00:00', '2025-10-15 14:00:00', 'Pendiente', 14, 'Sin azúcar extra', 1);
+INSERT INTO Reserva (ReservaID, ClienteID, EmpleadoID, FechaReserva, FechaRecogida, Estado, Total, Habilitado)
+VALUES ('RES-001', 'CLI-001', 'EMP-001', '2025-10-14 10:00:00', '2025-10-15 14:00:00', 'Pendiente', 14, 1);
 
 INSERT INTO DetalleReserva (ReservaID, ProductoID, Cantidad, Subtotal)
 VALUES 

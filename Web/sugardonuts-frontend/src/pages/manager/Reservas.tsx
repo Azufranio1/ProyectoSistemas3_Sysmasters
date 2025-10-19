@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import { Calendar, Clock, User, Package, CheckCircle, XCircle, AlertCircle, Loader2, ChevronDown, ChevronUp, Search } from 'lucide-react';
 
 const API_URL = 'http://localhost/sugardonuts-api';
@@ -22,12 +23,12 @@ interface Reserva {
   FechaRecogida: string;
   Estado: EstadoReserva;
   Total: number;
+  Archivada : boolean;
   Detalles?: DetalleReserva[];
 }
 
 export default function ReservasGestion() {
-  const workMode = false; // Cambia a true para modo trabajo
-
+  const { workMode } = useOutletContext<{ workMode: boolean }>();
   const [reservas, setReservas] = useState<Reserva[]>([]);
   const [filteredReservas, setFilteredReservas] = useState<Reserva[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -76,13 +77,14 @@ export default function ReservasGestion() {
     }
 
     // Filtrar por búsqueda
-    if (searchTerm.trim()) {
-      const term = searchTerm.toLowerCase();
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase().trim();
       filtered = filtered.filter(reserva => 
         reserva.ReservaID.toLowerCase().includes(term) ||
         reserva.ClienteNombre.toLowerCase().includes(term) ||
         reserva.Estado.toLowerCase().includes(term) ||
-        reserva.FechaRecogida.includes(term) ||
+        formatFecha(reserva.FechaReserva).includes(term) || reserva.FechaReserva.toLowerCase().includes(term) ||
+        formatFecha(reserva.FechaRecogida).includes(term) || reserva.FechaRecogida.includes(term) ||
         reserva.Total.toString().includes(term)
       );
     }
@@ -128,7 +130,7 @@ export default function ReservasGestion() {
   };
 
   const getCategoryIcon = (categoryName: string): string => {
-    const category = categoryName?.toLowerCase() || '';
+    const category = categoryName?.toLowerCase().trim() || '';
     if (category.includes('donas') || category.includes('dona')) return '🍩';
     if (category.includes('cafe') || category.includes('café')) return '☕';
     if (category.includes('te') || category.includes('té')) return '🍵';
@@ -228,7 +230,7 @@ export default function ReservasGestion() {
               type="text"
               placeholder="Buscar por ID, cliente, estado o fecha..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => setSearchTerm(e.target.value.replace(/\s+/g, ' '))}
               className={`w-full pl-12 pr-4 py-3 border-2 rounded-xl focus:ring-4 transition-all outline-none ${
                 workMode
                   ? 'border-gray-300 focus:border-gray-600 focus:ring-gray-200'

@@ -1,10 +1,10 @@
 import { useForm } from 'react-hook-form';
-import { Loader2, Package, DollarSign, NotepadText, Tag } from 'lucide-react';
+import { Loader2, Package, DollarSign, NotepadText, Tag, AlertCircle } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { productoService, categoriaService, type Producto } from '../services/Prod-DetVenta';
 
 interface FormularioProductoProps {
-  producto?: Producto | null; // Si viene producto, es edición
+  producto?: Producto | null;
   onSuccess: () => void;
   onCancel: () => void;
 }
@@ -25,7 +25,8 @@ export default function FormularioProducto({ producto, onSuccess, onCancel }: Fo
     register,
     handleSubmit,
     formState: { errors },
-    reset
+    reset,
+    setError: setFormError
   } = useForm<ProductoFormData>({
     defaultValues: {
       Nombre: '',
@@ -44,7 +45,7 @@ export default function FormularioProducto({ producto, onSuccess, onCancel }: Fo
       reset({
         Nombre: producto.Nombre,
         PrecioUnitario: producto.PrecioUnitario,
-        Descripcion: producto.Descripcion,
+        Descripcion: producto.Descripcion || '',
         CategoriaID: producto.CategoriaID
       });
     }
@@ -61,14 +62,25 @@ export default function FormularioProducto({ producto, onSuccess, onCancel }: Fo
     }
   };
 
+  const normalizeSpaces = (text: string): string => {
+    return text.replace(/\s+/g, ' ');
+  };
+
   const onSubmit = async (data: ProductoFormData) => {
     setLoading(true);
     try {
+      const cleanData = {
+        Nombre: normalizeSpaces(data.Nombre.trim()),
+        PrecioUnitario: Number(data.PrecioUnitario),
+        Descripcion: normalizeSpaces(data.Descripcion.trim()),
+        CategoriaID: data.CategoriaID
+      };
+
       let result;
       if (isEditing && producto) {
-        result = await productoService.update(producto.ProductoID, data);
+        result = await productoService.update(producto.ProductoID, cleanData);
       } else {
-        result = await productoService.create(data);
+        result = await productoService.create(cleanData);
       }
 
       if (result.success) {
@@ -76,10 +88,16 @@ export default function FormularioProducto({ producto, onSuccess, onCancel }: Fo
         reset();
         onSuccess();
       } else {
-        alert(result.error || 'Error al guardar el producto');
+        setFormError('root', {
+          type: 'manual',
+          message: result.error || 'Error al guardar el producto'
+        });
       }
     } catch (err) {
-      alert('Error de conexión con el servidor');
+      setFormError('root', {
+        type: 'manual',
+        message: 'Error de conexión con el servidor'
+      });
       console.error(err);
     } finally {
       setLoading(false);
@@ -88,6 +106,14 @@ export default function FormularioProducto({ producto, onSuccess, onCancel }: Fo
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      {/* Error general */}
+      {errors.root && (
+        <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4 flex items-start gap-3">
+          <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5"/>
+          <p className="text-sm text-red-700">{errors.root.message}</p>
+        </div>
+      )}
+
       {/* Nombre del producto */}
       <div>
         <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -98,8 +124,24 @@ export default function FormularioProducto({ producto, onSuccess, onCancel }: Fo
           type="text"
           {...register('Nombre', {
             required: 'El nombre es requerido',
-            minLength: { value: 3, message: 'Mínimo 3 caracteres' },
-            maxLength: { value: 100, message: 'Máximo 100 caracteres' }
+            validate: {
+              notEmpty: (value) => value.trim() !== '' || 'El nombre no puede estar vacío',
+              minLength: (value) => value.trim().length >= 3 || 'Mínimo 3 caracteres',
+              maxLength: (value) => value.trim().length <= 100 || 'Máximo 100 caracteres',
+              noOnlySpaces: (value) => value.trim().length > 0 || 'El nombre no puede ser solo espacios',
+              noSpecialCharsStart: (value) => {
+                const trimmed = value.trim();
+                return /^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ]/.test(trimmed) || 'Debe comenzar con una letra o número';
+              },
+              validChars: (value) => {
+                const trimmed = value.trim();
+                // Solo letras, números, espacios, tildes y algunos caracteres comunes
+                return /^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\s\-\(\)\.]+$/.test(trimmed) || 'Contiene caracteres no permitidos';
+              },
+              noExcessiveSpaces: (value) => {
+                return !/\s{2,}/.test(value) || 'No se permiten espacios múltiples consecutivos';
+              }
+            }
           })}
           className={`w-full px-4 py-3 border-2 rounded-xl transition-all outline-none ${
             errors.Nombre
@@ -110,7 +152,10 @@ export default function FormularioProducto({ producto, onSuccess, onCancel }: Fo
           disabled={loading}
         />
         {errors.Nombre && (
-          <p className="mt-1 text-sm text-red-600">{errors.Nombre.message}</p>
+          <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+            <AlertCircle className="w-4 h-4" />
+            {errors.Nombre.message}
+          </p>
         )}
       </div>
 
@@ -121,21 +166,37 @@ export default function FormularioProducto({ producto, onSuccess, onCancel }: Fo
           Descripción del Producto *
         </label>
         <textarea
+          rows={3}
           {...register('Descripcion', {
             required: 'La descripción es requerida',
-            minLength: { value: 10, message: 'Mínimo 10 caracteres' },
-            maxLength: { value: 250, message: 'Máximo 250 caracteres' }
+            validate: {
+              notEmpty: (value) => value.trim() !== '' || 'La descripción no puede estar vacía',
+              minLength: (value) => value.trim().length >= 10 || 'Mínimo 10 caracteres',
+              maxLength: (value) => value.trim().length <= 250 || 'Máximo 250 caracteres',
+              noOnlySpaces: (value) => value.trim().length > 0 || 'La descripción no puede ser solo espacios',
+              validChars: (value) => {
+                const trimmed = value.trim();
+                // Permitir letras, números, espacios, puntuación común
+                return /^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\s\.\,\-\(\)\;\:]+$/.test(trimmed) || 'Contiene caracteres no permitidos';
+              },
+              noExcessiveSpaces: (value) => {
+                return !/\s{2,}/.test(value) || 'No se permiten espacios múltiples consecutivos';
+              }
+            }
           })}
-          className={`w-full px-4 py-3 border-2 rounded-xl transition-all outline-none ${
+          className={`w-full px-4 py-3 border-2 rounded-xl transition-all outline-none resize-none ${
             errors.Descripcion
               ? 'border-red-300 focus:border-red-500 focus:ring-4 focus:ring-red-100'
               : 'border-gray-200 focus:border-pink-400 focus:ring-4 focus:ring-pink-100'
           }`}
-          placeholder="Ej: Cubierta de chocolate negro con chispas de colores."
+          placeholder="Ej: Deliciosa dona cubierta de chocolate belga con chispas de colores."
           disabled={loading}
         />
         {errors.Descripcion && (
-          <p className="mt-1 text-sm text-red-600">{errors.Descripcion.message}</p>
+          <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+            <AlertCircle className="w-4 h-4" />
+            {errors.Descripcion.message}
+          </p>
         )}
       </div>
 
@@ -150,8 +211,16 @@ export default function FormularioProducto({ producto, onSuccess, onCancel }: Fo
           step="0.01"
           {...register('PrecioUnitario', {
             required: 'El precio es requerido',
-            min: { value: 3, message: 'El precio debe ser mayor a 3' },
-            max: { value: 30, message: 'El precio es demasiado alto' }
+            validate: {
+              positive: (value) => Number(value) > 0 || 'El precio debe ser mayor a 0',
+              minPrice: (value) => Number(value) >= 3 || 'El precio mínimo es Bs. 3.00',
+              maxPrice: (value) => Number(value) <= 30 || 'El precio máximo es Bs. 30.00',
+              validDecimals: (value) => {
+                const decimals = value.toString().split('.')[1];
+                return !decimals || decimals.length <= 2 || 'Máximo 2 decimales';
+              },
+              notZero: (value) => Number(value) !== 0 || 'El precio no puede ser 0'
+            }
           })}
           className={`w-full px-4 py-3 border-2 rounded-xl transition-all outline-none ${
             errors.PrecioUnitario
@@ -162,7 +231,10 @@ export default function FormularioProducto({ producto, onSuccess, onCancel }: Fo
           disabled={loading}
         />
         {errors.PrecioUnitario && (
-          <p className="mt-1 text-sm text-red-600">{errors.PrecioUnitario.message}</p>
+          <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+            <AlertCircle className="w-4 h-4" />
+            {errors.PrecioUnitario.message}
+          </p>
         )}
       </div>
 
@@ -174,7 +246,10 @@ export default function FormularioProducto({ producto, onSuccess, onCancel }: Fo
         </label>
         <select
           {...register('CategoriaID', {
-            required: 'La categoría es requerida'
+            required: 'La categoría es requerida',
+            validate: {
+              notEmpty: (value) => value !== '' || 'Debes seleccionar una categoría'
+            }
           })}
           className={`w-full px-4 py-3 border-2 rounded-xl transition-all outline-none ${
             errors.CategoriaID
@@ -191,14 +266,18 @@ export default function FormularioProducto({ producto, onSuccess, onCancel }: Fo
           ))}
         </select>
         {errors.CategoriaID && (
-          <p className="mt-1 text-sm text-red-600">{errors.CategoriaID.message}</p>
+          <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+            <AlertCircle className="w-4 h-4" />
+            {errors.CategoriaID.message}
+          </p>
         )}
       </div>
 
       {/* Nota informativa */}
       <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4">
         <p className="text-sm text-blue-700">
-          <strong>Nota:</strong> Los campos marcados con * son obligatorios.
+          <strong>Nota:</strong> Los campos marcados con * son obligatorios. 
+          Los espacios al inicio y final serán eliminados automáticamente.
         </p>
       </div>
 

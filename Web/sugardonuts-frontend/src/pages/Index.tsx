@@ -431,7 +431,7 @@ export default function Index() {
                 </div>
                 <div className="flex items-center gap-3">
                   <Phone className="w-6 h-6 text-green-500" />
-                  <p className="text-gray-700 text-lg">+591 2 234 5678</p>
+                  <p className="text-gray-700 text-lg">+591 76359574</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <Clock className="w-6 h-6 text-amber-500" />
@@ -455,7 +455,7 @@ export default function Index() {
                 </div>
                 <div className="flex items-center gap-3">
                   <Phone className="w-6 h-6 text-green-500" />
-                  <p className="text-gray-700 text-lg">+591 2 876 5432</p>
+                  <p className="text-gray-700 text-lg">+591 76359574</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <Clock className="w-6 h-6 text-pink-500" />
@@ -485,11 +485,11 @@ export default function Index() {
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
                   <Mail className="w-5 h-5 text-pink-400" />
-                  <span className="text-gray-300">info@sugardonuts.com</span>
+                  <span className="text-gray-300">sugar.donuts.sa@gmail.com</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Phone className="w-5 h-5 text-green-400" />
-                  <span className="text-gray-300">+591 2 234 5678</span>
+                  <span className="text-gray-300">+591 76359574</span>
                 </div>
               </div>
             </div>
@@ -498,11 +498,11 @@ export default function Index() {
             <div>
               <h4 className="text-xl font-bold mb-4 text-amber-400">Síguenos</h4>
               <div className="flex gap-4">
-                <a href="#" className="bg-pink-600 p-3 rounded-full hover:bg-pink-700 transition-colors">
-                  <Instagram className="w-6 h-6" /> (Coming soon)
+                <a href="https://www.instagram.com/sugar.donuts/" className="bg-pink-600 p-3 rounded-full hover:bg-pink-700 transition-colors">
+                  <Instagram className="w-6 h-6" />
                 </a>
-                <a href="#" className="bg-blue-600 p-3 rounded-full hover:bg-blue-700 transition-colors">
-                  <Facebook className="w-6 h-6" /> (Coming soon)
+                <a href="https://www.facebook.com/people/Sugar-Donuts/100076449129395/" className="bg-blue-600 p-3 rounded-full hover:bg-blue-700 transition-colors">
+                  <Facebook className="w-6 h-6" />
                 </a>
               </div>
             </div>

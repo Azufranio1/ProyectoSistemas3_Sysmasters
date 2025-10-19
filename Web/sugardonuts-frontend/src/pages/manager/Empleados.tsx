@@ -48,7 +48,7 @@ export default function Empleados() {
       return;
     }
 
-    const term = searchTerm.toLowerCase();
+    const term = searchTerm.toLowerCase().trim().replace(/\s+/g, ' ');
     const filtered = empleados.filter(emp => 
       emp.Nombre.toLowerCase().includes(term) ||
       emp.Apellido.toLowerCase().includes(term) ||
@@ -158,7 +158,7 @@ export default function Empleados() {
             type="text"
             placeholder="Buscar por nombre, ID, usuario, correo o CI..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => setSearchTerm(e.target.value.replace(/\s+/g, ' '))}
             className={`w-full pl-12 pr-4 py-3 border-2 rounded-xl focus:ring-4 transition-all outline-none ${
               workMode
                 ? 'border-gray-300 focus:border-gray-600 focus:ring-gray-200'
