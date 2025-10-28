@@ -71,11 +71,14 @@ CREATE TABLE Producto(
     CategoriaID varchar(10) not null,
     Nombre varchar(100) not null,
     Descripcion varchar(255) null,
-    PrecioUnitario decimal not null,
+    PrecioUnitario decimal(5,2) not null,
     Habilitado boolean not null default 1,
     -- UltimaActualizacion DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (CategoriaID) REFERENCES Categoria(CategoriaID)
 );
+
+ALTER TABLE Producto
+MODIFY PrecioUnitario DECIMAL(10,2) NOT NULL;
 
 CREATE TABLE Venta(
     VentaID varchar(10) not null primary key,

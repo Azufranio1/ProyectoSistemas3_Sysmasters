@@ -261,7 +261,7 @@ export default function LogIn() {
                 <span className="text-sm text-gray-600">Recordarme</span>
               </label>
               <Link to="/recuperar-password" className="text-sm text-pink-600 hover:text-pink-700 font-medium hover:underline">
-                ¿Olvidaste tu contraseña?
+                ¿Olvidaste tu contraseña? (Coming Soon)
               </Link>
             </div>
 

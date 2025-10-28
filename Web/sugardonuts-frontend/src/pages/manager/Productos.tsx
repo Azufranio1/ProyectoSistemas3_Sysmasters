@@ -244,7 +244,7 @@ export default function Productos() {
                         <p className="text-gray-500 flex items-center gap-1">
                           Precio
                         </p>
-                        <p className="font-bold text-green-600 text-lg">{formatPrice(producto.PrecioUnitario)}</p>
+                        <p className="font-bold text-green-600 text-lg">{producto.PrecioUnitario} Bs.</p>
                       </div>
                       <div>
                         <p className="text-gray-500">Categoría</p>
