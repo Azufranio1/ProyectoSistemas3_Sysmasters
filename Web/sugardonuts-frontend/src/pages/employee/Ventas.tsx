@@ -70,7 +70,32 @@ export default function Ventas(): React.ReactElement {
     loadProductos();
     loadClientes();
     fetchOrders();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // ---------------- Validadores ----------------
+  const handleNewClientNameChange = (value: string) => {
+    // permitir letras (incluye acentos), espacios, guion y apóstrofe
+    const filtered = value.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ\s'-]/g, '');
+    setNewClientName(filtered);
+    setErrorMsg('');
+    setSuccessMsg('');
+  };
+
+  const handleNewClientApellidoChange = (value: string) => {
+    const filtered = value.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ\s'-]/g, '');
+    setNewClientApellido(filtered);
+    setErrorMsg('');
+    setSuccessMsg('');
+  };
+
+  const handleNewClientCINITChange = (value: string) => {
+    // solo dígitos
+    const filtered = value.replace(/\D/g, '');
+    setNewClientCINIT(filtered);
+    setErrorMsg('');
+    setSuccessMsg('');
+  };
 
   // ---------------- Funciones ----------------
   const addToCart = () => {
@@ -129,22 +154,19 @@ export default function Ventas(): React.ReactElement {
     }
 
     try {
-      const Detalles = cart.map(i => ({
+      // items para el backend
+      const items = cart.map(i => ({
         ProductoID: i.ProductoID,
         Cantidad: i.quantity,
         PrecioUnitario: i.PrecioUnitario
       }));
 
-     const payload = {
-      EmpleadoID,
-      ClienteID: selectedCliente!.ClienteID,
-      Descuento: 0,
-      items: cart.map(i => ({
-        ProductoID: i.ProductoID,
-        Cantidad: i.quantity,
-        PrecioUnitario: i.PrecioUnitario
-      }))
-    };
+      const payload = {
+        EmpleadoID,
+        ClienteID: selectedCliente!.ClienteID,
+        Descuento: 0,
+        items
+      };
 
       console.log("Payload enviado:", payload);
 
@@ -175,16 +197,38 @@ export default function Ventas(): React.ReactElement {
     setErrorMsg("");
     setSuccessMsg("");
 
-    if (!newClientName || !newClientApellido || !newClientCINIT) {
+    // validaciones finales
+    const nameTrim = newClientName.trim();
+    const apTrim = newClientApellido.trim();
+    const cinitTrim = newClientCINIT.trim();
+
+    if (!nameTrim || !apTrim || !cinitTrim) {
       setErrorMsg("Completa todos los campos del nuevo cliente.");
+      return;
+    }
+
+   
+    const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]+$/;
+    const cinitRegex = /^\d+$/;
+
+    if (!nameRegex.test(nameTrim)) {
+      setErrorMsg("El nombre solo puede contener letras, espacios, guiones o apóstrofes.");
+      return;
+    }
+    if (!nameRegex.test(apTrim)) {
+      setErrorMsg("El apellido solo puede contener letras, espacios, guiones o apóstrofes.");
+      return;
+    }
+    if (!cinitRegex.test(cinitTrim)) {
+      setErrorMsg("El CINIT solo puede contener números.");
       return;
     }
 
     try {
       const payload = {
-        Nombre: newClientName,
-        Apellido: newClientApellido,
-        CINIT: newClientCINIT
+        Nombre: nameTrim,
+        Apellido: apTrim,
+        CINIT: cinitTrim
       };
 
       const res = await clienteService.create(payload as Required<Cliente>);
@@ -250,10 +294,40 @@ export default function Ventas(): React.ReactElement {
 
         {showNewClientForm && (
           <div className="mt-2 p-3 border border-gray-300 rounded bg-gray-50">
-            <input type="text" placeholder="Nombre" value={newClientName} onChange={e => setNewClientName(e.target.value)} className="border p-2 rounded w-full mb-2" />
-            <input type="text" placeholder="Apellido" value={newClientApellido} onChange={e => setNewClientApellido(e.target.value)} className="border p-2 rounded w-full mb-2" />
-            <input type="text" placeholder="CINIT" value={newClientCINIT} onChange={e => setNewClientCINIT(e.target.value)} className="border p-2 rounded w-full mb-2" />
-            <button type="button" onClick={createNewClient} className="bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600">Guardar cliente</button>
+            <input
+              type="text"
+              placeholder="Nombre"
+              value={newClientName}
+              onChange={e => handleNewClientNameChange(e.target.value)}
+              className="border p-2 rounded w-full mb-2"
+              aria-label="Nombre cliente"
+            />
+            <input
+              type="text"
+              placeholder="Apellido"
+              value={newClientApellido}
+              onChange={e => handleNewClientApellidoChange(e.target.value)}
+              className="border p-2 rounded w-full mb-2"
+              aria-label="Apellido cliente"
+            />
+            <input
+              type="text"
+              placeholder="CINIT"
+              value={newClientCINIT}
+              onChange={e => handleNewClientCINITChange(e.target.value)}
+              className="border p-2 rounded w-full mb-2"
+              aria-label="CINIT cliente"
+              inputMode="numeric"
+              pattern="\d*"
+              maxLength={12}
+            />
+            <button
+              type="button"
+              onClick={createNewClient}
+              className="bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600"
+            >
+              Guardar cliente
+            </button>
           </div>
         )}
       </div>
