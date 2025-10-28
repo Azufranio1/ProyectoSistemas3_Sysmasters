@@ -30,7 +30,7 @@ export default function FormularioProducto({ producto, onSuccess, onCancel }: Fo
   } = useForm<ProductoFormData>({
     defaultValues: {
       Nombre: '',
-      PrecioUnitario: 0.0,
+      PrecioUnitario: undefined, // Cambiado de 0.0 a undefined
       Descripcion: '',
       CategoriaID: ''
     }
@@ -44,7 +44,7 @@ export default function FormularioProducto({ producto, onSuccess, onCancel }: Fo
     if (producto) {
       reset({
         Nombre: producto.Nombre,
-        PrecioUnitario: producto.PrecioUnitario,
+        PrecioUnitario: parseFloat(producto.PrecioUnitario.toString()),
         Descripcion: producto.Descripcion || '',
         CategoriaID: producto.CategoriaID
       });
@@ -62,6 +62,7 @@ export default function FormularioProducto({ producto, onSuccess, onCancel }: Fo
     }
   };
 
+  // Función para normalizar espacios (elimina múltiples espacios consecutivos)
   const normalizeSpaces = (text: string): string => {
     return text.replace(/\s+/g, ' ');
   };
@@ -69,9 +70,10 @@ export default function FormularioProducto({ producto, onSuccess, onCancel }: Fo
   const onSubmit = async (data: ProductoFormData) => {
     setLoading(true);
     try {
+      // Limpiar y normalizar datos antes de enviar
       const cleanData = {
         Nombre: normalizeSpaces(data.Nombre.trim()),
-        PrecioUnitario: Number(data.PrecioUnitario),
+        PrecioUnitario: data.PrecioUnitario, // Ya es number gracias a valueAsNumber
         Descripcion: normalizeSpaces(data.Descripcion.trim()),
         CategoriaID: data.CategoriaID
       };
@@ -135,7 +137,6 @@ export default function FormularioProducto({ producto, onSuccess, onCancel }: Fo
               },
               validChars: (value) => {
                 const trimmed = value.trim();
-                // Solo letras, números, espacios, tildes y algunos caracteres comunes
                 return /^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\s\-\(\)\.]+$/.test(trimmed) || 'Contiene caracteres no permitidos';
               },
               noExcessiveSpaces: (value) => {
@@ -176,7 +177,6 @@ export default function FormularioProducto({ producto, onSuccess, onCancel }: Fo
               noOnlySpaces: (value) => value.trim().length > 0 || 'La descripción no puede ser solo espacios',
               validChars: (value) => {
                 const trimmed = value.trim();
-                // Permitir letras, números, espacios, puntuación común
                 return /^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ\s\.\,\-\(\)\;\:]+$/.test(trimmed) || 'Contiene caracteres no permitidos';
               },
               noExcessiveSpaces: (value) => {
@@ -209,17 +209,20 @@ export default function FormularioProducto({ producto, onSuccess, onCancel }: Fo
         <input
           type="number"
           step="0.01"
+          min="0"
           {...register('PrecioUnitario', {
             required: 'El precio es requerido',
+            valueAsNumber: true, // Convierte automáticamente a número
             validate: {
-              positive: (value) => Number(value) > 0 || 'El precio debe ser mayor a 0',
-              minPrice: (value) => Number(value) >= 3 || 'El precio mínimo es Bs. 3.00',
-              maxPrice: (value) => Number(value) <= 30 || 'El precio máximo es Bs. 30.00',
+              positive: (value) => value > 0 || 'El precio debe ser mayor a 0',
+              minPrice: (value) => value >= 3 || 'El precio mínimo es Bs. 3.00',
+              maxPrice: (value) => value <= 30 || 'El precio máximo es Bs. 30.00',
               validDecimals: (value) => {
                 const decimals = value.toString().split('.')[1];
                 return !decimals || decimals.length <= 2 || 'Máximo 2 decimales';
               },
-              notZero: (value) => Number(value) !== 0 || 'El precio no puede ser 0'
+              notZero: (value) => value !== 0 || 'El precio no puede ser 0',
+              isNumber: (value) => !isNaN(value) || 'Debe ser un número válido'
             }
           })}
           className={`w-full px-4 py-3 border-2 rounded-xl transition-all outline-none ${

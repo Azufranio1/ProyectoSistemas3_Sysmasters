@@ -473,67 +473,6 @@ export default function Index() {
         </div>
       </section>
 
-      {/* ENCUÉNTRANOS MEJORADO */}
-      <section id="locations" className="py-24 bg-gradient-to-b from-white to-pink-50">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h3 className="text-5xl font-extrabold text-gray-800 mb-4">Encuéntranos</h3>
-            <div className="w-24 h-1 bg-gradient-to-r from-pink-500 to-amber-500 mx-auto rounded-full"></div>
-            <p className="text-xl text-gray-600 mt-6">Visítanos en nuestras sucursales</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            {/* Sucursal 1 */}
-            <div className="bg-white shadow-2xl rounded-2xl overflow-hidden hover:shadow-pink-200 transition-all transform hover:-translate-y-2">
-              <div className="bg-gradient-to-r from-pink-500 to-pink-600 p-6 text-white">
-                <div className="flex items-center gap-3 mb-2">
-                  <MapPin className="w-8 h-8" />
-                  <h4 className="text-2xl font-bold">Sucursal Central</h4>
-                </div>
-              </div>
-              <div className="p-8 space-y-4">
-                <div className="flex items-start gap-3">
-                  <MapPin className="w-6 h-6 text-pink-500 flex-shrink-0 mt-1" />
-                  <p className="text-gray-700 text-lg">Z/Miraflores, Av. Saavedra, entre Villalobos y Díaz Romero, La Paz</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Phone className="w-6 h-6 text-green-500" />
-                  <p className="text-gray-700 text-lg">+591 76359574</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Clock className="w-6 h-6 text-amber-500" />
-                  <p className="text-gray-700 text-lg">Lun - Dom: 8:00 AM - 8:00 PM</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Sucursal 2 */}
-            <div className="bg-white shadow-2xl rounded-2xl overflow-hidden hover:shadow-amber-200 transition-all transform hover:-translate-y-2">
-              <div className="bg-gradient-to-r from-amber-500 to-amber-600 p-6 text-white">
-                <div className="flex items-center gap-3 mb-2">
-                  <MapPin className="w-8 h-8" />
-                  <h4 className="text-2xl font-bold">Sucursal Secundaria</h4>
-                </div>
-              </div>
-              <div className="p-8 space-y-4">
-                <div className="flex items-start gap-3">
-                  <MapPin className="w-6 h-6 text-amber-500 flex-shrink-0 mt-1" />
-                  <p className="text-gray-700 text-lg">Z/Sopocachi, c. Andrés Muñoz, frente a la Universidad Nuestra Señora de La Paz, La Paz</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Phone className="w-6 h-6 text-green-500" />
-                  <p className="text-gray-700 text-lg">+591 76359574</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Clock className="w-6 h-6 text-pink-500" />
-                  <p className="text-gray-700 text-lg">Lun - Dom: 9:00 AM - 7:00 PM</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* ENCUÉNTRANOS CON MAPA */}
       <section id="locations" className="py-24 bg-gradient-to-b from-white to-pink-50">
         <div className="max-w-7xl mx-auto px-6 relative z-0">
@@ -627,6 +566,8 @@ export default function Index() {
           </div>
         </div>
       </section>
+
+      
 
       {/* FOOTER MEJORADO */}
       <footer className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white py-12">
