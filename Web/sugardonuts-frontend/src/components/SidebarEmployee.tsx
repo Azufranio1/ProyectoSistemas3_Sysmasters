@@ -3,7 +3,8 @@ import {
   Home, 
   ShoppingCart,
   LogOut,
-  ChevronRight 
+  ChevronRight, 
+  Calendar
 } from "lucide-react";
 import { authService, type Empleado } from "../services/Emp-Auth";
 import logo from "../Resources/imgs/SugarDonutsTD.png";
@@ -25,7 +26,8 @@ const SidebarEmployee = () => {
 
   const menuItems = [
     { to: "/employee/home", icon: Home, label: "Home" },
-    { to: "/employee/ventas", icon: ShoppingCart, label: "Ventas" }];
+    { to: "/employee/ventas", icon: ShoppingCart, label: "Ventas" },
+    { to: "/employee/reservas", icon: Calendar, label: "Reservas" },];
 
   return (
     <aside className="w-64 bg-gradient-to-b from-white to-pink-50 shadow-2xl min-h-screen flex flex-col border-r-4 border-pink-200">
