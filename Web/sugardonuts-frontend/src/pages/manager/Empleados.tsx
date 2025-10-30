@@ -239,17 +239,19 @@ export default function Empleados() {
 
                 {/* Acciones */}
                 <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => handleToggleActivo(empleado.EmpleadoID, empleado.Activo || false)}
-                    className={`p-3 rounded-xl transition-all ${
-                      empleado.Activo
-                        ? 'bg-gray-100 hover:bg-gray-200 text-gray-600'
-                        : 'bg-green-100 hover:bg-green-200 text-green-600'
-                    }`}
-                    title={empleado.Activo ? 'Desactivar' : 'Activar'}
-                  >
-                    <Power className="w-5 h-5" />
-                  </button>
+                  {empleado.EmpleadoID !== currentUser?.EmpleadoID && (
+                    <button
+                      onClick={() => handleToggleActivo(empleado.EmpleadoID, empleado.Activo || false)}
+                      className={`p-3 rounded-xl transition-all ${
+                        empleado.Activo
+                          ? 'bg-gray-100 hover:bg-gray-200 text-gray-600'
+                          : 'bg-green-100 hover:bg-green-200 text-green-600'
+                      }`}
+                      title={empleado.Activo ? 'Desactivar' : 'Activar'}
+                    >
+                      <Power className="w-5 h-5" />
+                    </button>
+                  )}
 
                   <button
                     className="p-3 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-xl transition-all"
@@ -258,6 +260,7 @@ export default function Empleados() {
                     <Edit className="w-5 h-5" /> (Coming Soon)
                   </button>
 
+                  {empleado.EmpleadoID !== currentUser?.EmpleadoID && (
                   <button
                     onClick={() => handleDelete(empleado.EmpleadoID)}
                     className="p-3 bg-red-100 hover:bg-red-200 text-red-600 rounded-xl transition-all"
@@ -265,6 +268,7 @@ export default function Empleados() {
                   >
                     <Trash2 className="w-5 h-5" />
                   </button>
+                  )}
                 </div>
               </div>
             </div>
