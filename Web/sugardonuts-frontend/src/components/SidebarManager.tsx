@@ -39,7 +39,7 @@ const SidebarManager = ({ workMode = false }: SidebarManagerProps) => {
     { to: "/manager/productos", icon: Package, label: "Productos" },
     { to: "/manager/empleado", icon: Users, label: "Empleados" },
     { to: "/manager/sucursal", icon: Building2, label: "Sucursales" },
-    { to: "/manager/reportes", icon: FileText, label: "Reportes (Coming Soon)" },
+    { to: "/manager/reportes", icon: FileText, label: "Reportes" },
   ];
 
   return (
