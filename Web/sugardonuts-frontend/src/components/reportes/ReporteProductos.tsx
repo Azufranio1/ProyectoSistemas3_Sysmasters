@@ -85,14 +85,30 @@ export default function ReporteProductos({ data, workMode }: ReporteProductosPro
                 cx="50%"
                 cy="50%"
                 outerRadius={100}
-                label={(entry) => `${entry.Categoria}: ${formatCurrency(entry.IngresoTotal)}`}
+                label={(entry: any) => {
+                  // entry puede venir con formas distintas dependiendo de la versión y contexto:
+                  // - entry.payload: el objeto original
+                  // - entry.value: valor numérico calculado
+                  // - entry.name: nombre de la categoría
+                  const payload = entry.payload ?? {};
+                  const categoriaName = payload.Categoria ?? entry.name ?? 'Sin categoría';
+                  const ingresoRaw = payload.IngresoTotal ?? entry.value ?? 0;
+                  const ingresoNum = Number(ingresoRaw) || 0;
+                  return `${categoriaName}: ${formatCurrency(ingresoNum)}`;
+                }}
               >
                 {categorias.map((entry: any, index: number) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
-              <Tooltip contentStyle={{ backgroundColor: workMode ? '#1f2937' : '#fff', color: workMode ? '#fff' : '#000' }}
-                formatter={(value: any) => formatCurrency(value)} />
+              <Tooltip
+                contentStyle={{ backgroundColor: workMode ? '#1f2937' : '#fff', color: workMode ? '#fff' : '#000' }}
+                // formatter recibe (value, name, props) — defensivo también
+                formatter={(value: any) => {
+                  const num = Number(value) || 0;
+                  return formatCurrency(num);
+                }}
+              />
             </PieChart>
           </ResponsiveContainer>
         </div>
