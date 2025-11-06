@@ -1,8 +1,9 @@
+//web/sugardonuts-frontend/src/pages/manager/Empleados.tsx
 import { useState, useEffect } from 'react';
-import { useOutletContext, useNavigate} from 'react-router-dom';
+import { useOutletContext, useNavigate } from 'react-router-dom';
 import { Search, Trash2Icon, UserPlus, Edit, Trash2, Power, CheckCircle, XCircle, RotateCcw, Loader2 } from 'lucide-react';
 import { empleadoService, authService, type Empleado } from '../../services/Emp-Auth';
-
+import { CreateEmpleadoModal, EditEmpleadoModal } from './EmpleadoModals';
 
 export default function Empleados() {
   const { workMode } = useOutletContext<{ workMode: boolean }>();
@@ -11,7 +12,14 @@ export default function Empleados() {
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  
+  // Estados de modales
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedEmpleado, setSelectedEmpleado] = useState<Empleado | null>(null);
+  
   const currentUser = authService.getCurrentEmpleado();
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadEmpleados();
@@ -20,8 +28,6 @@ export default function Empleados() {
   useEffect(() => {
     filterEmpleados();
   }, [searchTerm, empleados]);
-
-  const navigate = useNavigate();
 
   const loadEmpleados = async () => {
     setLoading(true);
@@ -79,7 +85,7 @@ export default function Empleados() {
   };
 
   const handleDelete = async (empleadoID: string) => {
-    if (!confirm('¿Estás seguro de eliminar este empleado? Esta acción no se puede deshacer.')) {
+    if (!confirm('¿Estás seguro de eliminar este empleado? Se moverá a la papelera.')) {
       return;
     }
 
@@ -94,6 +100,27 @@ export default function Empleados() {
       alert('Error de conexión');
       console.error(err);
     }
+  };
+
+  // Manejadores de modales
+  const handleOpenCreate = () => {
+    setShowCreateModal(true);
+  };
+
+  const handleOpenEdit = (empleado: Empleado) => {
+    setSelectedEmpleado(empleado);
+    setShowEditModal(true);
+  };
+
+  const handleCloseModals = () => {
+    setShowCreateModal(false);
+    setShowEditModal(false);
+    setSelectedEmpleado(null);
+  };
+
+  const handleSuccess = () => {
+    handleCloseModals();
+    loadEmpleados();
   };
 
   if (loading) {
@@ -113,27 +140,36 @@ export default function Empleados() {
           <p className="text-gray-600 mt-1">Administra el personal de tu sucursal</p>
         </div>
         <div className="flex gap-3">
-          <button className={`flex items-center gap-2 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl transform hover:scale-105 ${
-            workMode
-              ? 'bg-gray-700 hover:bg-gray-800'
-              : 'bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700'
-          }`}>
+          <button 
+            onClick={handleOpenCreate}
+            className={`flex items-center gap-2 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl transform hover:scale-105 ${
+              workMode
+                ? 'bg-gray-700 hover:bg-gray-800'
+                : 'bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700'
+            }`}
+          >
             <UserPlus className="w-5 h-5" />
-            Nuevo Empleado (Coming Soon)
+            Nuevo Empleado
           </button>
-          <button className={`flex items-center gap-2 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl transform hover:scale-105 ${
-            workMode
-              ? 'bg-gray-700 hover:bg-gray-800'
-              : 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700'
-          }`} onClick={loadEmpleados}>
+          <button 
+            onClick={loadEmpleados}
+            className={`flex items-center gap-2 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl transform hover:scale-105 ${
+              workMode
+                ? 'bg-gray-700 hover:bg-gray-800'
+                : 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700'
+            }`}
+          >
             <RotateCcw className="w-5 h-5" />
             Actualizar
           </button>
-          <button className={`flex items-center gap-2 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl transform hover:scale-105 ${
-            workMode
-              ? 'bg-gray-600 hover:bg-gray-700'
-              : 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700'
-          }`} onClick={() => navigate('/manager/papelera-empleados')}>
+          <button 
+            onClick={() => navigate('/manager/papelera-empleados')}
+            className={`flex items-center gap-2 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl transform hover:scale-105 ${
+              workMode
+                ? 'bg-gray-600 hover:bg-gray-700'
+                : 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700'
+            }`}
+          >
             <Trash2Icon className="w-5 h-5" />
             Papelera
           </button>
@@ -254,20 +290,21 @@ export default function Empleados() {
                   )}
 
                   <button
+                    onClick={() => handleOpenEdit(empleado)}
                     className="p-3 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-xl transition-all"
                     title="Editar"
                   >
-                    <Edit className="w-5 h-5" /> (Coming Soon)
+                    <Edit className="w-5 h-5" />
                   </button>
 
                   {empleado.EmpleadoID !== currentUser?.EmpleadoID && (
-                  <button
-                    onClick={() => handleDelete(empleado.EmpleadoID)}
-                    className="p-3 bg-red-100 hover:bg-red-200 text-red-600 rounded-xl transition-all"
-                    title="Eliminar"
-                  >
-                    <Trash2 className="w-5 h-5" />
-                  </button>
+                    <button
+                      onClick={() => handleDelete(empleado.EmpleadoID)}
+                      className="p-3 bg-red-100 hover:bg-red-200 text-red-600 rounded-xl transition-all"
+                      title="Eliminar"
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </button>
                   )}
                 </div>
               </div>
@@ -275,6 +312,24 @@ export default function Empleados() {
           ))
         )}
       </div>
+
+      {/* Modales */}
+      {showCreateModal && (
+        <CreateEmpleadoModal
+          onClose={handleCloseModals}
+          onSuccess={handleSuccess}
+          workMode={workMode}
+        />
+      )}
+
+      {showEditModal && selectedEmpleado && (
+        <EditEmpleadoModal
+          empleado={selectedEmpleado}
+          onClose={handleCloseModals}
+          onSuccess={handleSuccess}
+          workMode={workMode}
+        />
+      )}
     </div>
   );
 }
