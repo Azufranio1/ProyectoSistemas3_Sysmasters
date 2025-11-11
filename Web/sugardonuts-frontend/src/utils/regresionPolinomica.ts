@@ -16,21 +16,29 @@ export interface ResultadoRegresion {
 
 export class RegresionPolinomica {
   /**
-   * Calcula el mejor grado polinomial (1-5) basado en R²
+   * Calcula el mejor grado polinomial (1-5) basado en R² ajustado
+   * Lanzará error si hay menos de 3 datos
    */
   static calcularMejorGrado(datos: DatoRegresion[]): number {
-    let mejorGrado = 1;
-    let mejorR2 = 0;
+    if (datos.length < 3) {
+      throw new Error('Se necesitan al menos 3 datos para calcular la regresión.');
+    }
 
-    // Probar grados del 1 al 5
-    for (let grado = 1; grado <= Math.min(5, datos.length - 1); grado++) {
+    const n = datos.length;
+    let mejorGrado = 1;
+    let mejorR2Ajustado = -Infinity;
+
+    for (let grado = 1; grado <= Math.min(5, n - 2); grado++) {
       const resultado = this.regresion(datos, grado);
-      
-      // Penalizar grados altos para evitar overfitting
-      const r2Ajustado = resultado.r2 - (grado - 1) * 0.02;
-      
-      if (r2Ajustado > mejorR2) {
-        mejorR2 = r2Ajustado;
+
+      const denominator = n - grado - 1;
+      if (denominator <= 0) continue;
+
+      // R² ajustado para evitar overfitting
+      const r2Ajustado = 1 - ((1 - resultado.r2) * (n - 1)) / denominator;
+
+      if (r2Ajustado > mejorR2Ajustado) {
+        mejorR2Ajustado = r2Ajustado;
         mejorGrado = grado;
       }
     }
@@ -72,7 +80,7 @@ export class RegresionPolinomica {
     for (let i = 1; i <= mesesFuturos; i++) {
       const x = ultimoX + i;
       const y = result.predict(x)[1];
-      
+
       // Calcular mes futuro
       const fecha = new Date();
       fecha.setMonth(fecha.getMonth() + i);
@@ -85,7 +93,7 @@ export class RegresionPolinomica {
   }
 
   /**
-   * Calcula métricas de confianza
+   * Calcula métricas de error y precisión
    */
   static calcularMetricas(datos: DatoRegresion[], resultado: ResultadoRegresion) {
     const n = datos.length;
