@@ -7,9 +7,9 @@ export const getCategoryIcon = (categoryName?: string): string => {
   if (category.includes('donas') || category.includes('clasica')) return '🍩';
   
   // Bebidas
-  if (category.includes('cafe')) return '☕';
+  if (category.includes('café')) return '☕';
   if (category.includes('gaseosa')) return '🥤';
-  if (category.includes('te')) return '🍵';
+  if (category.includes('té')) return '🍵';
   if (category.includes('batido')) return '🥛';
   if (category.includes('jugo')) return '🧃';
 
