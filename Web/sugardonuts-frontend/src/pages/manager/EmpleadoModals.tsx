@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X, Save, Loader2, User, Mail, Lock, Calendar, CreditCard, Building2 } from 'lucide-react';
+import { X, Save, Loader2, User, Mail, Lock, Calendar, CreditCard, Building2, AlertCircle } from 'lucide-react';
 import { empleadoService, authService, type Empleado } from '../../services/Emp-Auth';
 
 interface ModalProps {
@@ -48,7 +48,7 @@ const isValidAge = (birthDate: string): boolean => {
 const isValidEmail = (email: string): boolean => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email) && !email.includes(' ');
-};
+}
 
 const removeOnlyNumbers = (value: string): string => {
   return value.replace(/[^\d]/g, '');
@@ -65,6 +65,338 @@ const trimExtraSpaces = (value: string): string => {
 const isOnlySpaces = (value: string): boolean => {
   return value.trim().length === 0;
 };
+
+// Validaciones para contraseña segura
+interface PasswordStrength {
+  hasMinLength: boolean;
+  hasUpperCase: boolean;
+  hasLowerCase: boolean;
+  hasNumber: boolean;
+  hasSpecialChar: boolean;
+}
+
+const checkPasswordStrength = (password: string): PasswordStrength => {
+  return {
+    hasMinLength: password.length >= 8,
+    hasUpperCase: /[A-Z]/.test(password),
+    hasLowerCase: /[a-z]/.test(password),
+    hasNumber: /[0-9]/.test(password),
+    hasSpecialChar: /[!@#$%^&*(),.?":{}|<>_\-+=]/.test(password),
+  };
+};
+
+const isPasswordStrong = (password: string): boolean => {
+  const strength = checkPasswordStrength(password);
+  return Object.values(strength).every(value => value === true);
+};
+
+// ============================================
+// MODAL DE EDITAR EMPLEADO
+// ============================================
+export function EditEmpleadoModal({ empleado, onClose, onSuccess, workMode = false }: EditModalProps) {
+  const [formData, setFormData] = useState({
+    Nombre: empleado.Nombre,
+    Apellido: empleado.Apellido,
+    Usuario: empleado.Usuario,
+    CorreoPersonal: empleado.CorreoPersonal || '',
+    Activo: empleado.Activo || false,
+  });
+  
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(false);
+
+  const validateForm = (): boolean => {
+    const newErrors: Record<string, string> = {};
+
+    // Validar Nombre
+    if (!formData.Nombre.trim()) {
+      newErrors.Nombre = 'El nombre es requerido';
+    } else if (isOnlySpaces(formData.Nombre)) {
+      newErrors.Nombre = 'El nombre no puede contener solo espacios';
+    } else if (formData.Nombre.trim().length < 2) {
+      newErrors.Nombre = 'El nombre debe tener al menos 2 caracteres';
+    }
+
+    // Validar Apellido
+    if (!formData.Apellido.trim()) {
+      newErrors.Apellido = 'El apellido es requerido';
+    } else if (isOnlySpaces(formData.Apellido)) {
+      newErrors.Apellido = 'El apellido no puede contener solo espacios';
+    } else if (formData.Apellido.trim().length < 2) {
+      newErrors.Apellido = 'El apellido debe tener al menos 2 caracteres';
+    }
+
+    // Validar Usuario
+    if (!formData.Usuario.trim()) {
+      newErrors.Usuario = 'El usuario es requerido';
+    } else if (isOnlySpaces(formData.Usuario)) {
+      newErrors.Usuario = 'El usuario no puede contener solo espacios';
+    } else if (formData.Usuario.trim().length < 3) {
+      newErrors.Usuario = 'El usuario debe tener al menos 3 caracteres';
+    } else if (/\s/.test(formData.Usuario)) {
+      newErrors.Usuario = 'El usuario no puede contener espacios';
+    }
+
+    // Validar Correo Personal (opcional)
+    if (formData.CorreoPersonal.trim()) {
+      if (!isValidEmail(formData.CorreoPersonal.trim())) {
+        newErrors.CorreoPersonal = 'El formato del correo personal no es válido';
+      }
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
+
+    if (type === 'checkbox') {
+      setFormData(prev => ({
+        ...prev,
+        [name]: checked,
+      }));
+    } else {
+      let processedValue = value;
+
+      if (name === 'Nombre' || name === 'Apellido') {
+        // Solo permitir letras y espacios
+        processedValue = removeOnlyLetters(value);
+        // Evitar múltiples espacios consecutivos
+        processedValue = processedValue.replace(/\s{2,}/g, ' ');
+        // No permitir espacios al inicio
+        if (processedValue.startsWith(' ') && value.length === 1) {
+          processedValue = '';
+        }
+      } else if (name === 'Usuario') {
+        // No permitir espacios en el usuario
+        processedValue = value.replace(/\s/g, '');
+      } else if (name === 'CorreoPersonal') {
+        // No permitir espacios en el correo
+        processedValue = value.replace(/\s/g, '');
+      }
+
+      setFormData(prev => ({
+        ...prev,
+        [name]: processedValue,
+      }));
+    }
+
+    // Limpiar error del campo cuando el usuario empieza a escribir
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) return;
+
+    setLoading(true);
+    try {
+      const updateData: any = {
+        Nombre: trimExtraSpaces(formData.Nombre),
+        Apellido: trimExtraSpaces(formData.Apellido),
+        Usuario: formData.Usuario.trim(),
+        CorreoPersonal: formData.CorreoPersonal.trim() || null,
+        Activo: formData.Activo ? 1 : 0,
+      };
+
+      const result = await empleadoService.update(empleado.EmpleadoID, updateData);
+      if (result.success) {
+        alert('✅ Empleado actualizado exitosamente');
+        onSuccess();
+      } else {
+        alert('❌ ' + (result.error || 'Error al actualizar empleado'));
+      }
+    } catch (err) {
+      alert('❌ Error de conexión con el servidor');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        {/* Header */}
+        <div className={`p-6 border-b flex items-center justify-between ${
+          workMode ? 'bg-gray-50' : 'bg-gradient-to-r from-pink-100 to-pink-200'
+        }`}>
+          <div>
+            <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+              <User className="w-6 h-6" />
+              Editar Empleado
+            </h2>
+            <p className="text-gray-600 text-sm mt-1">
+              {empleado.NombreCompleto} ({empleado.EmpleadoID})
+            </p>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-gray-200 rounded-lg transition-all"
+          >
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+          {/* Info del empleado (readonly) */}
+          <div className="bg-gray-50 rounded-xl p-4 space-y-2">
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <span className="text-gray-500 font-medium">CI:</span>
+                <span className="ml-2 font-semibold text-gray-800">{empleado.CI}</span>
+              </div>
+              <div>
+                <span className="text-gray-500 font-medium">Correo Institucional:</span>
+                <span className="ml-2 font-semibold text-gray-800">{empleado.Correo}</span>
+              </div>
+            </div>
+            <p className="text-xs text-gray-500 italic">
+              * CI y Correo Institucional no pueden ser modificados
+            </p>
+          </div>
+
+          {/* Campos editables */}
+          <div className="grid md:grid-cols-2 gap-4">
+            {/* Nombre */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Nombre *
+              </label>
+              <input
+                type="text"
+                name="Nombre"
+                value={formData.Nombre}
+                onChange={handleChange}
+                className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 transition-all outline-none ${
+                  errors.Nombre
+                    ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
+                    : 'border-gray-200 focus:border-blue-400 focus:ring-blue-100'
+                }`}
+              />
+              {errors.Nombre && <p className="text-red-500 text-sm mt-1">{errors.Nombre}</p>}
+            </div>
+
+            {/* Apellido */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Apellido *
+              </label>
+              <input
+                type="text"
+                name="Apellido"
+                value={formData.Apellido}
+                onChange={handleChange}
+                className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 transition-all outline-none ${
+                  errors.Apellido
+                    ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
+                    : 'border-gray-200 focus:border-blue-400 focus:ring-blue-100'
+                }`}
+              />
+              {errors.Apellido && <p className="text-red-500 text-sm mt-1">{errors.Apellido}</p>}
+            </div>
+
+            {/* Usuario */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Usuario *
+              </label>
+              <input
+                type="text"
+                name="Usuario"
+                value={formData.Usuario}
+                onChange={handleChange}
+                className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 transition-all outline-none ${
+                  errors.Usuario
+                    ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
+                    : 'border-gray-200 focus:border-blue-400 focus:ring-blue-100'
+                }`}
+              />
+              {errors.Usuario && <p className="text-red-500 text-sm mt-1">{errors.Usuario}</p>}
+            </div>
+
+            {/* Correo Personal */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <Mail className="w-4 h-4 inline mr-1" />
+                Correo Personal (opcional)
+              </label>
+              <input
+                type="email"
+                name="CorreoPersonal"
+                value={formData.CorreoPersonal}
+                onChange={handleChange}
+                placeholder="ejemplo@gmail.com"
+                className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 transition-all outline-none ${
+                  errors.CorreoPersonal
+                    ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
+                    : 'border-gray-200 focus:border-blue-400 focus:ring-blue-100'
+                }`}
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                ℹ️ Usado para recuperación de contraseña
+              </p>
+              {errors.CorreoPersonal && (
+                <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                  <AlertCircle className="w-4 h-4" />
+                  {errors.CorreoPersonal}
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* Nota sobre cambio de contraseña */}
+          <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4">
+            <p className="text-sm text-blue-800 font-semibold mb-1">
+              🔐 ¿Necesitas cambiar la contraseña?
+            </p>
+            <p className="text-xs text-blue-700">
+              El empleado puede usar la opción <strong>"¿Olvidaste tu contraseña?"</strong> en la página de inicio de sesión para restablecer su contraseña de forma segura usando su correo personal.
+            </p>
+          </div>
+
+          {/* Botones */}
+          <div className="flex gap-4 pt-4 border-t">
+            <button
+              type="submit"
+              disabled={loading}
+              className={`flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-white transition-all shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none ${
+                workMode
+                  ? 'bg-gray-700 hover:bg-gray-800'
+                  : 'bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700'
+              }`}
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Actualizando...
+                </>
+              ) : (
+                <>
+                  <Save className="w-5 h-5" />
+                  Actualizar Empleado
+                </>
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={loading}
+              className="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold transition-all disabled:opacity-50"
+            >
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
 
 // ============================================
 // MODAL DE CREAR EMPLEADO
@@ -103,6 +435,13 @@ export function CreateEmpleadoModal({ onClose, onSuccess, workMode = false }: Mo
   const [loading, setLoading] = useState(false);
   const [maxDate, setMaxDate] = useState('');
   const [minDate, setMinDate] = useState('');
+  const [passwordStrength, setPasswordStrength] = useState<PasswordStrength>({
+    hasMinLength: false,
+    hasUpperCase: false,
+    hasLowerCase: false,
+    hasNumber: false,
+    hasSpecialChar: false,
+  });
 
   useEffect(() => {
     console.log('🔍 Debug CreateEmpleadoModal:');
@@ -174,8 +513,8 @@ export function CreateEmpleadoModal({ onClose, onSuccess, workMode = false }: Mo
     // Validar Contraseña
     if (!formData.Keyword) {
       newErrors.Keyword = 'La contraseña es requerida';
-    } else if (formData.Keyword.length < 6) {
-      newErrors.Keyword = 'La contraseña debe tener al menos 6 caracteres';
+    } else if (!isPasswordStrong(formData.Keyword)) {
+      newErrors.Keyword = 'La contraseña no cumple con todos los requisitos de seguridad';
     } else if (isOnlySpaces(formData.Keyword)) {
       newErrors.Keyword = 'La contraseña no puede contener solo espacios';
     }
@@ -232,6 +571,8 @@ export function CreateEmpleadoModal({ onClose, onSuccess, workMode = false }: Mo
     } else if (name === 'Keyword') {
       // Permitir cualquier carácter pero sin espacios al inicio o fin durante la escritura
       processedValue = value;
+      // Actualizar la fortaleza de la contraseña
+      setPasswordStrength(checkPasswordStrength(value));
     }
 
     setFormData(prev => ({ ...prev, [name]: processedValue }));
@@ -508,12 +849,50 @@ export function CreateEmpleadoModal({ onClose, onSuccess, workMode = false }: Mo
                       ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
                       : 'border-gray-200 focus:border-pink-400 focus:ring-pink-100'
                   }`}
-                  placeholder="Mínimo 6 caracteres"
+                  placeholder="Crea una contraseña segura"
                 />
-                <p className="text-xs text-gray-500 mt-1">
-                  ℹ️ Debe contener al menos 6 caracteres
-                </p>
-                {errors.Keyword && <p className="text-red-500 text-sm mt-1">{errors.Keyword}</p>}
+                
+                {/* Requisitos de contraseña */}
+                <div className="mt-3 space-y-2">
+                  <p className="text-xs font-semibold text-gray-600 mb-2">Requisitos de seguridad:</p>
+                  
+                  <div className={`flex items-center gap-2 text-xs transition-all ${
+                    passwordStrength.hasMinLength ? 'text-green-600' : 'text-red-500'
+                  }`}>
+                    <span className="font-bold">{passwordStrength.hasMinLength ? '✓' : '✗'}</span>
+                    <span>Mínimo 8 caracteres</span>
+                  </div>
+                  
+                  <div className={`flex items-center gap-2 text-xs transition-all ${
+                    passwordStrength.hasUpperCase ? 'text-green-600' : 'text-red-500'
+                  }`}>
+                    <span className="font-bold">{passwordStrength.hasUpperCase ? '✓' : '✗'}</span>
+                    <span>Al menos una letra mayúscula (A-Z)</span>
+                  </div>
+                  
+                  <div className={`flex items-center gap-2 text-xs transition-all ${
+                    passwordStrength.hasLowerCase ? 'text-green-600' : 'text-red-500'
+                  }`}>
+                    <span className="font-bold">{passwordStrength.hasLowerCase ? '✓' : '✗'}</span>
+                    <span>Al menos una letra minúscula (a-z)</span>
+                  </div>
+                  
+                  <div className={`flex items-center gap-2 text-xs transition-all ${
+                    passwordStrength.hasNumber ? 'text-green-600' : 'text-red-500'
+                  }`}>
+                    <span className="font-bold">{passwordStrength.hasNumber ? '✓' : '✗'}</span>
+                    <span>Al menos un número (0-9)</span>
+                  </div>
+                  
+                  <div className={`flex items-center gap-2 text-xs transition-all ${
+                    passwordStrength.hasSpecialChar ? 'text-green-600' : 'text-red-500'
+                  }`}>
+                    <span className="font-bold">{passwordStrength.hasSpecialChar ? '✓' : '✗'}</span>
+                    <span>Al menos un carácter especial (!@#$%^&*...)</span>
+                  </div>
+                </div>
+                
+                {errors.Keyword && <p className="text-red-500 text-sm mt-2 font-semibold">{errors.Keyword}</p>}
               </div>
             </div>
           </div>
@@ -548,328 +927,6 @@ export function CreateEmpleadoModal({ onClose, onSuccess, workMode = false }: Mo
                 <>
                   <Save className="w-5 h-5" />
                   Crear Empleado
-                </>
-              )}
-            </button>
-            <button
-              type="button"
-              onClick={onClose}
-              disabled={loading}
-              className="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold transition-all disabled:opacity-50"
-            >
-              Cancelar
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-}
-
-// ============================================
-// MODAL DE EDITAR EMPLEADO
-// ============================================
-export function EditEmpleadoModal({ empleado, onClose, onSuccess, workMode = false }: EditModalProps) {
-  const [formData, setFormData] = useState({
-    Nombre: empleado.Nombre,
-    Apellido: empleado.Apellido,
-    Usuario: empleado.Usuario,
-    Activo: empleado.Activo || false,
-    Keyword: '',
-  });
-  
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [loading, setLoading] = useState(false);
-
-  const validateForm = (): boolean => {
-    const newErrors: Record<string, string> = {};
-
-    // Validar Nombre
-    if (!formData.Nombre.trim()) {
-      newErrors.Nombre = 'El nombre es requerido';
-    } else if (isOnlySpaces(formData.Nombre)) {
-      newErrors.Nombre = 'El nombre no puede contener solo espacios';
-    } else if (formData.Nombre.trim().length < 2) {
-      newErrors.Nombre = 'El nombre debe tener al menos 2 caracteres';
-    }
-
-    // Validar Apellido
-    if (!formData.Apellido.trim()) {
-      newErrors.Apellido = 'El apellido es requerido';
-    } else if (isOnlySpaces(formData.Apellido)) {
-      newErrors.Apellido = 'El apellido no puede contener solo espacios';
-    } else if (formData.Apellido.trim().length < 2) {
-      newErrors.Apellido = 'El apellido debe tener al menos 2 caracteres';
-    }
-
-    // Validar Usuario
-    if (!formData.Usuario.trim()) {
-      newErrors.Usuario = 'El usuario es requerido';
-    } else if (isOnlySpaces(formData.Usuario)) {
-      newErrors.Usuario = 'El usuario no puede contener solo espacios';
-    } else if (formData.Usuario.trim().length < 3) {
-      newErrors.Usuario = 'El usuario debe tener al menos 3 caracteres';
-    } else if (/\s/.test(formData.Usuario)) {
-      newErrors.Usuario = 'El usuario no puede contener espacios';
-    }
-
-    // Validar Contraseña (solo si se está cambiando)
-    if (formData.Keyword) {
-      if (formData.Keyword.length < 6) {
-        newErrors.Keyword = 'La contraseña debe tener al menos 6 caracteres';
-      } else if (isOnlySpaces(formData.Keyword)) {
-        newErrors.Keyword = 'La contraseña no puede contener solo espacios';
-      }
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-
-    if (type === 'checkbox') {
-      setFormData(prev => ({
-        ...prev,
-        [name]: checked,
-      }));
-    } else {
-      let processedValue = value;
-
-      if (name === 'Nombre' || name === 'Apellido') {
-        // Solo permitir letras y espacios
-        processedValue = removeOnlyLetters(value);
-        // Evitar múltiples espacios consecutivos
-        processedValue = processedValue.replace(/\s{2,}/g, ' ');
-        // No permitir espacios al inicio
-        if (processedValue.startsWith(' ') && value.length === 1) {
-          processedValue = '';
-        }
-      } else if (name === 'Usuario') {
-        // No permitir espacios en el usuario
-        processedValue = value.replace(/\s/g, '');
-      }
-
-      setFormData(prev => ({
-        ...prev,
-        [name]: processedValue,
-      }));
-    }
-
-    // Limpiar error del campo cuando el usuario empieza a escribir
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!validateForm()) return;
-
-    setLoading(true);
-    try {
-      const updateData: any = {
-        Nombre: trimExtraSpaces(formData.Nombre),
-        Apellido: trimExtraSpaces(formData.Apellido),
-        Usuario: formData.Usuario.trim(),
-        Activo: formData.Activo ? 1 : 0,
-      };
-
-      if (formData.Keyword) {
-        updateData.Keyword = formData.Keyword;
-      }
-
-      const result = await empleadoService.update(empleado.EmpleadoID, updateData);
-      if (result.success) {
-        alert('✅ Empleado actualizado exitosamente');
-        onSuccess();
-      } else {
-        alert('❌ ' + (result.error || 'Error al actualizar empleado'));
-      }
-    } catch (err) {
-      alert('❌ Error de conexión con el servidor');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className={`p-6 border-b flex items-center justify-between ${
-          workMode ? 'bg-gray-50' : 'bg-gradient-to-r from-blue-50 to-cyan-50'
-        }`}>
-          <div>
-            <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-              <User className="w-6 h-6" />
-              Editar Empleado
-            </h2>
-            <p className="text-gray-600 text-sm mt-1">
-              {empleado.NombreCompleto} ({empleado.EmpleadoID})
-            </p>
-          </div>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-gray-200 rounded-lg transition-all"
-          >
-            <X className="w-6 h-6" />
-          </button>
-        </div>
-
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
-          {/* Info del empleado (readonly) */}
-          <div className="bg-gray-50 rounded-xl p-4 space-y-2">
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <span className="text-gray-500 font-medium">CI:</span>
-                <span className="ml-2 font-semibold text-gray-800">{empleado.CI}</span>
-              </div>
-              <div>
-                <span className="text-gray-500 font-medium">Correo:</span>
-                <span className="ml-2 font-semibold text-gray-800">{empleado.Correo}</span>
-              </div>
-            </div>
-            <p className="text-xs text-gray-500 italic">
-              * CI y Correo no pueden ser modificados
-            </p>
-          </div>
-
-          {/* Campos editables */}
-          <div className="grid md:grid-cols-2 gap-4">
-            {/* Nombre */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Nombre *
-              </label>
-              <input
-                type="text"
-                name="Nombre"
-                value={formData.Nombre}
-                onChange={handleChange}
-                maxLength={50}
-                className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 transition-all outline-none ${
-                  errors.Nombre
-                    ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
-                    : 'border-gray-200 focus:border-blue-400 focus:ring-blue-100'
-                }`}
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                ℹ️ Solo se aceptan letras (mínimo 2 caracteres)
-              </p>
-              {errors.Nombre && <p className="text-red-500 text-sm mt-1">{errors.Nombre}</p>}
-            </div>
-
-            {/* Apellido */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Apellido *
-              </label>
-              <input
-                type="text"
-                name="Apellido"
-                value={formData.Apellido}
-                onChange={handleChange}
-                maxLength={50}
-                className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 transition-all outline-none ${
-                  errors.Apellido
-                    ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
-                    : 'border-gray-200 focus:border-blue-400 focus:ring-blue-100'
-                }`}
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                ℹ️ Solo se aceptan letras (mínimo 2 caracteres)
-              </p>
-              {errors.Apellido && <p className="text-red-500 text-sm mt-1">{errors.Apellido}</p>}
-            </div>
-
-            {/* Usuario */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Usuario *
-              </label>
-              <input
-                type="text"
-                name="Usuario"
-                value={formData.Usuario}
-                onChange={handleChange}
-                maxLength={30}
-                className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 transition-all outline-none ${
-                  errors.Usuario
-                    ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
-                    : 'border-gray-200 focus:border-blue-400 focus:ring-blue-100'
-                }`}
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                ℹ️ Sin espacios (mínimo 3 caracteres)
-              </p>
-              {errors.Usuario && <p className="text-red-500 text-sm mt-1">{errors.Usuario}</p>}
-            </div>
-
-            {/* Estado Activo */}
-            <div className="flex items-center">
-              <label className="flex items-center gap-3 cursor-pointer">
-                <span className="text-sm font-semibold text-gray-700">
-                  🍩 Empleado Activo
-                </span>
-              </label>
-            </div>
-          </div>
-
-          {/* Cambiar Contraseña */}
-          <div className="border-t pt-4">
-            <h4 className="text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
-              <Lock className="w-4 h-4 text-blue-500" />
-              Cambiar Contraseña (Opcional)
-            </h4>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Nueva Contraseña
-              </label>
-              <input
-                type="password"
-                name="Keyword"
-                value={formData.Keyword}
-                onChange={handleChange}
-                maxLength={50}
-                className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 transition-all outline-none ${
-                  errors.Keyword
-                    ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
-                    : 'border-gray-200 focus:border-blue-400 focus:ring-blue-100'
-                }`}
-                placeholder="Dejar en blanco para mantener la actual"
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                ℹ️ Debe contener al menos 6 caracteres (dejar vacío si no desea cambiarla)
-              </p>
-              {errors.Keyword && <p className="text-red-500 text-sm mt-1">{errors.Keyword}</p>}
-            </div>
-          </div>
-
-          {/* Botones */}
-          <div className="flex gap-4 pt-4 border-t">
-            <button
-              type="submit"
-              disabled={loading}
-              className={`flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-white transition-all shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none ${
-                workMode
-                  ? 'bg-gray-700 hover:bg-gray-800'
-                  : 'bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700'
-              }`}
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  Actualizando...
-                </>
-              ) : (
-                <>
-                  <Save className="w-5 h-5" />
-                  Guardar Cambios
                 </>
               )}
             </button>

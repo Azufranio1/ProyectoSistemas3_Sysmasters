@@ -5,6 +5,7 @@ export interface Empleado {
   SucursalID?: string;
   Usuario: string;
   Correo: string;
+  CorreoPersonal?: string;
   Nombre: string;
   Apellido: string;
   NombreCompleto: string;

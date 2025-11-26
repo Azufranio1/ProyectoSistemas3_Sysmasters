@@ -1,6 +1,6 @@
--- DROP DATABASE IF EXISTS SugarDonuts;
--- CREATE DATABASE SugarDonuts;
--- USE SugarDonuts;
+DROP DATABASE IF EXISTS SugarDonuts;
+CREATE DATABASE SugarDonuts;
+USE SugarDonuts;
 
 DROP TABLE IF EXISTS DetalleReserva;
 DROP TABLE IF EXISTS Reserva;
@@ -162,6 +162,11 @@ VALUES ('EMP-003', 34567890, 'Mateo', 'Torrez', '2025-08-16', '1992-05-26', 1, 1
 INSERT INTO UsuarioEmp (EmpleadoID, Usuario, Correo, Keyword, CodRecuperacion, Habilitado) 
 VALUES ('EMP-003', 'TaptoEMP', 'taptomaxe@sugardonuts.com', '$2y$10$HCnLMk6ERv0tY8bV/.f/tugVI3lYkFf8zfJHd/kFsrFX0LR0wF9GC', 123456, 1);
 
+INSERT INTO Empleado (EmpleadoID, CI, Nombre, Apellido, FechaContrato, FechaNacimiento, Activo, Habilitado, SucursalID) 
+VALUES ('EMP-004', 23456189, 'Alexa', 'Mamani', '2025-08-26', '1999-05-26', 1, 1, 'SUC-001');
+INSERT INTO UsuarioEmp (EmpleadoID, Usuario, Correo, Keyword, CodRecuperacion, Habilitado) 
+VALUES ('EMP-004', 'AlexaEMP', 'aledune@sugardonuts.com', '$2y$10$QEAiiONHkXyXuPmm.noyjOpK4MuUJh5HkjAsSe.2KHli6wZjs8HD6', 170524, 1);
+
 -- Inserciones para Producto y Categoria
 INSERT INTO Categoria (CategoriaID, Categoria) VALUES ('CAT-001', 'Donas');
 INSERT INTO Categoria (CategoriaID, Categoria) VALUES ('CAT-002', 'Café');
@@ -219,6 +224,8 @@ VALUES
 ('CLI-011', 'Valentina', 'Santos', 8654321, 1),
 ('CLI-012', 'Mateo', 'Castillo', 7981234, 1);
 
+INSERT INTO Cliente (ClienteID, Nombre, Apellido, CINIT, Habilitado)
+VALUES ('CLI-013', 'Elena', 'Morales', 8123987, 1);
 
 -- Inserciones para Ventas
 INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
@@ -1083,380 +1090,6 @@ VALUES
 ('VNT-092', 'PRD-012', 2, 22),
 ('VNT-092', 'PRD-015', 1, 13);
 
--- Inserciones para Ventas (Agosto 2025)
-INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
-VALUES
-('VNT-053', 'EMP-001', 'CLI-001', '2025-08-01', 0, 52, 0),
-('VNT-054', 'EMP-002', 'CLI-002', '2025-08-01', 7, 89, 0),
-('VNT-055', 'EMP-003', 'CLI-003', '2025-08-02', 0, 68, 0),
-('VNT-056', 'EMP-004', 'CLI-004', '2025-08-02', 10, 145, 0),
-('VNT-057', 'EMP-001', 'CLI-005', '2025-08-03', 5, 78, 0),
-('VNT-058', 'EMP-002', 'CLI-006', '2025-08-04', 0, 63, 0),
-('VNT-059', 'EMP-003', 'CLI-007', '2025-08-04', 12, 167, 0),
-('VNT-060', 'EMP-004', 'CLI-008', '2025-08-05', 0, 44, 0),
-('VNT-061', 'EMP-001', 'CLI-009', '2025-08-06', 8, 121, 0),
-('VNT-062', 'EMP-002', 'CLI-010', '2025-08-06', 0, 57, 0),
-('VNT-063', 'EMP-003', 'CLI-011', '2025-08-07', 15, 193, 0),
-('VNT-064', 'EMP-004', 'CLI-012', '2025-08-08', 0, 72, 0),
-('VNT-065', 'EMP-001', 'CLI-013', '2025-08-08', 6, 98, 0),
-('VNT-066', 'EMP-002', 'CLI-001', '2025-08-09', 0, 85, 0),
-('VNT-067', 'EMP-003', 'CLI-002', '2025-08-10', 11, 156, 0),
-('VNT-068', 'EMP-004', 'CLI-003', '2025-08-10', 0, 49, 0),
-('VNT-069', 'EMP-001', 'CLI-004', '2025-08-11', 9, 132, 0),
-('VNT-070', 'EMP-002', 'CLI-005', '2025-08-12', 0, 66, 0),
-('VNT-071', 'EMP-003', 'CLI-006', '2025-08-12', 14, 178, 0),
-('VNT-072', 'EMP-004', 'CLI-007', '2025-08-13', 0, 54, 0),
-('VNT-073', 'EMP-001', 'CLI-008', '2025-08-14', 7, 114, 0),
-('VNT-074', 'EMP-002', 'CLI-009', '2025-08-14', 0, 81, 0),
-('VNT-075', 'EMP-003', 'CLI-010', '2025-08-15', 13, 184, 0),
-('VNT-076', 'EMP-004', 'CLI-011', '2025-08-16', 0, 59, 0),
-('VNT-077', 'EMP-001', 'CLI-012', '2025-08-16', 10, 149, 0),
-('VNT-078', 'EMP-002', 'CLI-013', '2025-08-17', 0, 73, 0),
-('VNT-079', 'EMP-003', 'CLI-001', '2025-08-18', 16, 201, 0),
-('VNT-080', 'EMP-004', 'CLI-002', '2025-08-18', 0, 47, 0),
-('VNT-081', 'EMP-001', 'CLI-003', '2025-08-19', 8, 126, 0),
-('VNT-082', 'EMP-002', 'CLI-004', '2025-08-20', 0, 92, 0),
-('VNT-083', 'EMP-003', 'CLI-005', '2025-08-20', 12, 171, 0),
-('VNT-084', 'EMP-004', 'CLI-006', '2025-08-21', 0, 61, 0),
-('VNT-085', 'EMP-001', 'CLI-007', '2025-08-22', 9, 138, 0),
-('VNT-086', 'EMP-002', 'CLI-008', '2025-08-22', 0, 76, 0),
-('VNT-087', 'EMP-003', 'CLI-009', '2025-08-23', 15, 196, 0),
-('VNT-088', 'EMP-004', 'CLI-010', '2025-08-24', 0, 55, 0),
-('VNT-089', 'EMP-001', 'CLI-011', '2025-08-24', 11, 162, 0),
-('VNT-090', 'EMP-002', 'CLI-012', '2025-08-25', 0, 69, 0),
-('VNT-091', 'EMP-003', 'CLI-013', '2025-08-26', 14, 187, 0),
-('VNT-092', 'EMP-004', 'CLI-001', '2025-08-26', 0, 83, 0);
-
--- Inserciones para DetalleVenta
-
--- Venta 53 (VNT-053): 3 productos, total 52
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-053', 'PRD-001', 2, 14),
-('VNT-053', 'PRD-005', 2, 16),
-('VNT-053', 'PRD-009', 1, 22);
-
--- Venta 54 (VNT-054): 4 productos, total 96 (descuento 7 aplicado aparte)
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-054', 'PRD-003', 3, 21),
-('VNT-054', 'PRD-007', 2, 24),
-('VNT-054', 'PRD-011', 2, 18),
-('VNT-054', 'PRD-015', 2, 33);
-
--- Venta 55 (VNT-055): 4 productos, total 68
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-055', 'PRD-002', 2, 14),
-('VNT-055', 'PRD-008', 1, 13),
-('VNT-055', 'PRD-012', 2, 22),
-('VNT-055', 'PRD-016', 1, 19);
-
--- Venta 56 (VNT-056): 5 productos, total 155 (descuento 10 aplicado aparte)
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-056', 'PRD-004', 3, 27),
-('VNT-056', 'PRD-006', 2, 16),
-('VNT-056', 'PRD-010', 2, 30),
-('VNT-056', 'PRD-014', 2, 28),
-('VNT-056', 'PRD-020', 3, 54);
-
--- Venta 57 (VNT-057): 4 productos, total 83 (descuento 5 aplicado aparte)
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-057', 'PRD-001', 3, 21),
-('VNT-057', 'PRD-009', 1, 19),
-('VNT-057', 'PRD-013', 2, 20),
-('VNT-057', 'PRD-017', 1, 23);
-
--- Venta 58 (VNT-058): 3 productos, total 63
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-058', 'PRD-005', 2, 16),
-('VNT-058', 'PRD-011', 2, 18),
-('VNT-058', 'PRD-018', 2, 29);
-
--- Venta 59 (VNT-059): 5 productos, total 179 (descuento 12 aplicado aparte)
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-059', 'PRD-003', 3, 21),
-('VNT-059', 'PRD-007', 3, 36),
-('VNT-059', 'PRD-015', 2, 26),
-('VNT-059', 'PRD-019', 2, 34),
-('VNT-059', 'PRD-021', 3, 62);
-
--- Venta 60 (VNT-060): 3 productos, total 44
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-060', 'PRD-002', 2, 14),
-('VNT-060', 'PRD-008', 1, 13),
-('VNT-060', 'PRD-022', 1, 17);
-
--- Venta 61 (VNT-061): 5 productos, total 129 (descuento 8 aplicado aparte)
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-061', 'PRD-004', 2, 18),
-('VNT-061', 'PRD-006', 3, 24),
-('VNT-061', 'PRD-010', 2, 30),
-('VNT-061', 'PRD-012', 2, 22),
-('VNT-061', 'PRD-016', 2, 35);
-
--- Venta 62 (VNT-062): 3 productos, total 57
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-062', 'PRD-001', 2, 14),
-('VNT-062', 'PRD-013', 2, 20),
-('VNT-062', 'PRD-023', 1, 23);
-
--- Venta 63 (VNT-063): 5 productos, total 208 (descuento 15 aplicado aparte)
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-063', 'PRD-005', 4, 32),
-('VNT-063', 'PRD-009', 2, 38),
-('VNT-063', 'PRD-014', 3, 42),
-('VNT-063', 'PRD-017', 2, 44),
-('VNT-063', 'PRD-020', 3, 52);
-
--- Venta 64 (VNT-064): 4 productos, total 72
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-064', 'PRD-003', 2, 14),
-('VNT-064', 'PRD-007', 2, 24),
-('VNT-064', 'PRD-011', 2, 18),
-('VNT-064', 'PRD-018', 1, 16);
-
--- Venta 65 (VNT-065): 5 productos, total 104 (descuento 6 aplicado aparte)
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-065', 'PRD-002', 3, 21),
-('VNT-065', 'PRD-008', 2, 26),
-('VNT-065', 'PRD-015', 1, 13),
-('VNT-065', 'PRD-019', 2, 34),
-('VNT-065', 'PRD-022', 1, 10);
-
--- Venta 66 (VNT-066): 4 productos, total 85
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-066', 'PRD-004', 3, 27),
-('VNT-066', 'PRD-010', 1, 15),
-('VNT-066', 'PRD-012', 2, 22),
-('VNT-066', 'PRD-021', 1, 21);
-
--- Venta 67 (VNT-067): 5 productos, total 167 (descuento 11 aplicado aparte)
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-067', 'PRD-001', 3, 21),
-('VNT-067', 'PRD-006', 3, 24),
-('VNT-067', 'PRD-013', 3, 30),
-('VNT-067', 'PRD-016', 2, 36),
-('VNT-067', 'PRD-023', 2, 56);
-
--- Venta 68 (VNT-068): 3 productos, total 49
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-068', 'PRD-005', 1, 8),
-('VNT-068', 'PRD-009', 1, 19),
-('VNT-068', 'PRD-017', 1, 22);
-
--- Venta 69 (VNT-069): 5 productos, total 141 (descuento 9 aplicado aparte)
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-069', 'PRD-003', 3, 21),
-('VNT-069', 'PRD-007', 2, 24),
-('VNT-069', 'PRD-011', 3, 27),
-('VNT-069', 'PRD-014', 2, 28),
-('VNT-069', 'PRD-018', 3, 41);
-
--- Venta 70 (VNT-070): 4 productos, total 66
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-070', 'PRD-002', 2, 14),
-('VNT-070', 'PRD-008', 1, 13),
-('VNT-070', 'PRD-015', 2, 26),
-('VNT-070', 'PRD-019', 1, 13);
-
--- Venta 71 (VNT-071): 5 productos, total 192 (descuento 14 aplicado aparte)
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-071', 'PRD-004', 4, 36),
-('VNT-071', 'PRD-010', 2, 30),
-('VNT-071', 'PRD-012', 3, 33),
-('VNT-071', 'PRD-020', 3, 45),
-('VNT-071', 'PRD-021', 2, 48);
-
--- Venta 72 (VNT-072): 3 productos, total 54
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-072', 'PRD-001', 2, 14),
-('VNT-072', 'PRD-006', 2, 16),
-('VNT-072', 'PRD-022', 1, 24);
-
--- Venta 73 (VNT-073): 5 productos, total 121 (descuento 7 aplicado aparte)
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-073', 'PRD-005', 3, 24),
-('VNT-073', 'PRD-009', 1, 19),
-('VNT-073', 'PRD-013', 2, 20),
-('VNT-073', 'PRD-016', 2, 36),
-('VNT-073', 'PRD-023', 1, 22);
-
--- Venta 74 (VNT-074): 4 productos, total 81
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-074', 'PRD-003', 3, 21),
-('VNT-074', 'PRD-007', 1, 12),
-('VNT-074', 'PRD-011', 2, 18),
-('VNT-074', 'PRD-017', 2, 30);
-
--- Venta 75 (VNT-075): 5 productos, total 197 (descuento 13 aplicado aparte)
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-075', 'PRD-002', 4, 28),
-('VNT-075', 'PRD-008', 3, 39),
-('VNT-075', 'PRD-014', 2, 28),
-('VNT-075', 'PRD-018', 3, 39),
-('VNT-075', 'PRD-021', 3, 63);
-
--- Venta 76 (VNT-076): 3 productos, total 59
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-076', 'PRD-004', 2, 18),
-('VNT-076', 'PRD-012', 2, 22),
-('VNT-076', 'PRD-015', 1, 19);
-
--- Venta 77 (VNT-077): 5 productos, total 159 (descuento 10 aplicado aparte)
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-077', 'PRD-001', 4, 28),
-('VNT-077', 'PRD-006', 3, 24),
-('VNT-077', 'PRD-010', 2, 30),
-('VNT-077', 'PRD-019', 2, 34),
-('VNT-077', 'PRD-020', 2, 43);
-
--- Venta 78 (VNT-078): 4 productos, total 73
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-078', 'PRD-005', 2, 16),
-('VNT-078', 'PRD-009', 1, 19),
-('VNT-078', 'PRD-013', 2, 20),
-('VNT-078', 'PRD-022', 1, 18);
-
--- Venta 79 (VNT-079): 5 productos, total 217 (descuento 16 aplicado aparte)
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-079', 'PRD-003', 4, 28),
-('VNT-079', 'PRD-007', 3, 36),
-('VNT-079', 'PRD-011', 3, 27),
-('VNT-079', 'PRD-016', 3, 54),
-('VNT-079', 'PRD-021', 4, 72);
-
--- Venta 80 (VNT-080): 3 productos, total 47
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-080', 'PRD-002', 2, 14),
-('VNT-080', 'PRD-014', 1, 14),
-('VNT-080', 'PRD-017', 1, 19);
-
--- Venta 81 (VNT-081): 5 productos, total 134 (descuento 8 aplicado aparte)
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-081', 'PRD-004', 3, 27),
-('VNT-081', 'PRD-008', 2, 26),
-('VNT-081', 'PRD-012', 2, 22),
-('VNT-081', 'PRD-015', 2, 26),
-('VNT-081', 'PRD-018', 2, 33);
-
--- Venta 82 (VNT-082): 4 productos, total 92
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-082', 'PRD-001', 3, 21),
-('VNT-082', 'PRD-010', 2, 30),
-('VNT-082', 'PRD-019', 2, 34),
-('VNT-082', 'PRD-023', 1, 7);
-
--- Venta 83 (VNT-083): 5 productos, total 183 (descuento 12 aplicado aparte)
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-083', 'PRD-005', 4, 32),
-('VNT-083', 'PRD-006', 3, 24),
-('VNT-083', 'PRD-013', 3, 30),
-('VNT-083', 'PRD-020', 3, 45),
-('VNT-083', 'PRD-022', 2, 52);
-
--- Venta 84 (VNT-084): 3 productos, total 61
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-084', 'PRD-003', 2, 14),
-('VNT-084', 'PRD-009', 1, 19),
-('VNT-084', 'PRD-016', 2, 28);
-
--- Venta 85 (VNT-085): 5 productos, total 147 (descuento 9 aplicado aparte)
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-085', 'PRD-007', 3, 36),
-('VNT-085', 'PRD-011', 2, 18),
-('VNT-085', 'PRD-014', 2, 28),
-('VNT-085', 'PRD-017', 2, 44),
-('VNT-085', 'PRD-021', 1, 21);
-
--- Venta 86 (VNT-086): 4 productos, total 76
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-086', 'PRD-002', 3, 21),
-('VNT-086', 'PRD-008', 2, 26),
-('VNT-086', 'PRD-012', 1, 11),
-('VNT-086', 'PRD-018', 1, 18);
-
--- Venta 87 (VNT-087): 5 productos, total 211 (descuento 15 aplicado aparte)
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-087', 'PRD-004', 4, 36),
-('VNT-087', 'PRD-010', 3, 45),
-('VNT-087', 'PRD-015', 3, 39),
-('VNT-087', 'PRD-019', 3, 51),
-('VNT-087', 'PRD-023', 2, 40);
-
--- Venta 88 (VNT-088): 3 productos, total 55
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-088', 'PRD-001', 2, 14),
-('VNT-088', 'PRD-006', 2, 16),
-('VNT-088', 'PRD-020', 1, 25);
-
--- Venta 89 (VNT-089): 5 productos, total 173 (descuento 11 aplicado aparte)
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-089', 'PRD-005', 3, 24),
-('VNT-089', 'PRD-009', 2, 38),
-('VNT-089', 'PRD-013', 3, 30),
-('VNT-089', 'PRD-016', 2, 36),
-('VNT-089', 'PRD-022', 2, 45);
-
--- Venta 90 (VNT-090): 4 productos, total 69
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-090', 'PRD-003', 2, 14),
-('VNT-090', 'PRD-007', 2, 24),
-('VNT-090', 'PRD-011', 2, 18),
-('VNT-090', 'PRD-017', 1, 13);
-
--- Venta 91 (VNT-091): 5 productos, total 201 (descuento 14 aplicado aparte)
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-091', 'PRD-002', 4, 28),
-('VNT-091', 'PRD-008', 3, 39),
-('VNT-091', 'PRD-014', 3, 42),
-('VNT-091', 'PRD-018', 3, 39),
-('VNT-091', 'PRD-021', 3, 53);
-
--- Venta 92 (VNT-092): 4 productos, total 83
-INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
-VALUES
-('VNT-092', 'PRD-004', 2, 18),
-('VNT-092', 'PRD-010', 2, 30),
-('VNT-092', 'PRD-012', 2, 22),
-('VNT-092', 'PRD-015', 1, 13);
-
 -- Inserciones para Ventas (Septiembre 2025)
 INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
 VALUES
@@ -1878,3 +1511,1718 @@ VALUES
 ('VNT-137', 'PRD-010', 1, 5),
 ('VNT-137', 'PRD-011', 4, 20),
 ('VNT-137', 'PRD-001', 3, 21);
+
+
+
+-- Inserciones para Octubre y Noviembre
+
+-- Venta VNT-138 (Total: 97 Bs, Descuento: 10%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-138', 'EMP-002', 'CLI-005', '2025-10-19', 10, 97, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-138', 'PRD-004', 1, 7),
+('VNT-138', 'PRD-016', 3, 36),
+('VNT-138', 'PRD-020', 3, 24),
+('VNT-138', 'PRD-022', 1, 10),
+('VNT-138', 'PRD-023', 2, 20);
+
+-- Venta VNT-139 (Total: 46 Bs, Descuento: 0%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-139', 'EMP-003', 'CLI-006', '2025-10-14', 0, 46, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-139', 'PRD-006', 2, 12),
+('VNT-139', 'PRD-021', 1, 9),
+('VNT-139', 'PRD-005', 2, 14),
+('VNT-139', 'PRD-017', 1, 11);
+
+-- Venta VNT-140 (Total: 126 Bs, Descuento: 15%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-140', 'EMP-003', 'CLI-008', '2025-10-26', 15, 126, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-140', 'PRD-011', 3, 15),
+('VNT-140', 'PRD-022', 3, 30),
+('VNT-140', 'PRD-006', 2, 12),
+('VNT-140', 'PRD-019', 3, 36),
+('VNT-140', 'PRD-015', 3, 33);
+
+-- Venta VNT-141 (Total: 59 Bs, Descuento: 15%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-141', 'EMP-004', 'CLI-005', '2025-10-23', 15, 59, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-141', 'PRD-004', 3, 21),
+('VNT-141', 'PRD-016', 2, 24),
+('VNT-141', 'PRD-011', 1, 5),
+('VNT-141', 'PRD-021', 1, 9);
+
+-- Venta VNT-142 (Total: 40 Bs, Descuento: 15%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-142', 'EMP-004', 'CLI-005', '2025-10-22', 15, 40, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-142', 'PRD-010', 2, 10),
+('VNT-142', 'PRD-007', 1, 6),
+('VNT-142', 'PRD-018', 1, 9),
+('VNT-142', 'PRD-011', 3, 15);
+
+-- Venta VNT-143 (Total: 49 Bs, Descuento: 8%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-143', 'EMP-002', 'CLI-010', '2025-10-24', 8, 49, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-143', 'PRD-013', 1, 10),
+('VNT-143', 'PRD-006', 3, 18),
+('VNT-143', 'PRD-001', 3, 21);
+
+-- Venta VNT-144 (Total: 93 Bs, Descuento: 12%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-144', 'EMP-003', 'CLI-004', '2025-10-13', 12, 93, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-144', 'PRD-014', 3, 30),
+('VNT-144', 'PRD-023', 3, 30),
+('VNT-144', 'PRD-009', 3, 33);
+
+-- Venta VNT-145 (Total: 116 Bs, Descuento: 15%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-145', 'EMP-004', 'CLI-006', '2025-10-26', 15, 116, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-145', 'PRD-014', 3, 30),
+('VNT-145', 'PRD-021', 3, 27),
+('VNT-145', 'PRD-004', 3, 21),
+('VNT-145', 'PRD-018', 2, 18),
+('VNT-145', 'PRD-022', 2, 20);
+
+-- Venta VNT-146 (Total: 39 Bs, Descuento: 15%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-146', 'EMP-004', 'CLI-001', '2025-10-06', 15, 39, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-146', 'PRD-004', 1, 7),
+('VNT-146', 'PRD-017', 1, 11),
+('VNT-146', 'PRD-013', 1, 10),
+('VNT-146', 'PRD-015', 1, 11);
+
+-- Venta VNT-147 (Total: 41 Bs, Descuento: 8%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-147', 'EMP-001', 'CLI-0010', '2025-10-12', 8, 41, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-147', 'PRD-004', 2, 14),
+('VNT-147', 'PRD-007', 1, 6),
+('VNT-147', 'PRD-023', 1, 10),
+('VNT-147', 'PRD-015', 1, 11);
+
+-- Venta VNT-148 (Total: 42 Bs, Descuento: 0%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-148', 'EMP-003', 'CLI-001', '2025-10-01', 0, 42, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-148', 'PRD-011', 1, 5),
+('VNT-148', 'PRD-008', 2, 22),
+('VNT-148', 'PRD-010', 3, 15);
+
+-- Venta VNT-149 (Total: 90 Bs, Descuento: 0%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-149', 'EMP-004', 'CLI-004', '2025-10-11', 0, 90, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-149', 'PRD-002', 3, 21),
+('VNT-149', 'PRD-012', 3, 36),
+('VNT-149', 'PRD-015', 2, 22),
+('VNT-149', 'PRD-017', 1, 11);
+
+-- Venta VNT-150 (Total: 49 Bs, Descuento: 10%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-150', 'EMP-003', 'CLI-005', '2025-10-20', 10, 49, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-150', 'PRD-005', 2, 14),
+('VNT-150', 'PRD-013', 3, 30),
+('VNT-150', 'PRD-011', 1, 5);
+
+-- Venta VNT-151 (Total: 94 Bs, Descuento: 8%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-151', 'EMP-001', 'CLI-0011', '2025-10-04', 8, 94, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-151', 'PRD-008', 1, 11),
+('VNT-151', 'PRD-007', 3, 18),
+('VNT-151', 'PRD-015', 1, 11),
+('VNT-151', 'PRD-022', 3, 30),
+('VNT-151', 'PRD-020', 3, 24);
+
+-- Venta VNT-152 (Total: 72 Bs, Descuento: 10%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-152', 'EMP-003', 'CLI-0013', '2025-10-29', 10, 72, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-152', 'PRD-013', 1, 10),
+('VNT-152', 'PRD-008', 2, 22),
+('VNT-152', 'PRD-012', 2, 24),
+('VNT-152', 'PRD-020', 2, 16);
+
+-- Venta VNT-153 (Total: 36 Bs, Descuento: 3%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-153', 'EMP-004', 'CLI-007', '2025-10-15', 3, 36, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-153', 'PRD-013', 1, 10),
+('VNT-153', 'PRD-008', 1, 11),
+('VNT-153', 'PRD-010', 3, 15);
+
+-- Venta VNT-154 (Total: 61 Bs, Descuento: 15%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-154', 'EMP-003', 'CLI-007', '2025-10-27', 15, 61, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-154', 'PRD-004', 3, 21),
+('VNT-154', 'PRD-011', 2, 10),
+('VNT-154', 'PRD-021', 2, 18),
+('VNT-154', 'PRD-007', 2, 12);
+
+-- Venta VNT-155 (Total: 81 Bs, Descuento: 0%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-155', 'EMP-001', 'CLI-006', '2025-10-09', 0, 81, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-155', 'PRD-012', 2, 24),
+('VNT-155', 'PRD-001', 3, 21),
+('VNT-155', 'PRD-016', 3, 36);
+
+-- Venta VNT-156 (Total: 73 Bs, Descuento: 15%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-156', 'EMP-002', 'CLI-0010', '2025-10-07', 15, 73, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-156', 'PRD-008', 1, 11),
+('VNT-156', 'PRD-018', 3, 27),
+('VNT-156', 'PRD-005', 3, 21),
+('VNT-156', 'PRD-004', 2, 14);
+
+-- Venta VNT-157 (Total: 95 Bs, Descuento: 10%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-157', 'EMP-002', 'CLI-005', '2025-10-06', 10, 95, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-157', 'PRD-023', 3, 30),
+('VNT-157', 'PRD-012', 1, 12),
+('VNT-157', 'PRD-020', 3, 24),
+('VNT-157', 'PRD-013', 2, 20),
+('VNT-157', 'PRD-018', 1, 9);
+
+-- Venta VNT-158 (Total: 56 Bs, Descuento: 15%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-158', 'EMP-003', 'CLI-005', '2025-10-13', 15, 56, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-158', 'PRD-017', 3, 33),
+('VNT-158', 'PRD-002', 1, 7),
+('VNT-158', 'PRD-006', 1, 6),
+('VNT-158', 'PRD-013', 1, 10);
+
+-- Venta VNT-159 (Total: 47 Bs, Descuento: 3%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-159', 'EMP-001', 'CLI-005', '2025-10-30', 3, 47, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-159', 'PRD-005', 3, 21),
+('VNT-159', 'PRD-002', 3, 21),
+('VNT-159', 'PRD-011', 1, 5);
+
+-- Venta VNT-160 (Total: 107 Bs, Descuento: 5%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-160', 'EMP-004', 'CLI-0013', '2025-10-21', 5, 107, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-160', 'PRD-023', 3, 30),
+('VNT-160', 'PRD-018', 1, 9),
+('VNT-160', 'PRD-021', 3, 27),
+('VNT-160', 'PRD-008', 1, 11),
+('VNT-160', 'PRD-013', 3, 30);
+
+-- Venta VNT-161 (Total: 80 Bs, Descuento: 3%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-161', 'EMP-004', 'CLI-0012', '2025-10-29', 3, 80, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-161', 'PRD-015', 3, 33),
+('VNT-161', 'PRD-011', 1, 5),
+('VNT-161', 'PRD-014', 3, 30),
+('VNT-161', 'PRD-016', 1, 12);
+
+-- Venta VNT-162 (Total: 44 Bs, Descuento: 15%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-162', 'EMP-001', 'CLI-006', '2025-10-16', 15, 44, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-162', 'PRD-002', 2, 14),
+('VNT-162', 'PRD-013', 3, 30);
+
+-- Venta VNT-163 (Total: 64 Bs, Descuento: 3%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-163', 'EMP-003', 'CLI-0012', '2025-10-02', 3, 64, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-163', 'PRD-019', 1, 12),
+('VNT-163', 'PRD-003', 2, 14),
+('VNT-163', 'PRD-015', 2, 22),
+('VNT-163', 'PRD-020', 2, 16);
+
+-- Venta VNT-164 (Total: 113 Bs, Descuento: 0%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-164', 'EMP-003', 'CLI-003', '2025-10-03', 0, 113, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-164', 'PRD-005', 2, 14),
+('VNT-164', 'PRD-008', 3, 33),
+('VNT-164', 'PRD-013', 3, 30),
+('VNT-164', 'PRD-012', 3, 36);
+
+-- Venta VNT-165 (Total: 93 Bs, Descuento: 3%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-165', 'EMP-004', 'CLI-009', '2025-10-26', 3, 93, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-165', 'PRD-013', 3, 30),
+('VNT-165', 'PRD-017', 1, 11),
+('VNT-165', 'PRD-008', 3, 33),
+('VNT-165', 'PRD-007', 2, 12),
+('VNT-165', 'PRD-004', 1, 7);
+
+-- Venta VNT-166 (Total: 27 Bs, Descuento: 5%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-166', 'EMP-001', 'CLI-008', '2025-10-18', 5, 27, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-166', 'PRD-023', 1, 10),
+('VNT-166', 'PRD-004', 1, 7),
+('VNT-166', 'PRD-013', 1, 10);
+
+-- Venta VNT-167 (Total: 72 Bs, Descuento: 0%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-167', 'EMP-002', 'CLI-0012', '2025-10-04', 0, 72, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-167', 'PRD-011', 1, 5),
+('VNT-167', 'PRD-016', 2, 24),
+('VNT-167', 'PRD-004', 1, 7),
+('VNT-167', 'PRD-019', 3, 36);
+
+-- Venta VNT-168 (Total: 60 Bs, Descuento: 15%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-168', 'EMP-004', 'CLI-0010', '2025-10-07', 15, 60, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-168', 'PRD-023', 1, 10),
+('VNT-168', 'PRD-017', 3, 33),
+('VNT-168', 'PRD-006', 2, 12),
+('VNT-168', 'PRD-010', 1, 5);
+
+-- Venta VNT-169 (Total: 63 Bs, Descuento: 5%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-169', 'EMP-004', 'CLI-001', '2025-10-08', 5, 63, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-169', 'PRD-008', 1, 11),
+('VNT-169', 'PRD-005', 1, 7),
+('VNT-169', 'PRD-020', 3, 24),
+('VNT-169', 'PRD-002', 3, 21);
+
+-- Venta VNT-170 (Total: 50 Bs, Descuento: 3%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-170', 'EMP-002', 'CLI-003', '2025-10-22', 3, 50, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-170', 'PRD-008', 2, 22),
+('VNT-170', 'PRD-023', 1, 10),
+('VNT-170', 'PRD-006', 1, 6),
+('VNT-170', 'PRD-007', 2, 12);
+
+-- Venta VNT-171 (Total: 69 Bs, Descuento: 12%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-171', 'EMP-004', 'CLI-007', '2025-10-06', 12, 69, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-171', 'PRD-006', 3, 18),
+('VNT-171', 'PRD-005', 1, 7),
+('VNT-171', 'PRD-023', 1, 10),
+('VNT-171', 'PRD-018', 3, 27),
+('VNT-171', 'PRD-003', 1, 7);
+
+-- Venta VNT-172 (Total: 95 Bs, Descuento: 15%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-172', 'EMP-004', 'CLI-0013', '2025-10-04', 15, 95, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-172', 'PRD-008', 3, 33),
+('VNT-172', 'PRD-022', 2, 20),
+('VNT-172', 'PRD-011', 2, 10),
+('VNT-172', 'PRD-004', 2, 14),
+('VNT-172', 'PRD-021', 2, 18);
+
+-- Venta VNT-173 (Total: 84 Bs, Descuento: 15%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-173', 'EMP-004', 'CLI-002', '2025-10-11', 15, 84, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-173', 'PRD-021', 3, 27),
+('VNT-173', 'PRD-012', 1, 12),
+('VNT-173', 'PRD-007', 2, 12),
+('VNT-173', 'PRD-017', 3, 33);
+
+-- Venta VNT-174 (Total: 102 Bs, Descuento: 0%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-174', 'EMP-001', 'CLI-006', '2025-10-07', 0, 102, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-174', 'PRD-018', 3, 27),
+('VNT-174', 'PRD-020', 3, 24),
+('VNT-174', 'PRD-014', 3, 30),
+('VNT-174', 'PRD-004', 3, 21);
+
+-- Venta VNT-175 (Total: 48 Bs, Descuento: 15%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-175', 'EMP-004', 'CLI-004', '2025-10-20', 15, 48, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-175', 'PRD-013', 1, 10),
+('VNT-175', 'PRD-007', 1, 6),
+('VNT-175', 'PRD-008', 1, 11),
+('VNT-175', 'PRD-004', 3, 21);
+
+-- Venta VNT-176 (Total: 40 Bs, Descuento: 10%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-176', 'EMP-001', 'CLI-005', '2025-10-01', 10, 40, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-176', 'PRD-016', 2, 24),
+('VNT-176', 'PRD-002', 1, 7),
+('VNT-176', 'PRD-018', 1, 9);
+
+-- Venta VNT-177 (Total: 60 Bs, Descuento: 15%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-177', 'EMP-003', 'CLI-0013', '2025-10-01', 15, 60, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-177', 'PRD-013', 2, 20),
+('VNT-177', 'PRD-010', 2, 10),
+('VNT-177', 'PRD-006', 1, 6),
+('VNT-177', 'PRD-005', 2, 14),
+('VNT-177', 'PRD-023', 1, 10);
+
+-- Venta VNT-178 (Total: 53 Bs, Descuento: 8%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-178', 'EMP-002', 'CLI-003', '2025-10-09', 8, 53, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-178', 'PRD-020', 2, 16),
+('VNT-178', 'PRD-013', 3, 30),
+('VNT-178', 'PRD-005', 1, 7);
+
+-- Venta VNT-179 (Total: 73 Bs, Descuento: 15%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-179', 'EMP-002', 'CLI-007', '2025-10-01', 15, 73, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-179', 'PRD-014', 1, 10),
+('VNT-179', 'PRD-023', 3, 30),
+('VNT-179', 'PRD-016', 1, 12),
+('VNT-179', 'PRD-003', 3, 21);
+
+-- Venta VNT-180 (Total: 86 Bs, Descuento: 0%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-180', 'EMP-003', 'CLI-002', '2025-10-30', 0, 86, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-180', 'PRD-018', 2, 18),
+('VNT-180', 'PRD-001', 1, 7),
+('VNT-180', 'PRD-015', 2, 22),
+('VNT-180', 'PRD-021', 2, 18),
+('VNT-180', 'PRD-002', 3, 21);
+
+-- Venta VNT-181 (Total: 92 Bs, Descuento: 12%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-181', 'EMP-002', 'CLI-006', '2025-10-26', 12, 92, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-181', 'PRD-005', 3, 21),
+('VNT-181', 'PRD-009', 3, 33),
+('VNT-181', 'PRD-020', 3, 24),
+('VNT-181', 'PRD-001', 2, 14);
+
+-- Venta VNT-182 (Total: 28 Bs, Descuento: 12%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-182', 'EMP-004', 'CLI-001', '2025-10-10', 12, 28, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-182', 'PRD-023', 1, 10),
+('VNT-182', 'PRD-003', 1, 7),
+('VNT-182', 'PRD-009', 1, 11);
+
+-- Venta VNT-183 (Total: 76 Bs, Descuento: 12%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-183', 'EMP-001', 'CLI-007', '2025-10-16', 12, 76, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-183', 'PRD-002', 2, 14),
+('VNT-183', 'PRD-016', 1, 12),
+('VNT-183', 'PRD-010', 2, 10),
+('VNT-183', 'PRD-018', 2, 18),
+('VNT-183', 'PRD-017', 2, 22);
+
+-- Venta VNT-184 (Total: 94 Bs, Descuento: 3%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-184', 'EMP-003', 'CLI-0011', '2025-10-25', 3, 94, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-184', 'PRD-005', 3, 21),
+('VNT-184', 'PRD-006', 3, 18),
+('VNT-184', 'PRD-009', 2, 22),
+('VNT-184', 'PRD-017', 3, 33);
+
+-- Venta VNT-185 (Total: 105 Bs, Descuento: 12%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-185', 'EMP-004', 'CLI-009', '2025-10-16', 12, 105, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-185', 'PRD-023', 3, 30),
+('VNT-185', 'PRD-020', 3, 24),
+('VNT-185', 'PRD-013', 3, 30),
+('VNT-185', 'PRD-005', 3, 21);
+
+-- Venta VNT-186 (Total: 87 Bs, Descuento: 10%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-186', 'EMP-003', 'CLI-004', '2025-10-26', 10, 87, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-186', 'PRD-023', 1, 10),
+('VNT-186', 'PRD-022', 1, 10),
+('VNT-186', 'PRD-015', 3, 33),
+('VNT-186', 'PRD-005', 2, 14),
+('VNT-186', 'PRD-014', 2, 20);
+
+-- Venta VNT-187 (Total: 91 Bs, Descuento: 15%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-187', 'EMP-002', 'CLI-004', '2025-10-10', 15, 91, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-187', 'PRD-017', 3, 33),
+('VNT-187', 'PRD-004', 2, 14),
+('VNT-187', 'PRD-013', 2, 20),
+('VNT-187', 'PRD-012', 1, 12),
+('VNT-187', 'PRD-019', 1, 12);
+
+-- Venta VNT-188 (Total: 45 Bs, Descuento: 8%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-188', 'EMP-002', 'CLI-008', '2025-10-12', 8, 45, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-188', 'PRD-021', 1, 9),
+('VNT-188', 'PRD-002', 2, 14),
+('VNT-188', 'PRD-009', 1, 11),
+('VNT-188', 'PRD-015', 1, 11);
+
+-- Venta VNT-189 (Total: 67 Bs, Descuento: 5%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-189', 'EMP-003', 'CLI-007', '2025-10-31', 5, 67, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-189', 'PRD-013', 1, 10),
+('VNT-189', 'PRD-023', 1, 10),
+('VNT-189', 'PRD-001', 2, 14),
+('VNT-189', 'PRD-008', 3, 33);
+
+-- Venta VNT-190 (Total: 81 Bs, Descuento: 0%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-190', 'EMP-003', 'CLI-009', '2025-10-02', 0, 81, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-190', 'PRD-017', 3, 33),
+('VNT-190', 'PRD-011', 2, 10),
+('VNT-190', 'PRD-020', 2, 16),
+('VNT-190', 'PRD-012', 1, 12),
+('VNT-190', 'PRD-023', 1, 10);
+
+-- Venta VNT-191 (Total: 56 Bs, Descuento: 5%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-191', 'EMP-002', 'CLI-001', '2025-10-28', 5, 56, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-191', 'PRD-001', 2, 14),
+('VNT-191', 'PRD-017', 2, 22),
+('VNT-191', 'PRD-022', 2, 20);
+
+-- Venta VNT-192 (Total: 71 Bs, Descuento: 5%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-192', 'EMP-002', 'CLI-0011', '2025-10-04', 5, 71, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-192', 'PRD-020', 1, 8),
+('VNT-192', 'PRD-021', 2, 18),
+('VNT-192', 'PRD-015', 1, 11),
+('VNT-192', 'PRD-001', 2, 14),
+('VNT-192', 'PRD-022', 2, 20);
+
+-- Venta VNT-193 (Total: 111 Bs, Descuento: 15%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-193', 'EMP-002', 'CLI-0012', '2025-10-09', 15, 111, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-193', 'PRD-002', 1, 7),
+('VNT-193', 'PRD-001', 2, 14),
+('VNT-193', 'PRD-021', 3, 27),
+('VNT-193', 'PRD-014', 3, 30),
+('VNT-193', 'PRD-015', 3, 33);
+
+-- Venta VNT-194 (Total: 117 Bs, Descuento: 5%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-194', 'EMP-001', 'CLI-005', '2025-10-04', 5, 117, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-194', 'PRD-008', 3, 33),
+('VNT-194', 'PRD-023', 2, 20),
+('VNT-194', 'PRD-013', 1, 10),
+('VNT-194', 'PRD-003', 3, 21),
+('VNT-194', 'PRD-009', 3, 33);
+
+-- Venta VNT-195 (Total: 12 Bs, Descuento: 12%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-195', 'EMP-004', 'CLI-0012', '2025-10-18', 12, 12, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-195', 'PRD-007', 2, 12);
+
+-- Venta VNT-196 (Total: 110 Bs, Descuento: 5%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-196', 'EMP-004', 'CLI-005', '2025-10-09', 5, 110, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-196', 'PRD-018', 1, 9),
+('VNT-196', 'PRD-008', 3, 33),
+('VNT-196', 'PRD-007', 2, 12),
+('VNT-196', 'PRD-013', 2, 20),
+('VNT-196', 'PRD-012', 3, 36);
+
+-- Venta VNT-197 (Total: 75 Bs, Descuento: 15%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-197', 'EMP-003', 'CLI-003', '2025-10-27', 15, 75, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-197', 'PRD-004', 3, 21),
+('VNT-197', 'PRD-011', 2, 10),
+('VNT-197', 'PRD-017', 3, 33),
+('VNT-197', 'PRD-009', 1, 11);
+
+-- Venta VNT-198 (Total: 76 Bs, Descuento: 8%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-198', 'EMP-004', 'CLI-006', '2025-10-05', 8, 76, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-198', 'PRD-004', 1, 7),
+('VNT-198', 'PRD-007', 2, 12),
+('VNT-198', 'PRD-002', 1, 7),
+('VNT-198', 'PRD-022', 2, 20),
+('VNT-198', 'PRD-014', 3, 30);
+
+-- Venta VNT-199 (Total: 89 Bs, Descuento: 8%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-199', 'EMP-004', 'CLI-0010', '2025-10-20', 8, 89, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-199', 'PRD-012', 3, 36),
+('VNT-199', 'PRD-007', 2, 12),
+('VNT-199', 'PRD-022', 2, 20),
+('VNT-199', 'PRD-005', 3, 21);
+
+-- Venta VNT-200 (Total: 45 Bs, Descuento: 5%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-200', 'EMP-001', 'CLI-003', '2025-10-02', 5, 45, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-200', 'PRD-020', 2, 16),
+('VNT-200', 'PRD-011', 1, 5),
+('VNT-200', 'PRD-016', 2, 24);
+
+-- Venta VNT-201 (Total: 126 Bs, Descuento: 12%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-201', 'EMP-002', 'CLI-006', '2025-10-29', 12, 126, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-201', 'PRD-009', 3, 33),
+('VNT-201', 'PRD-005', 3, 21),
+('VNT-201', 'PRD-008', 2, 22),
+('VNT-201', 'PRD-013', 3, 30),
+('VNT-201', 'PRD-014', 2, 20);
+
+-- Venta VNT-202 (Total: 53 Bs, Descuento: 15%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-202', 'EMP-003', 'CLI-009', '2025-10-22', 15, 53, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-202', 'PRD-020', 1, 8),
+('VNT-202', 'PRD-017', 1, 11),
+('VNT-202', 'PRD-015', 2, 22),
+('VNT-202', 'PRD-007', 2, 12);
+
+-- Venta VNT-203 (Total: 66 Bs, Descuento: 8%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-203', 'EMP-002', 'CLI-005', '2025-10-06', 8, 66, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-203', 'PRD-017', 2, 22),
+('VNT-203', 'PRD-006', 3, 18),
+('VNT-203', 'PRD-004', 2, 14),
+('VNT-203', 'PRD-012', 1, 12);
+
+-- Venta VNT-204 (Total: 66 Bs, Descuento: 8%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-204', 'EMP-003', 'CLI-0010', '2025-10-15', 8, 66, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-204', 'PRD-003', 3, 21),
+('VNT-204', 'PRD-007', 3, 18),
+('VNT-204', 'PRD-011', 1, 5),
+('VNT-204', 'PRD-008', 2, 22);
+
+-- Venta VNT-205 (Total: 111 Bs, Descuento: 8%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-205', 'EMP-002', 'CLI-0011', '2025-10-31', 8, 111, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-205', 'PRD-023', 3, 30),
+('VNT-205', 'PRD-022', 3, 30),
+('VNT-205', 'PRD-003', 3, 21),
+('VNT-205', 'PRD-014', 3, 30);
+
+-- Venta VNT-206 (Total: 61 Bs, Descuento: 15%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-206', 'EMP-001', 'CLI-004', '2025-10-26', 15, 61, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-206', 'PRD-019', 3, 36),
+('VNT-206', 'PRD-010', 2, 10),
+('VNT-206', 'PRD-022', 1, 10),
+('VNT-206', 'PRD-011', 1, 5);
+
+-- Venta VNT-207 (Total: 62 Bs, Descuento: 0%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-207', 'EMP-004', 'CLI-0010', '2025-10-16', 0, 62, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-207', 'PRD-014', 3, 30),
+('VNT-207', 'PRD-007', 3, 18),
+('VNT-207', 'PRD-004', 2, 14);
+
+-- Venta VNT-208 (Total: 74 Bs, Descuento: 5%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-208', 'EMP-001', 'CLI-001', '2025-10-26', 5, 74, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-208', 'PRD-010', 1, 5),
+('VNT-208', 'PRD-018', 2, 18),
+('VNT-208', 'PRD-005', 3, 21),
+('VNT-208', 'PRD-016', 1, 12),
+('VNT-208', 'PRD-006', 3, 18);
+
+-- Venta VNT-209 (Total: 51 Bs, Descuento: 8%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-209', 'EMP-001', 'CLI-0013', '2025-10-31', 8, 51, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-209', 'PRD-010', 1, 5),
+('VNT-209', 'PRD-011', 2, 10),
+('VNT-209', 'PRD-020', 2, 16),
+('VNT-209', 'PRD-023', 2, 20);
+
+-- Venta VNT-210 (Total: 53 Bs, Descuento: 5%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-210', 'EMP-001', 'CLI-007', '2025-10-16', 5, 53, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-210', 'PRD-004', 3, 21),
+('VNT-210', 'PRD-022', 1, 10),
+('VNT-210', 'PRD-008', 2, 22);
+
+-- Venta VNT-211 (Total: 107 Bs, Descuento: 0%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-211', 'EMP-002', 'CLI-0012', '2025-10-17', 0, 107, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-211', 'PRD-012', 3, 36),
+('VNT-211', 'PRD-006', 2, 12),
+('VNT-211', 'PRD-022', 2, 20),
+('VNT-211', 'PRD-023', 3, 30),
+('VNT-211', 'PRD-021', 1, 9);
+
+-- Venta VNT-212 (Total: 36 Bs, Descuento: 15%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-212', 'EMP-004', 'CLI-002', '2025-10-01', 15, 36, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-212', 'PRD-020', 3, 24),
+('VNT-212', 'PRD-011', 1, 5),
+('VNT-212', 'PRD-005', 1, 7);
+
+-- Venta VNT-213 (Total: 71 Bs, Descuento: 3%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-213', 'EMP-002', 'CLI-007', '2025-10-23', 3, 71, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-213', 'PRD-021', 3, 27),
+('VNT-213', 'PRD-016', 2, 24),
+('VNT-213', 'PRD-011', 2, 10),
+('VNT-213', 'PRD-022', 1, 10);
+
+-- Venta VNT-214 (Total: 40 Bs, Descuento: 15%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-214', 'EMP-003', 'CLI-006', '2025-10-07', 15, 40, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-214', 'PRD-003', 1, 7),
+('VNT-214', 'PRD-015', 1, 11),
+('VNT-214', 'PRD-017', 2, 22);
+
+-- Venta VNT-215 (Total: 60 Bs, Descuento: 0%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-215', 'EMP-004', 'CLI-0010', '2025-10-25', 0, 60, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-215', 'PRD-004', 2, 14),
+('VNT-215', 'PRD-012', 2, 24),
+('VNT-215', 'PRD-019', 1, 12),
+('VNT-215', 'PRD-022', 1, 10);
+
+-- Venta VNT-216 (Total: 32 Bs, Descuento: 5%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-216', 'EMP-003', 'CLI-001', '2025-10-06', 5, 32, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-216', 'PRD-009', 1, 11),
+('VNT-216', 'PRD-005', 3, 21);
+
+-- Venta VNT-217 (Total: 47 Bs, Descuento: 3%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-217', 'EMP-003', 'CLI-002', '2025-10-21', 3, 47, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-217', 'PRD-004', 2, 14),
+('VNT-217', 'PRD-010', 3, 15),
+('VNT-217', 'PRD-007', 2, 12),
+('VNT-217', 'PRD-006', 1, 6);
+
+-- Venta VNT-218 (Total: 26 Bs, Descuento: 15%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-218', 'EMP-002', 'CLI-0013', '2025-10-15', 15, 26, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-218', 'PRD-022', 1, 10),
+('VNT-218', 'PRD-010', 1, 5),
+('VNT-218', 'PRD-017', 1, 11);
+
+-- Venta VNT-219 (Total: 48 Bs, Descuento: 12%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-219', 'EMP-001', 'CLI-0011', '2025-10-26', 12, 48, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-219', 'PRD-018', 2, 18),
+('VNT-219', 'PRD-011', 1, 5),
+('VNT-219', 'PRD-004', 1, 7),
+('VNT-219', 'PRD-021', 2, 18);
+
+-- Venta VNT-220 (Total: 68 Bs, Descuento: 10%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-220', 'EMP-002', 'CLI-001', '2025-10-19', 10, 68, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-220', 'PRD-001', 2, 14),
+('VNT-220', 'PRD-009', 1, 11),
+('VNT-220', 'PRD-023', 2, 20),
+('VNT-220', 'PRD-006', 2, 12),
+('VNT-220', 'PRD-008', 1, 11);
+
+-- Venta VNT-221 (Total: 59 Bs, Descuento: 0%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-221', 'EMP-003', 'CLI-005', '2025-10-18', 0, 59, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-221', 'PRD-014', 2, 20),
+('VNT-221', 'PRD-009', 2, 22),
+('VNT-221', 'PRD-004', 1, 7),
+('VNT-221', 'PRD-023', 1, 10);
+
+-- Venta VNT-222 (Total: 83 Bs, Descuento: 12%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-222', 'EMP-004', 'CLI-009', '2025-10-05', 12, 83, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-222', 'PRD-016', 3, 36),
+('VNT-222', 'PRD-021', 2, 18),
+('VNT-222', 'PRD-011', 1, 5),
+('VNT-222', 'PRD-020', 3, 24);
+
+-- Venta VNT-223 (Total: 27 Bs, Descuento: 10%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-223', 'EMP-002', 'CLI-006', '2025-10-22', 10, 27, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-223', 'PRD-012', 1, 12),
+('VNT-223', 'PRD-020', 1, 8),
+('VNT-223', 'PRD-005', 1, 7);
+
+-- Venta VNT-224 (Total: 66 Bs, Descuento: 0%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-224', 'EMP-002', 'CLI-004', '2025-10-17', 0, 66, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-224', 'PRD-009', 2, 22),
+('VNT-224', 'PRD-003', 2, 14),
+('VNT-224', 'PRD-023', 3, 30);
+
+-- Venta VNT-225 (Total: 63 Bs, Descuento: 0%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-225', 'EMP-002', 'CLI-001', '2025-10-06', 0, 63, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-225', 'PRD-007', 3, 18),
+('VNT-225', 'PRD-012', 1, 12),
+('VNT-225', 'PRD-004', 2, 14),
+('VNT-225', 'PRD-003', 1, 7),
+('VNT-225', 'PRD-016', 1, 12);
+
+-- Venta VNT-226 (Total: 44 Bs, Descuento: 3%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-226', 'EMP-002', 'CLI-001', '2025-10-15', 3, 44, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-226', 'PRD-022', 1, 10),
+('VNT-226', 'PRD-009', 2, 22),
+('VNT-226', 'PRD-019', 1, 12);
+
+-- Venta VNT-227 (Total: 100 Bs, Descuento: 12%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-227', 'EMP-003', 'CLI-0011', '2025-10-26', 12, 100, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-227', 'PRD-014', 2, 20),
+('VNT-227', 'PRD-009', 3, 33),
+('VNT-227', 'PRD-022', 2, 20),
+('VNT-227', 'PRD-021', 3, 27);
+
+-- Venta VNT-228 (Total: 65 Bs, Descuento: 12%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-228', 'EMP-002', 'CLI-0013', '2025-10-26', 12, 65, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-228', 'PRD-013', 2, 20),
+('VNT-228', 'PRD-016', 2, 24),
+('VNT-228', 'PRD-005', 3, 21);
+
+-- Venta VNT-229 (Total: 15 Bs, Descuento: 15%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-229', 'EMP-003', 'CLI-0010', '2025-10-21', 15, 15, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-229', 'PRD-011', 3, 15);
+
+-- Venta VNT-230 (Total: 111 Bs, Descuento: 10%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-230', 'EMP-004', 'CLI-0011', '2025-10-03', 10, 111, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-230', 'PRD-003', 1, 7),
+('VNT-230', 'PRD-017', 3, 33),
+('VNT-230', 'PRD-004', 3, 21),
+('VNT-230', 'PRD-005', 2, 14),
+('VNT-230', 'PRD-016', 3, 36);
+
+-- Venta VNT-231 (Total: 81 Bs, Descuento: 12%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-231', 'EMP-001', 'CLI-007', '2025-10-31', 12, 81, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-231', 'PRD-016', 1, 12),
+('VNT-231', 'PRD-012', 1, 12),
+('VNT-231', 'PRD-017', 1, 11),
+('VNT-231', 'PRD-020', 3, 24),
+('VNT-231', 'PRD-015', 2, 22);
+
+-- Venta VNT-232 (Total: 55 Bs, Descuento: 5%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-232', 'EMP-004', 'CLI-009', '2025-10-31', 5, 55, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-232', 'PRD-015', 2, 22),
+('VNT-232', 'PRD-008', 3, 33);
+
+-- Venta VNT-233 (Total: 99 Bs, Descuento: 0%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-233', 'EMP-001', 'CLI-009', '2025-10-01', 0, 99, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-233', 'PRD-022', 3, 30),
+('VNT-233', 'PRD-020', 2, 16),
+('VNT-233', 'PRD-001', 3, 21),
+('VNT-233', 'PRD-005', 3, 21),
+('VNT-233', 'PRD-009', 1, 11);
+
+-- Venta VNT-234 (Total: 40 Bs, Descuento: 12%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-234', 'EMP-002', 'CLI-009', '2025-10-12', 12, 40, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-234', 'PRD-001', 1, 7),
+('VNT-234', 'PRD-018', 1, 9),
+('VNT-234', 'PRD-016', 2, 24);
+
+-- Venta VNT-235 (Total: 59 Bs, Descuento: 12%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-235', 'EMP-002', 'CLI-002', '2025-10-07', 12, 59, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-235', 'PRD-010', 3, 15),
+('VNT-235', 'PRD-002', 2, 14),
+('VNT-235', 'PRD-023', 3, 30);
+
+-- Venta VNT-236 (Total: 43 Bs, Descuento: 8%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-236', 'EMP-003', 'CLI-004', '2025-11-04', 8, 43, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-236', 'PRD-022', 1, 10),
+('VNT-236', 'PRD-017', 1, 11),
+('VNT-236', 'PRD-015', 2, 22);
+
+-- Venta VNT-237 (Total: 51 Bs, Descuento: 15%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-237', 'EMP-002', 'CLI-004', '2025-11-01', 15, 51, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-237', 'PRD-020', 2, 16),
+('VNT-237', 'PRD-011', 3, 15),
+('VNT-237', 'PRD-021', 1, 9),
+('VNT-237', 'PRD-008', 1, 11);
+
+-- Venta VNT-238 (Total: 57 Bs, Descuento: 12%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-238', 'EMP-003', 'CLI-008', '2025-11-04', 12, 57, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-238', 'PRD-020', 1, 8),
+('VNT-238', 'PRD-011', 2, 10),
+('VNT-238', 'PRD-010', 3, 15),
+('VNT-238', 'PRD-016', 2, 24);
+
+-- Venta VNT-239 (Total: 36 Bs, Descuento: 3%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-239', 'EMP-004', 'CLI-007', '2025-11-07', 3, 36, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-239', 'PRD-012', 3, 36);
+
+-- Venta VNT-240 (Total: 80 Bs, Descuento: 12%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-240', 'EMP-004', 'CLI-0010', '2025-11-02', 12, 80, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-240', 'PRD-006', 2, 12),
+('VNT-240', 'PRD-007', 2, 12),
+('VNT-240', 'PRD-019', 2, 24),
+('VNT-240', 'PRD-001', 3, 21),
+('VNT-240', 'PRD-017', 1, 11);
+
+-- Venta VNT-241 (Total: 55 Bs, Descuento: 5%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-241', 'EMP-002', 'CLI-0011', '2025-11-06', 5, 55, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-241', 'PRD-023', 2, 20),
+('VNT-241', 'PRD-001', 2, 14),
+('VNT-241', 'PRD-003', 3, 21);
+
+-- Venta VNT-242 (Total: 102 Bs, Descuento: 12%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-242', 'EMP-004', 'CLI-0011', '2025-11-05', 12, 102, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-242', 'PRD-008', 3, 33),
+('VNT-242', 'PRD-009', 1, 11),
+('VNT-242', 'PRD-012', 3, 36),
+('VNT-242', 'PRD-017', 2, 22);
+
+-- Venta VNT-243 (Total: 25 Bs, Descuento: 12%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-243', 'EMP-004', 'CLI-0010', '2025-11-10', 12, 25, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-243', 'PRD-003', 1, 7),
+('VNT-243', 'PRD-005', 1, 7),
+('VNT-243', 'PRD-009', 1, 11);
+
+-- Venta VNT-244 (Total: 102 Bs, Descuento: 10%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-244', 'EMP-001', 'CLI-0013', '2025-11-08', 10, 102, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-244', 'PRD-022', 3, 30),
+('VNT-244', 'PRD-002', 2, 14),
+('VNT-244', 'PRD-009', 2, 22),
+('VNT-244', 'PRD-019', 3, 36);
+
+-- Venta VNT-245 (Total: 12 Bs, Descuento: 10%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-245', 'EMP-002', 'CLI-001', '2025-11-10', 10, 12, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-245', 'PRD-019', 1, 12);
+
+-- Venta VNT-246 (Total: 40 Bs, Descuento: 0%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-246', 'EMP-001', 'CLI-0011', '2025-11-08', 0, 40, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-246', 'PRD-005', 3, 21),
+('VNT-246', 'PRD-019', 1, 12),
+('VNT-246', 'PRD-004', 1, 7);
+
+-- Venta VNT-247 (Total: 55 Bs, Descuento: 15%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-247', 'EMP-001', 'CLI-013', '2025-11-03', 15, 55, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-247', 'PRD-019', 1, 12),
+('VNT-247', 'PRD-001', 2, 14),
+('VNT-247', 'PRD-008', 2, 22),
+('VNT-247', 'PRD-003', 1, 7);
+
+-- Venta VNT-248 (Total: 80 Bs, Descuento: 3%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-248', 'EMP-001', 'CLI-010', '2025-11-06', 3, 80, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-248', 'PRD-016', 1, 12),
+('VNT-248', 'PRD-020', 3, 24),
+('VNT-248', 'PRD-021', 3, 27),
+('VNT-248', 'PRD-013', 1, 10),
+('VNT-248', 'PRD-002', 1, 7);
+
+-- Venta VNT-249 (Total: 50 Bs, Descuento: 0%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-249', 'EMP-002', 'CLI-005', '2025-11-07', 0, 50, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-249', 'PRD-008', 1, 11),
+('VNT-249', 'PRD-021', 2, 18),
+('VNT-249', 'PRD-003', 3, 21);
+
+-- Venta VNT-250 (Total: 33 Bs, Descuento: 12%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-250', 'EMP-001', 'CLI-008', '2025-11-02', 12, 33, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-250', 'PRD-015', 3, 33);
+
+-- Venta VNT-251 (Total: 69 Bs, Descuento: 12%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-251', 'EMP-002', 'CLI-013', '2025-11-08', 12, 69, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-251', 'PRD-015', 2, 22),
+('VNT-251', 'PRD-006', 1, 6),
+('VNT-251', 'PRD-013', 1, 10),
+('VNT-251', 'PRD-012', 2, 24),
+('VNT-251', 'PRD-005', 1, 7);
+
+-- Venta VNT-252 (Total: 82 Bs, Descuento: 0%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-252', 'EMP-004', 'CLI-010', '2025-11-06', 0, 82, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-252', 'PRD-022', 2, 20),
+('VNT-252', 'PRD-005', 2, 14),
+('VNT-252', 'PRD-009', 1, 11),
+('VNT-252', 'PRD-015', 2, 22),
+('VNT-252', 'PRD-011', 3, 15);
+
+-- Venta VNT-253 (Total: 83 Bs, Descuento: 12%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-253', 'EMP-002', 'CLI-004', '2025-11-04', 12, 83, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-253', 'PRD-015', 3, 33),
+('VNT-253', 'PRD-013', 1, 10),
+('VNT-253', 'PRD-017', 2, 22),
+('VNT-253', 'PRD-007', 3, 18);
+
+-- Venta VNT-254 (Total: 19 Bs, Descuento: 10%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-254', 'EMP-003', 'CLI-009', '2025-11-10', 10, 19, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-254', 'PRD-018', 1, 9),
+('VNT-254', 'PRD-014', 1, 10);
+
+-- Venta VNT-255 (Total: 44 Bs, Descuento: 12%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-255', 'EMP-003', 'CLI-013', '2025-11-10', 12, 44, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-255', 'PRD-020', 1, 8),
+('VNT-255', 'PRD-006', 1, 6),
+('VNT-255', 'PRD-014', 3, 30);
+
+-- Venta VNT-256 (Total: 85 Bs, Descuento: 15%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-256', 'EMP-002', 'CLI-001', '2025-11-03', 15, 85, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-256', 'PRD-005', 1, 7),
+('VNT-256', 'PRD-016', 3, 36),
+('VNT-256', 'PRD-020', 3, 24),
+('VNT-256', 'PRD-006', 3, 18);
+
+-- Venta VNT-257 (Total: 88 Bs, Descuento: 3%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-257', 'EMP-003', 'CLI-008', '2025-11-07', 3, 88, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-257', 'PRD-009', 2, 22),
+('VNT-257', 'PRD-002', 2, 14),
+('VNT-257', 'PRD-015', 1, 11),
+('VNT-257', 'PRD-023', 3, 30),
+('VNT-257', 'PRD-017', 1, 11);
+
+-- Venta VNT-258 (Total: 106 Bs, Descuento: 5%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-258', 'EMP-001', 'CLI-006', '2025-11-01', 5, 106, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-258', 'PRD-008', 1, 11),
+('VNT-258', 'PRD-011', 3, 15),
+('VNT-258', 'PRD-001', 2, 14),
+('VNT-258', 'PRD-019', 3, 36),
+('VNT-258', 'PRD-022', 3, 30);
+
+-- Venta VNT-259 (Total: 65 Bs, Descuento: 8%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-259', 'EMP-002', 'CLI-012', '2025-11-02', 8, 65, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-259', 'PRD-014', 2, 20),
+('VNT-259', 'PRD-022', 1, 10),
+('VNT-259', 'PRD-004', 2, 14),
+('VNT-259', 'PRD-006', 1, 6),
+('VNT-259', 'PRD-010', 3, 15);
+
+-- Venta VNT-260 (Total: 102 Bs, Descuento: 5%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-260', 'EMP-003', 'CLI-001', '2025-11-07', 5, 102, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-260', 'PRD-016', 3, 36),
+('VNT-260', 'PRD-013', 2, 20),
+('VNT-260', 'PRD-009', 1, 11),
+('VNT-260', 'PRD-002', 2, 14),
+('VNT-260', 'PRD-003', 3, 21);
+
+-- Venta VNT-261 (Total: 90 Bs, Descuento: 8%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-261', 'EMP-002', 'CLI-012', '2025-11-07', 8, 90, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-261', 'PRD-004', 3, 21),
+('VNT-261', 'PRD-001', 3, 21),
+('VNT-261', 'PRD-012', 3, 36),
+('VNT-261', 'PRD-006', 2, 12);
+
+-- Venta VNT-262 (Total: 61 Bs, Descuento: 0%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-262', 'EMP-001', 'CLI-010', '2025-11-10', 0, 61, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-262', 'PRD-004', 2, 14),
+('VNT-262', 'PRD-018', 2, 18),
+('VNT-262', 'PRD-001', 1, 7),
+('VNT-262', 'PRD-003', 1, 7),
+('VNT-262', 'PRD-010', 3, 15);
+
+-- Venta VNT-263 (Total: 86 Bs, Descuento: 12%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-263', 'EMP-003', 'CLI-007', '2025-11-07', 12, 86, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-263', 'PRD-019', 1, 12),
+('VNT-263', 'PRD-012', 3, 36),
+('VNT-263', 'PRD-006', 3, 18),
+('VNT-263', 'PRD-023', 2, 20);
+
+-- Venta VNT-264 (Total: 55 Bs, Descuento: 5%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-264', 'EMP-003', 'CLI-013', '2025-11-02', 5, 55, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-264', 'PRD-023', 1, 10),
+('VNT-264', 'PRD-016', 2, 24),
+('VNT-264', 'PRD-009', 1, 11),
+('VNT-264', 'PRD-010', 2, 10);
+
+-- Venta VNT-265 (Total: 99 Bs, Descuento: 10%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-265', 'EMP-002', 'CLI-010', '2025-11-05', 10, 99, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-265', 'PRD-013', 3, 30),
+('VNT-265', 'PRD-004', 2, 14),
+('VNT-265', 'PRD-003', 2, 14),
+('VNT-265', 'PRD-015', 1, 11),
+('VNT-265', 'PRD-014', 3, 30);
+
+-- Venta VNT-266 (Total: 29 Bs, Descuento: 3%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-266', 'EMP-003', 'CLI-003', '2025-11-07', 3, 29, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-266', 'PRD-010', 2, 10),
+('VNT-266', 'PRD-012', 1, 12),
+('VNT-266', 'PRD-005', 1, 7);
+
+-- Venta VNT-267 (Total: 89 Bs, Descuento: 8%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-267', 'EMP-003', 'CLI-008', '2025-11-03', 8, 89, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-267', 'PRD-015', 2, 22),
+('VNT-267', 'PRD-020', 3, 24),
+('VNT-267', 'PRD-009', 2, 22),
+('VNT-267', 'PRD-001', 3, 21);
+
+-- Venta VNT-268 (Total: 55 Bs, Descuento: 12%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-268', 'EMP-004', 'CLI-010', '2025-11-05', 12, 55, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-268', 'PRD-004', 1, 7),
+('VNT-268', 'PRD-008', 3, 33),
+('VNT-268', 'PRD-020', 1, 8),
+('VNT-268', 'PRD-005', 1, 7);
+
+-- Venta VNT-269 (Total: 45 Bs, Descuento: 10%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-269', 'EMP-004', 'CLI-013', '2025-11-03', 10, 45, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-269', 'PRD-013', 1, 10),
+('VNT-269', 'PRD-004', 3, 21),
+('VNT-269', 'PRD-002', 2, 14);
+
+-- Venta VNT-270 (Total: 36 Bs, Descuento: 10%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-270', 'EMP-003', 'CLI-002', '2025-11-03', 10, 36, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-270', 'PRD-023', 2, 20),
+('VNT-270', 'PRD-020', 2, 16);
+
+-- Venta VNT-271 (Total: 80 Bs, Descuento: 10%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-271', 'EMP-003', 'CLI-004', '2025-11-02', 10, 80, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-271', 'PRD-020', 3, 24),
+('VNT-271', 'PRD-023', 2, 20),
+('VNT-271', 'PRD-012', 3, 36);
+
+-- Venta VNT-272 (Total: 75 Bs, Descuento: 12%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-272', 'EMP-003', 'CLI-012', '2025-11-03', 12, 75, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-272', 'PRD-012', 2, 24),
+('VNT-272', 'PRD-016', 2, 24),
+('VNT-272', 'PRD-018', 3, 27);
+
+-- Venta VNT-273 (Total: 102 Bs, Descuento: 8%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-273', 'EMP-002', 'CLI-013', '2025-11-07', 8, 102, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-273', 'PRD-009', 2, 22),
+('VNT-273', 'PRD-008', 2, 22),
+('VNT-273', 'PRD-023', 3, 30),
+('VNT-273', 'PRD-018', 2, 18),
+('VNT-273', 'PRD-013', 1, 10);
+
+-- Venta VNT-274 (Total: 55 Bs, Descuento: 3%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-274', 'EMP-002', 'CLI-005', '2025-11-06', 3, 55, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-274', 'PRD-009', 3, 33),
+('VNT-274', 'PRD-017', 2, 22);
+
+-- Venta VNT-275 (Total: 29 Bs, Descuento: 0%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-275', 'EMP-004', 'CLI-013', '2025-11-10', 0, 29, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-275', 'PRD-017', 1, 11),
+('VNT-275', 'PRD-006', 3, 18);
+
+-- Venta VNT-276 (Total: 74 Bs, Descuento: 10%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-276', 'EMP-002', 'CLI-008', '2025-11-01', 10, 74, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-276', 'PRD-020', 2, 16),
+('VNT-276', 'PRD-021', 3, 27),
+('VNT-276', 'PRD-022', 1, 10),
+('VNT-276', 'PRD-005', 3, 21);
+
+-- Venta VNT-277 (Total: 43 Bs, Descuento: 0%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-277', 'EMP-003', 'CLI-006', '2025-11-01', 0, 43, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-277', 'PRD-005', 2, 14),
+('VNT-277', 'PRD-004', 1, 7),
+('VNT-277', 'PRD-008', 2, 22);
+
+-- Venta VNT-278 (Total: 50 Bs, Descuento: 0%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-278', 'EMP-004', 'CLI-006', '2025-11-02', 0, 50, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-278', 'PRD-006', 3, 18),
+('VNT-278', 'PRD-023', 1, 10),
+('VNT-278', 'PRD-017', 2, 22);
+
+-- Venta VNT-279 (Total: 56 Bs, Descuento: 12%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-279', 'EMP-002', 'CLI-010', '2025-11-07', 12, 56, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-279', 'PRD-020', 1, 8),
+('VNT-279', 'PRD-022', 3, 30),
+('VNT-279', 'PRD-006', 3, 18);
+
+-- Venta VNT-280 (Total: 42 Bs, Descuento: 15%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-280', 'EMP-003', 'CLI-012', '2025-11-10', 15, 42, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-280', 'PRD-010', 2, 10),
+('VNT-280', 'PRD-007', 3, 18),
+('VNT-280', 'PRD-002', 2, 14);
+
+-- Venta VNT-281 (Total: 29 Bs, Descuento: 5%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-281', 'EMP-003', 'CLI-004', '2025-11-03', 5, 29, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-281', 'PRD-002', 3, 21),
+('VNT-281', 'PRD-020', 1, 8);
+
+-- Venta VNT-282 (Total: 89 Bs, Descuento: 8%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-282', 'EMP-004', 'CLI-005', '2025-11-06', 8, 89, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-282', 'PRD-018', 1, 9),
+('VNT-282', 'PRD-014', 3, 30),
+('VNT-282', 'PRD-010', 2, 10),
+('VNT-282', 'PRD-008', 3, 33),
+('VNT-282', 'PRD-004', 1, 7);
+
+-- Venta VNT-283 (Total: 127 Bs, Descuento: 3%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-283', 'EMP-003', 'CLI-008', '2025-11-02', 3, 127, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-283', 'PRD-008', 2, 22),
+('VNT-283', 'PRD-002', 3, 21),
+('VNT-283', 'PRD-014', 3, 30),
+('VNT-283', 'PRD-012', 2, 24),
+('VNT-283', 'PRD-022', 3, 30);
+
+-- Venta VNT-284 (Total: 104 Bs, Descuento: 12%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-284', 'EMP-004', 'CLI-007', '2025-11-10', 12, 104, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-284', 'PRD-017', 1, 11),
+('VNT-284', 'PRD-022', 3, 30),
+('VNT-284', 'PRD-009', 3, 33),
+('VNT-284', 'PRD-013', 3, 30);
+
+-- Venta VNT-285 (Total: 68 Bs, Descuento: 8%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-285', 'EMP-004', 'CLI-013', '2025-11-08', 8, 68, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-285', 'PRD-001', 3, 21),
+('VNT-285', 'PRD-008', 1, 11),
+('VNT-285', 'PRD-006', 3, 18),
+('VNT-285', 'PRD-007', 3, 18);
+
+-- Venta VNT-286 (Total: 51 Bs, Descuento: 10%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-286', 'EMP-003', 'CLI-004', '2025-11-01', 10, 51, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-286', 'PRD-006', 3, 18),
+('VNT-286', 'PRD-014', 1, 10),
+('VNT-286', 'PRD-017', 1, 11),
+('VNT-286', 'PRD-012', 1, 12);
+
+-- Venta VNT-287 (Total: 100 Bs, Descuento: 8%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-287', 'EMP-001', 'CLI-011', '2025-11-02', 8, 100, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-287', 'PRD-023', 3, 30),
+('VNT-287', 'PRD-014', 1, 10),
+('VNT-287', 'PRD-020', 3, 24),
+('VNT-287', 'PRD-019', 1, 12),
+('VNT-287', 'PRD-016', 2, 24);
+
+-- Venta VNT-288 (Total: 69 Bs, Descuento: 15%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-288', 'EMP-001', 'CLI-009', '2025-11-09', 15, 69, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-288', 'PRD-016', 2, 24),
+('VNT-288', 'PRD-015', 3, 33),
+('VNT-288', 'PRD-007', 2, 12);
+
+-- Venta VNT-289 (Total: 99 Bs, Descuento: 10%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-289', 'EMP-002', 'CLI-007', '2025-11-03', 10, 99, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-289', 'PRD-007', 3, 18),
+('VNT-289', 'PRD-023', 2, 20),
+('VNT-289', 'PRD-006', 3, 18),
+('VNT-289', 'PRD-009', 3, 33),
+('VNT-289', 'PRD-013', 1, 10);
+
+-- Venta VNT-290 (Total: 49 Bs, Descuento: 15%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-290', 'EMP-003', 'CLI-005', '2025-11-06', 15, 49, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-290', 'PRD-004', 1, 7),
+('VNT-290', 'PRD-006', 1, 6),
+('VNT-290', 'PRD-023', 2, 20),
+('VNT-290', 'PRD-020', 2, 16);
+
+-- Venta VNT-291 (Total: 59 Bs, Descuento: 3%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-291', 'EMP-002', 'CLI-006', '2025-11-09', 3, 59, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-291', 'PRD-006', 3, 18),
+('VNT-291', 'PRD-015', 1, 11),
+('VNT-291', 'PRD-005', 3, 21),
+('VNT-291', 'PRD-018', 1, 9);
+
+-- Venta VNT-292 (Total: 116 Bs, Descuento: 10%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-292', 'EMP-003', 'CLI-004', '2025-11-10', 10, 116, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-292', 'PRD-009', 3, 33),
+('VNT-292', 'PRD-012', 3, 36),
+('VNT-292', 'PRD-010', 3, 15),
+('VNT-292', 'PRD-019', 2, 24),
+('VNT-292', 'PRD-020', 1, 8);
+
+-- Venta VNT-293 (Total: 52 Bs, Descuento: 0%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-293', 'EMP-004', 'CLI-006', '2025-11-10', 0, 52, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-293', 'PRD-008', 2, 22),
+('VNT-293', 'PRD-021', 2, 18),
+('VNT-293', 'PRD-019', 1, 12);
+
+-- Venta VNT-294 (Total: 118 Bs, Descuento: 12%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-294', 'EMP-004', 'CLI-012', '2025-11-02', 12, 118, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-294', 'PRD-021', 1, 9),
+('VNT-294', 'PRD-013', 3, 30),
+('VNT-294', 'PRD-008', 3, 33),
+('VNT-294', 'PRD-017', 2, 22),
+('VNT-294', 'PRD-019', 2, 24);
+
+-- Venta VNT-295 (Total: 45 Bs, Descuento: 15%)
+INSERT INTO Venta (VentaID, EmpleadoID, ClienteID, FechaVenta, Descuento, Total, Archivada)
+VALUES ('VNT-295', 'EMP-004', 'CLI-010', '2025-11-05', 15, 45, 0);
+
+INSERT INTO DetalleVenta (VentaID, ProductoID, Cantidad, Subtotal)
+VALUES
+('VNT-295', 'PRD-004', 2, 14),
+('VNT-295', 'PRD-003', 3, 21),
+('VNT-295', 'PRD-010', 2, 10);
