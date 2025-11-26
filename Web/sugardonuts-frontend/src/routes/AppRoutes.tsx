@@ -64,6 +64,7 @@ export default function AppRoutes() {
           <Route path="ventas" element={<VentasE />} />
           <Route path="catalogo" element={<CatalogoE />} />
           <Route path="reservas" element={<ReservasE />} />
+         
         </Route>  
       <Route path="*" element={<NotFound />} />
     </Routes>

@@ -1,6 +1,18 @@
 // src/pages/manager/Ventas.tsx
 import React, { useEffect, useState } from "react";
-import { ShoppingBag, DollarSign, CheckCircle } from "lucide-react";
+import {
+  ShoppingBag,
+  DollarSign,
+  CheckCircle,
+  Search,
+  Archive,
+  ChevronDown,
+  ChevronUp,
+  Calendar,
+  User,
+  Loader2,
+  Package
+} from "lucide-react";
 import { productoService, type Producto } from '../../services/Prod-DetVenta';
 import { ventaService } from '../../services/ventaService';
 import { clienteService, type Cliente } from '../../services/Cliente-Auth';
@@ -12,7 +24,22 @@ interface CartItem {
   PrecioUnitario: number;
 }
 
+type Empleado = { EmpleadoID: string; Nombre?: string; Apellido?: string; [k: string]: any } | null;
+
+function getCurrentEmpleado(): Empleado {
+  let empleadoStr = localStorage.getItem('empleado');
+  if (!empleadoStr) {
+    empleadoStr = sessionStorage.getItem('empleado');
+  }
+  return empleadoStr ? JSON.parse(empleadoStr) : null;
+}
+
 export default function Ventas(): React.ReactElement {
+  // Si quieres usar workMode desde contexto, reemplaza la siguiente línea por:
+  // const { workMode } = useOutletContext<{ workMode: boolean }>();
+  const workMode = false;
+
+  // --- Estados para tu UI de empleado (se mantiene tal cual pediste)
   const [productos, setProductos] = useState<Producto[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -31,12 +58,21 @@ export default function Ventas(): React.ReactElement {
   const [newClientApellido, setNewClientApellido] = useState("");
   const [newClientCINIT, setNewClientCINIT] = useState("");
 
-  const [EmpleadoID, setEmpleadoID] = useState<string>('EMP-001'); // empleado simulado
+  const [EmpleadoID, setEmpleadoID] = useState<string | null>(null); // viene de almacenamiento
+
+  // --- Estados para la lista estilo manager
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredVentas, setFilteredVentas] = useState<any[]>([]);
+  const [loadingList, setLoadingList] = useState<boolean>(true);
+  const [listError, setListError] = useState<string>('');
+  const [expandedVenta, setExpandedVenta] = useState<string | null>(null);
+  const [detallesVenta, setDetallesVenta] = useState<any>(null);
+  const [loadingDetalle, setLoadingDetalle] = useState(false);
 
   // ---------------- Cargar datos ----------------
   const loadProductos = async () => {
-    setLoading(true);
     try {
+      setLoading(true);
       const res = await productoService.getAll();
       if (res.success) setProductos(res.data);
       else setErrorMsg(res.error || "Error al cargar productos");
@@ -57,25 +93,70 @@ export default function Ventas(): React.ReactElement {
     }
   };
 
-  const fetchOrders = async () => {
+  const fetchOrders = async (empleadoId?: string | null) => {
     try {
-      const res = await ventaService.getAll(true);
-      if (res.success) setOrders(res.ventas || []);
+      setLoadingList(true);
+      setListError('');
+      const res = await ventaService.getAll(true, empleadoId || undefined);
+      if (res.success) {
+        // algunos endpoints retornan 'ventas' o 'data' -> normalizamos
+        const arr = res.ventas || res.data || [];
+        setOrders(arr);
+        setFilteredVentas(arr);
+      } else {
+        setOrders([]);
+        setFilteredVentas([]);
+        setListError(res.error || 'Error al cargar ventas');
+      }
     } catch (err) {
-      console.error(err);
+      console.error('fetchOrders -> error:', err);
+      setOrders([]);
+      setFilteredVentas([]);
+      setListError('Error de conexión con el servidor');
+    } finally {
+      setLoadingList(false);
     }
   };
 
   useEffect(() => {
+    // obtener empleado actual desde local/session storage
+    const emp = getCurrentEmpleado();
+    if (emp && emp.EmpleadoID) {
+      setEmpleadoID(emp.EmpleadoID);
+    } else {
+      setEmpleadoID(null);
+    }
+
     loadProductos();
     loadClientes();
-    fetchOrders();
+    // fetchOrders será llamado por el efecto siguiente cuando EmpleadoID esté listo
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // ---------------- Validadores ----------------
+  useEffect(() => {
+    fetchOrders(EmpleadoID);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [EmpleadoID]);
+
+  useEffect(() => {
+    // filtrar lista cuando cambie searchTerm u orders
+    if (!searchTerm.trim()) {
+      setFilteredVentas(orders);
+      return;
+    }
+    const term = searchTerm.toLowerCase();
+    const filtered = orders.filter((venta: any) =>
+      (venta.VentaID || '').toString().toLowerCase().includes(term) ||
+      (venta.EmpleadoNombre || venta.EmpleadoID || '').toString().toLowerCase().includes(term) ||
+      (venta.ClienteNombre || venta.ClienteID || '').toString().toLowerCase().includes(term) ||
+      (venta.FechaVenta || '').toString().toLowerCase().includes(term) ||
+      (venta.Total || '').toString().toLowerCase().includes(term)
+    );
+    setFilteredVentas(filtered);
+  }, [searchTerm, orders]);
+
+  // ---------------- Validadores (mismos que tenías) ----------------
   const handleNewClientNameChange = (value: string) => {
-    // permitir letras (incluye acentos), espacios, guion y apóstrofe
     const filtered = value.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ\s'-]/g, '');
     setNewClientName(filtered);
     setErrorMsg('');
@@ -90,14 +171,13 @@ export default function Ventas(): React.ReactElement {
   };
 
   const handleNewClientCINITChange = (value: string) => {
-    // solo dígitos
     const filtered = value.replace(/\D/g, '');
     setNewClientCINIT(filtered);
     setErrorMsg('');
     setSuccessMsg('');
   };
 
-  // ---------------- Funciones ----------------
+  // ---------------- Funciones carrito (idénticas) ----------------
   const addToCart = () => {
     setErrorMsg("");
     setSuccessMsg("");
@@ -140,7 +220,8 @@ export default function Ventas(): React.ReactElement {
     setErrorMsg("");
     setSuccessMsg("");
 
-    if (!EmpleadoID) {
+    const empleadoId = EmpleadoID;
+    if (!empleadoId) {
       setErrorMsg("Empleado no logueado.");
       return;
     }
@@ -154,7 +235,6 @@ export default function Ventas(): React.ReactElement {
     }
 
     try {
-      // items para el backend
       const items = cart.map(i => ({
         ProductoID: i.ProductoID,
         Cantidad: i.quantity,
@@ -162,8 +242,8 @@ export default function Ventas(): React.ReactElement {
       }));
 
       const payload = {
-        EmpleadoID,
-        ClienteID: selectedCliente!.ClienteID,
+        EmpleadoID: empleadoId,
+        ClienteID: selectedCliente!.ClienteID as string,
         Descuento: 0,
         items
       };
@@ -184,9 +264,8 @@ export default function Ventas(): React.ReactElement {
       setSelectedCliente(null);
       setSuccessMsg("¡Compra realizada con éxito! ID: " + (res.VentaID || ""));
 
-      // refrescar ventas
-      const ventasRes = await ventaService.getAll(true);
-      if (ventasRes.success) setOrders(ventasRes.ventas || []);
+      // refrescar lista de ventas
+      await fetchOrders(empleadoId);
     } catch (err: any) {
       console.error("Error al llamar a createSale:", err);
       setErrorMsg(err.message || "Ocurrió un error al procesar la compra.");
@@ -197,7 +276,6 @@ export default function Ventas(): React.ReactElement {
     setErrorMsg("");
     setSuccessMsg("");
 
-    // validaciones finales
     const nameTrim = newClientName.trim();
     const apTrim = newClientApellido.trim();
     const cinitTrim = newClientCINIT.trim();
@@ -207,7 +285,6 @@ export default function Ventas(): React.ReactElement {
       return;
     }
 
-   
     const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]+$/;
     const cinitRegex = /^\d+$/;
 
@@ -250,18 +327,53 @@ export default function Ventas(): React.ReactElement {
     }
   };
 
-  const formatMoney = (n: number) => `Bs. ${Number(n).toFixed(2)}`;
+  // ---------------- Lista estilo manager: detalles / acciones ----------------
+  const handleToggleExpand = async (ventaID: string) => {
+    if (expandedVenta === ventaID) {
+      setExpandedVenta(null);
+      setDetallesVenta(null);
+    } else {
+      setExpandedVenta(ventaID);
+      setLoadingDetalle(true);
+      try {
+        const result = await ventaService.getById(ventaID);
+        if (result.success) {
+          setDetallesVenta(result.data);
+        } else {
+          setDetallesVenta(null);
+        }
+      } catch (err) {
+        console.error('Error al cargar detalles:', err);
+        setDetallesVenta(null);
+      } finally {
+        setLoadingDetalle(false);
+      }
+    }
+  };
+
+ 
+  const formatDate = (dateString: string) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  const formatPrice = (price: number) => `Bs. ${Number(price).toFixed(2)}`;
 
   // ---------------- Render ----------------
   return (
     <div className="min-h-[80vh] px-6 py-8">
       <h1 className="text-3xl font-bold mb-6">Ventas — <span className="text-pink-600">SugarDonuts</span></h1>
 
-      {/* Mensajes */}
+      {/* Mensajes (carrito) */}
       {errorMsg && <div className="mb-4 p-3 bg-red-100 text-red-700 rounded border border-red-300">{errorMsg}</div>}
       {successMsg && <div className="mb-4 p-3 bg-green-100 text-green-700 rounded border border-green-300">{successMsg}</div>}
 
-      {/* Selección cliente */}
+      {/* ---------------- Selección cliente (MANTENIDO tal cual pediste) ---------------- */}
       <div className="mb-4 bg-white rounded-2xl shadow-md p-4">
         <label className="block font-medium text-gray-700 mb-1">Cliente:</label>
         <div className="flex gap-2 mb-2">
@@ -332,7 +444,7 @@ export default function Ventas(): React.ReactElement {
         )}
       </div>
 
-      {/* Selección producto */}
+      {/* ---------------- Selección producto (MANTENIDO tal cual pediste) ---------------- */}
       <div className="mb-6 bg-white rounded-2xl shadow-md p-6">
         <h2 className="text-xl font-semibold mb-3 flex items-center gap-2">
           <ShoppingBag className="w-5 h-5 text-pink-500" /> Carrito
@@ -378,7 +490,7 @@ export default function Ventas(): React.ReactElement {
               {cart.map((item, idx) => (
                 <li key={idx} className="py-2 flex justify-between">
                   <span>{item.Nombre} x{item.quantity}</span>
-                  <span>{formatMoney(item.quantity * item.PrecioUnitario)}</span>
+                  <span>{formatPrice(item.quantity * item.PrecioUnitario)}</span>
                 </li>
               ))}
             </ul>
@@ -399,41 +511,171 @@ export default function Ventas(): React.ReactElement {
               {lastCheckout.map((item, idx) => (
                 <li key={idx} className="py-1 flex justify-between">
                   <span>{item.Nombre} x{item.quantity}</span>
-                  <span>{formatMoney(item.quantity * item.PrecioUnitario)}</span>
+                  <span>{formatPrice(item.quantity * item.PrecioUnitario)}</span>
                 </li>
               ))}
             </ul>
             <p className="text-sm text-green-600 font-medium mt-1">
-              Total: {formatMoney(lastCheckout.reduce((acc, i) => acc + i.quantity * i.PrecioUnitario, 0))}
+              Total: {formatPrice(lastCheckout.reduce((acc, i) => acc + i.quantity * i.PrecioUnitario, 0))}
             </p>
           </div>
         )}
       </div>
 
-      {/* Órdenes existentes */}
-      <div className="grid gap-4">
-        <h2 className="text-xl font-semibold mb-2 flex items-center gap-2">
-          <DollarSign className="w-5 h-5 text-pink-500" /> Ventas registradas
-        </h2>
+      {/* ---------------- Lista "Ventas registradas" con estilo del manager ---------------- */}
+      <div className="space-y-6">
+        <div className="flex items-center justify-between flex-wrap gap-4">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-800">Ventas registradas</h2>
+            <p className="text-gray-600 mt-1">Historial de ventas realizadas (filtrado por tu sesión)</p>
+          </div>
 
-        {orders.length === 0 ? (
-          <p>No hay ventas registradas</p>
+          <div className="flex gap-3 items-center">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Buscar por ID, cliente, fecha o total..."
+                className="pl-10 pr-4 py-2 border rounded-xl outline-none w-64"
+              />
+            </div>
+            <button
+              onClick={() => fetchOrders(EmpleadoID)}
+              className={`px-4 py-2 rounded-xl font-semibold transition ${workMode ? 'bg-gray-600 text-white' : 'bg-amber-500 text-white'}`}
+              title="Refrescar"
+            >
+              <Loader2 className="w-4 h-4 animate-spin inline-block mr-2" /> Refrescar
+            </button>
+          </div>
+        </div>
+
+        {loadingList ? (
+          <div className="flex items-center justify-center h-40">
+            <Loader2 className="w-8 h-8 animate-spin text-pink-500" />
+          </div>
+        ) : listError ? (
+          <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4 flex items-center gap-3">
+            <Package className="w-5 h-5 text-red-500" />
+            <p className="text-red-700">{listError}</p>
+          </div>
+        ) : filteredVentas.length === 0 ? (
+          <div className="bg-white rounded-xl shadow-md p-12 text-center">
+            <div className="text-6xl mb-4">📦</div>
+            <p className="text-gray-500 text-lg">No se encontraron ventas</p>
+          </div>
         ) : (
-          <ul className="divide-y divide-gray-200">
-            {orders.map((o, idx) => (
-              <li key={idx} className="py-2 flex justify-between items-center">
-                <div>
-                  <div className="font-medium">{o.VentaID} — Empleado: {o.EmpleadoID} — Cliente: {o.ClienteID}</div>
-                  <div className="text-sm text-gray-500">{o.FechaVenta} — Total: Bs. {Number(o.Total).toFixed(2)}</div>
-                  {o.detalles && o.detalles.length > 0 && (
-                    <div className="text-sm mt-1">
-                      <strong>Detalles:</strong> {o.detalles.map((d: any) => `${d.ProductoID} x${d.Cantidad} (${d.Subtotal}Bs)`).join(', ')}
+          <div className="space-y-4">
+            {filteredVentas.map((venta: any) => (
+              <div key={venta.VentaID} className={`bg-white rounded-xl shadow-md hover:shadow-xl transition-all border-l-4 ${workMode ? 'border-gray-600' : 'border-green-400'}`}>
+                <div className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4 flex-1">
+                      <div className={`w-16 h-16 rounded-full flex items-center justify-center shadow-lg ${workMode ? 'bg-gray-600' : 'bg-gradient-to-br from-green-400 to-emerald-500'}`}>
+                        <span className="text-white text-2xl">🛒</span>
+                      </div>
+
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <h3 className="text-xl font-bold text-gray-800">{venta.VentaID}</h3>
+                          <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold">
+                            {venta.CantidadProductos ?? (venta.detalles ? venta.detalles.length : '-')} {((venta.CantidadProductos ?? (venta.detalles ? venta.detalles.length : 0)) === 1) ? 'producto' : 'productos'}
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                          <div>
+                            <p className="text-gray-500 flex items-center gap-1"><Calendar className="w-4 h-4" /> Fecha</p>
+                            <p className="font-semibold text-gray-800">{formatDate(venta.FechaVenta)}</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-500 flex items-center gap-1"><User className="w-4 h-4" /> Cliente</p>
+                            <p className="font-semibold text-gray-800">{venta.ClienteNombre ?? venta.ClienteID}</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-500 flex items-center gap-1"><User className="w-4 h-4" /> Empleado</p>
+                            <p className="font-semibold text-gray-800">{venta.EmpleadoNombre ?? venta.EmpleadoID}</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-500 flex items-center gap-1"><DollarSign className="w-4 h-4" /> Total</p>
+                            <p className="font-bold text-green-600 text-lg">{formatPrice(Number(venta.Total || 0))}</p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  )}
+
+                    <div className="flex items-center gap-2 ml-4">
+                      <button
+                        onClick={() => handleToggleExpand(venta.VentaID)}
+                        className="p-3 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-xl transition-all"
+                        title="Ver detalles"
+                      >
+                        {expandedVenta === venta.VentaID ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                      </button>
+
+          
+                    </div>
+                  </div>
                 </div>
-              </li>
+
+                {expandedVenta === venta.VentaID && (
+                  <div className="border-t border-gray-200 p-6 bg-gray-50">
+                    {loadingDetalle ? (
+                      <div className="flex justify-center py-8">
+                        <Loader2 className="w-6 h-6 animate-spin text-pink-500" />
+                      </div>
+                    ) : detallesVenta ? (
+                      <div className="space-y-4">
+                        <h4 className="font-bold text-gray-800 text-lg mb-4">Detalles de la Venta</h4>
+
+                        <div className="overflow-x-auto">
+                          <table className="w-full">
+                            <thead>
+                              <tr className="bg-gray-200">
+                                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Producto</th>
+                                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Categoría</th>
+                                <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700">Cantidad</th>
+                                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">P. Unitario</th>
+                                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">Subtotal</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {detallesVenta.Detalles && detallesVenta.Detalles.map((detalle: any, index: number) => (
+                                <tr key={index} className="border-b border-gray-200 hover:bg-gray-100">
+                                  <td className="px-4 py-3">
+                                    <p className="font-semibold text-gray-800">{detalle.ProductoNombre}</p>
+                                    {detalle.ProductoDescripcion && <p className="text-sm text-gray-500">{detalle.ProductoDescripcion}</p>}
+                                  </td>
+                                  <td className="px-4 py-3">
+                                    <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-semibold">{detalle.CategoriaNombre}</span>
+                                  </td>
+                                  <td className="px-4 py-3 text-center font-semibold">{detalle.Cantidad}</td>
+                                  <td className="px-4 py-3 text-right text-gray-700">{formatPrice(Number(detalle.PrecioUnitario || 0))}</td>
+                                  <td className="px-4 py-3 text-right font-bold text-green-600">{formatPrice(Number(detalle.Subtotal || 0))}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                            <tfoot className="bg-gray-100">
+                              <tr>
+                                <td colSpan={4} className="px-4 py-3 text-right font-bold text-gray-800">Descuento:</td>
+                                <td className="px-4 py-3 text-right font-bold text-red-600">-{formatPrice(Number(detallesVenta.Descuento || 0))}</td>
+                              </tr>
+                              <tr className="bg-green-100">
+                                <td colSpan={4} className="px-4 py-4 text-right font-bold text-gray-800 text-lg">TOTAL:</td>
+                                <td className="px-4 py-4 text-right font-bold text-green-700 text-xl">{formatPrice(Number(detallesVenta.Total || 0))}</td>
+                              </tr>
+                            </tfoot>
+                          </table>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-gray-500 text-center">No se pudieron cargar los detalles</p>
+                    )}
+                  </div>
+                )}
+              </div>
             ))}
-          </ul>
+          </div>
         )}
       </div>
     </div>
