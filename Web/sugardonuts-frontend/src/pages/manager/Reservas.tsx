@@ -1,6 +1,18 @@
-import { useState, useEffect } from 'react';
-import { useOutletContext } from 'react-router-dom';
-import { Calendar, Clock, User, Package, CheckCircle, XCircle, AlertCircle, Loader2, ChevronDown, ChevronUp, Search } from 'lucide-react';
+// src/pages/empleado/Reservas.tsx
+import React, { useEffect, useState } from 'react';
+import {
+  Calendar,
+  Clock,
+  User,
+  Package,
+  CheckCircle,
+  XCircle,
+  AlertCircle,
+  Loader2,
+  ChevronDown,
+  ChevronUp,
+  Search
+} from 'lucide-react';
 
 const API_URL = 'http://localhost/sugardonuts-api';
 
@@ -23,12 +35,11 @@ interface Reserva {
   FechaRecogida: string;
   Estado: EstadoReserva;
   Total: number;
-  Archivada : boolean;
+  Archivada?: boolean;
   Detalles?: DetalleReserva[];
 }
 
-export default function ReservasGestion() {
-  const { workMode } = useOutletContext<{ workMode: boolean }>();
+export default function ReservasEmpleado(): React.ReactElement {
   const [reservas, setReservas] = useState<Reserva[]>([]);
   const [filteredReservas, setFilteredReservas] = useState<Reserva[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -38,6 +49,9 @@ export default function ReservasGestion() {
   const [loading, setLoading] = useState(true);
   const [loadingDetalle, setLoadingDetalle] = useState(false);
   const [error, setError] = useState('');
+  // para cambio de estado UI
+  const [nuevoEstadoSeleccionado, setNuevoEstadoSeleccionado] = useState<EstadoReserva | ''>('');
+  const [updatingEstadoReserva, setUpdatingEstadoReserva] = useState(false);
 
   useEffect(() => {
     cargarReservas();
@@ -45,6 +59,7 @@ export default function ReservasGestion() {
 
   useEffect(() => {
     filterReservas();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, filtroEstado, reservas]);
 
   const cargarReservas = async () => {
@@ -53,40 +68,44 @@ export default function ReservasGestion() {
     try {
       const response = await fetch(`${API_URL}/reservas.php`);
       const result = await response.json();
-      
-      if (result.success && result.data) {
-        setReservas(result.data);
-        setFilteredReservas(result.data);
+
+      if (result && result.success && (result.data || Array.isArray(result.data))) {
+        setReservas(result.data || []);
+        setFilteredReservas(result.data || []);
       } else {
-        setError(result.error || 'Error al cargar reservas');
+        setError(result?.error || 'Error al cargar reservas');
+        setReservas([]);
+        setFilteredReservas([]);
       }
     } catch (err) {
+      console.error('cargarReservas -> error', err);
       setError('Error de conexión con el servidor');
-      console.error(err);
+      setReservas([]);
+      setFilteredReservas([]);
     } finally {
       setLoading(false);
     }
   };
 
   const filterReservas = () => {
-    let filtered = reservas;
+    let filtered = Array.isArray(reservas) ? reservas.slice() : [];
 
-    // Filtrar por estado
-    if (filtroEstado !== 'Todas') {
-      filtered = filtered.filter(r => r.Estado === filtroEstado);
-    }
+    if (filtroEstado !== 'Todas') filtered = filtered.filter((r) => r.Estado === filtroEstado);
 
-    // Filtrar por búsqueda
-    if (searchTerm) {
+    if (searchTerm && searchTerm.trim() !== '') {
       const term = searchTerm.toLowerCase().trim();
-      filtered = filtered.filter(reserva => 
-        reserva.ReservaID.toLowerCase().includes(term) ||
-        reserva.ClienteNombre.toLowerCase().includes(term) ||
-        reserva.Estado.toLowerCase().includes(term) ||
-        formatFecha(reserva.FechaReserva).includes(term) || reserva.FechaReserva.toLowerCase().includes(term) ||
-        formatFecha(reserva.FechaRecogida).includes(term) || reserva.FechaRecogida.includes(term) ||
-        reserva.Total.toString().includes(term)
-      );
+      filtered = filtered.filter((reserva) => {
+        const fechaReservaFmt = safeFormatFecha(reserva.FechaReserva).toLowerCase();
+        const fechaRecogidaFmt = safeFormatFecha(reserva.FechaRecogida).toLowerCase();
+        return (
+          String(reserva.ReservaID || '').toLowerCase().includes(term) ||
+          String(reserva.ClienteNombre || '').toLowerCase().includes(term) ||
+          String(reserva.Estado || '').toLowerCase().includes(term) ||
+          fechaReservaFmt.includes(term) ||
+          fechaRecogidaFmt.includes(term) ||
+          String(reserva.Total || '').toLowerCase().includes(term)
+        );
+      });
     }
 
     setFilteredReservas(filtered);
@@ -96,76 +115,87 @@ export default function ReservasGestion() {
     if (expandedReserva === reservaID) {
       setExpandedReserva(null);
       setDetallesReserva(null);
-    } else {
-      setExpandedReserva(reservaID);
-      setLoadingDetalle(true);
-      try {
-        const response = await fetch(`${API_URL}/reservas.php?id=${reservaID}`);
-        const result = await response.json();
-        
-        if (result.success && result.data) {
-          setDetallesReserva(result.data);
-        }
-      } catch (err) {
-        console.error('Error al cargar detalles:', err);
-      } finally {
-        setLoadingDetalle(false);
+      setNuevoEstadoSeleccionado('');
+      return;
+    }
+
+    setExpandedReserva(reservaID);
+    setLoadingDetalle(true);
+    setDetallesReserva(null);
+    setNuevoEstadoSeleccionado('');
+
+    try {
+      const response = await fetch(`${API_URL}/reservas.php?id=${encodeURIComponent(reservaID)}`);
+      const result = await response.json();
+
+      if (result && result.success && result.data) {
+        setDetallesReserva(result.data);
+        // preseleccionar el estado actual para el dropdown
+        setNuevoEstadoSeleccionado(result.data.Estado as EstadoReserva);
+      } else {
+        console.warn('handleToggleExpand: no data', result);
       }
+    } catch (err) {
+      console.error('handleToggleExpand -> error', err);
+    } finally {
+      setLoadingDetalle(false);
     }
   };
 
-  const formatFecha = (fecha: string) => {
-    const date = new Date(fecha);
-    return date.toLocaleDateString('es-BO', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+  const safeFormatFecha = (fecha?: string) => {
+    if (!fecha) return '';
+    try {
+      const date = new Date(fecha);
+      if (isNaN(date.getTime())) return fecha;
+      return date.toLocaleDateString('es-BO', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    } catch {
+      return fecha;
+    }
   };
 
-  const formatPrice = (price: number) => {
-    return `Bs. ${price.toFixed(2)}`;
+  const formatPrice = (price?: number) => {
+    const n = typeof price === 'number' ? price : 0;
+    return `Bs. ${n.toFixed(2)}`;
   };
 
-  const getCategoryIcon = (categoryName: string): string => {
-    const category = categoryName?.toLowerCase().trim() || '';
+  const getCategoryIcon = (categoryName?: string): string => {
+    const category = (categoryName || '').toLowerCase().trim();
     if (category.includes('donas') || category.includes('dona')) return '🍩';
     if (category.includes('cafe') || category.includes('café')) return '☕';
     if (category.includes('te') || category.includes('té')) return '🍵';
     if (category.includes('batido')) return '🥛';
     if (category.includes('sandwiches') || category.includes('sandwich')) return '🥪';
     if (category.includes('refresco') || category.includes('bebida')) return '🥤';
-    return '🍩';
+    return '📦';
   };
 
   const getEstadoConfig = (estado: EstadoReserva) => {
-    const configs = {
-      'Pendiente': { 
-        color: 'bg-yellow-100 text-yellow-700 border-yellow-300', 
-        icon: Clock,
-        gradient: 'from-yellow-400 to-orange-500'
+    const configs: Record<string, any> = {
+      Pendiente: {
+        color: 'bg-yellow-100 text-yellow-700 border-yellow-300',
+        icon: Clock
       },
-      'Confirmada': { 
-        color: 'bg-blue-100 text-blue-700 border-blue-300', 
-        icon: CheckCircle,
-        gradient: 'from-blue-400 to-blue-500'
+      Confirmada: {
+        color: 'bg-blue-100 text-blue-700 border-blue-300',
+        icon: CheckCircle
       },
-      'Lista': { 
-        color: 'bg-green-100 text-green-700 border-green-300', 
-        icon: Package,
-        gradient: 'from-green-400 to-emerald-500'
+      Lista: {
+        color: 'bg-green-100 text-green-700 border-green-300',
+        icon: Package
       },
-      'Entregada': { 
-        color: 'bg-gray-100 text-gray-700 border-gray-300', 
-        icon: CheckCircle,
-        gradient: 'from-gray-400 to-gray-500'
+      Entregada: {
+        color: 'bg-gray-100 text-gray-700 border-gray-300',
+        icon: CheckCircle
       },
-      'Cancelada': { 
-        color: 'bg-red-100 text-red-700 border-red-300', 
-        icon: XCircle,
-        gradient: 'from-red-400 to-red-500'
+      Cancelada: {
+        color: 'bg-red-100 text-red-700 border-red-300',
+        icon: XCircle
       }
     };
     return configs[estado] || configs['Pendiente'];
@@ -173,10 +203,62 @@ export default function ReservasGestion() {
 
   const estados: Array<EstadoReserva | 'Todas'> = ['Todas', 'Pendiente', 'Confirmada', 'Lista', 'Entregada', 'Cancelada'];
 
+  // ---- Cambiar estado en backend ----
+  const updateReservaEstado = async (reservaID: string, nuevoEstado: EstadoReserva) => {
+    setUpdatingEstadoReserva(true);
+    setError('');
+    try {
+      // Haga POST con action=updateStatus (ajusta si tu API espera otro formato)
+      const res = await fetch(`${API_URL}/reservas.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'updateStatus', ReservaID: reservaID, Estado: nuevoEstado })
+      });
+      const data = await res.json();
+
+      if (!data || !data.success) {
+        const msg = data?.error || 'Error al actualizar estado';
+        setError(msg);
+        return false;
+      }
+
+      // Actualización optimista local: actualiza arrays reservas y filteredReservas
+      setReservas(prev => prev.map(r => (r.ReservaID === reservaID ? { ...r, Estado: nuevoEstado } : r)));
+      setFilteredReservas(prev => prev.map(r => (r.ReservaID === reservaID ? { ...r, Estado: nuevoEstado } : r)));
+
+      // Si detalles abiertos corresponden, actualizarlo también
+      setDetallesReserva(prev => (prev && prev.ReservaID === reservaID ? { ...prev, Estado: nuevoEstado } : prev));
+
+      return true;
+    } catch (err) {
+      console.error('updateReservaEstado -> error', err);
+      setError('Error de conexión al actualizar estado');
+      return false;
+    } finally {
+      setUpdatingEstadoReserva(false);
+    }
+  };
+
+  // quick helper que se usa al click de confirmar cambio
+  const handleConfirmEstadoChange = async () => {
+    if (!detallesReserva || !nuevoEstadoSeleccionado) return;
+    if (detallesReserva.Estado === nuevoEstadoSeleccionado) {
+      // nada que hacer
+      return;
+    }
+
+    const ok = await updateReservaEstado(detallesReserva.ReservaID, nuevoEstadoSeleccionado as EstadoReserva);
+    if (ok) {
+      // feedback: la UI ya se actualizó optimísticamente
+      // puedes mostrar un mensaje breve con success (aquí uso console)
+      console.log(`Estado de ${detallesReserva.ReservaID} actualizado a ${nuevoEstadoSeleccionado}`);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className={`w-8 h-8 animate-spin ${workMode ? 'text-gray-600' : 'text-pink-500'}`} />
+        <Loader2 className="w-8 h-8 animate-spin text-pink-500" />
       </div>
     );
   }
@@ -199,20 +281,15 @@ export default function ReservasGestion() {
 
       {/* Filtros y Búsqueda */}
       <div className="bg-white rounded-xl shadow-md p-6 space-y-4">
-        {/* Filtros por Estado */}
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">Filtrar por Estado</label>
           <div className="flex gap-2 flex-wrap">
-            {estados.map(estado => (
+            {estados.map((estado) => (
               <button
                 key={estado}
                 onClick={() => setFiltroEstado(estado)}
                 className={`px-4 py-2 rounded-xl font-semibold transition-all ${
-                  filtroEstado === estado
-                    ? workMode
-                      ? 'bg-gray-700 text-white shadow-md'
-                      : 'bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-md'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  filtroEstado === estado ? 'bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
                 {estado}
@@ -221,7 +298,6 @@ export default function ReservasGestion() {
           </div>
         </div>
 
-        {/* Buscador */}
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">Buscar</label>
           <div className="relative">
@@ -231,11 +307,7 @@ export default function ReservasGestion() {
               placeholder="Buscar por ID, cliente, estado o fecha..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value.replace(/\s+/g, ' '))}
-              className={`w-full pl-12 pr-4 py-3 border-2 rounded-xl focus:ring-4 transition-all outline-none ${
-                workMode
-                  ? 'border-gray-300 focus:border-gray-600 focus:ring-gray-200'
-                  : 'border-gray-200 focus:border-pink-400 focus:ring-pink-100'
-              }`}
+              className="w-full pl-12 pr-4 py-3 border-2 rounded-xl focus:ring-4 transition-all outline-none border-gray-200 focus:border-pink-400 focus:ring-pink-100"
             />
           </div>
         </div>
@@ -251,8 +323,7 @@ export default function ReservasGestion() {
           <div className="bg-white rounded-xl shadow-md p-12 text-center">
             <div className="text-6xl mb-4">📦</div>
             <p className="text-gray-500 text-lg">
-              No se encontraron reservas
-              {filtroEstado !== 'Todas' && ` en estado "${filtroEstado}"`}
+              No se encontraron reservas {filtroEstado !== 'Todas' && ` en estado "${filtroEstado}"`}
             </p>
           </div>
         ) : (
@@ -261,31 +332,17 @@ export default function ReservasGestion() {
             const EstadoIcon = estadoConfig.icon;
 
             return (
-              <div
-                key={reserva.ReservaID}
-                className={`bg-white rounded-xl shadow-md hover:shadow-xl transition-all border-l-4 ${
-                  workMode ? 'border-gray-600' : 'border-pink-400'
-                }`}
-              >
-                {/* Cabecera de la reserva */}
+              <div key={reserva.ReservaID} className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all border-l-4 border-pink-400">
                 <div className="p-6">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4 flex-1">
-                      {/* Icono */}
-                      <div className={`w-20 h-20 rounded-2xl flex items-center justify-center shadow-lg transition-colors duration-300 ${
-                        workMode
-                          ? 'bg-gray-600'
-                          : 'bg-gradient-to-br from-amber-400 to-orange-500'
-                      }`}>
+                      <div className="w-20 h-20 rounded-2xl flex items-center justify-center shadow-lg transition-colors duration-300 bg-gradient-to-br from-amber-400 to-orange-500">
                         <span className="text-white text-2xl">📦</span>
                       </div>
 
-                      {/* Info principal */}
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
-                          <h3 className="text-xl font-bold text-gray-800">
-                            {reserva.ReservaID}
-                          </h3>
+                          <h3 className="text-xl font-bold text-gray-800">{reserva.ReservaID}</h3>
                           <span className={`px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1 border-2 ${estadoConfig.color}`}>
                             <EstadoIcon className="w-3 h-3" />
                             {reserva.Estado}
@@ -294,32 +351,20 @@ export default function ReservasGestion() {
 
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                           <div>
-                            <p className="text-gray-500 flex items-center gap-1">
-                              <User className="w-4 h-4" />
-                              Cliente
-                            </p>
+                            <p className="text-gray-500 flex items-center gap-1"><User className="w-4 h-4" /> Cliente</p>
                             <p className="font-semibold text-gray-800">{reserva.ClienteNombre}</p>
                           </div>
                           <div>
-                            <p className="text-gray-500 flex items-center gap-1">
-                              <Calendar className="w-4 h-4" />
-                              Fecha Reserva
-                            </p>
-                            <p className="font-semibold text-gray-800">{formatFecha(reserva.FechaReserva)}</p>
+                            <p className="text-gray-500 flex items-center gap-1"><Calendar className="w-4 h-4" /> Fecha Reserva</p>
+                            <p className="font-semibold text-gray-800">{safeFormatFecha(reserva.FechaReserva)}</p>
                           </div>
                           <div>
-                            <p className="text-gray-500 flex items-center gap-1">
-                              <Clock className="w-4 h-4" />
-                              Fecha Recogida
-                            </p>
-                            <p className="font-semibold text-gray-800">{formatFecha(reserva.FechaRecogida)}</p>
+                            <p className="text-gray-500 flex items-center gap-1"><Clock className="w-4 h-4" /> Fecha Recogida</p>
+                            <p className="font-semibold text-gray-800">{safeFormatFecha(reserva.FechaRecogida)}</p>
                           </div>
                           <div>
-                            <p className="text-gray-500 flex items-center gap-1">
-                              <Package className="w-4 h-4" />
-                              Total
-                            </p>
-                            <p className="font-bold text-green-600 text-lg">{formatPrice(reserva.Total)}</p>
+                            <p className="text-gray-500 flex items-center gap-1"><Package className="w-4 h-4" /> Total</p>
+                            <p className="text-bold text-green-600 text-lg">{formatPrice(reserva.Total)}</p>
                           </div>
                         </div>
                       </div>
@@ -327,16 +372,8 @@ export default function ReservasGestion() {
 
                     {/* Botón expandir */}
                     <div className="ml-4">
-                      <button
-                        onClick={() => handleToggleExpand(reserva.ReservaID)}
-                        className="p-3 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-xl transition-all"
-                        title="Ver detalles"
-                      >
-                        {expandedReserva === reserva.ReservaID ? (
-                          <ChevronUp className="w-5 h-5" />
-                        ) : (
-                          <ChevronDown className="w-5 h-5" />
-                        )}
+                      <button onClick={() => handleToggleExpand(reserva.ReservaID)} className="p-3 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-xl transition-all" title="Ver detalles">
+                        {expandedReserva === reserva.ReservaID ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                       </button>
                     </div>
                   </div>
@@ -346,18 +383,13 @@ export default function ReservasGestion() {
                 {expandedReserva === reserva.ReservaID && (
                   <div className="border-t border-gray-200 p-6 bg-gray-50">
                     {loadingDetalle ? (
-                      <div className="flex justify-center py-8">
-                        <Loader2 className="w-6 h-6 animate-spin text-pink-500" />
-                      </div>
+                      <div className="flex justify-center py-8"><Loader2 className="w-6 h-6 animate-spin text-pink-500" /></div>
                     ) : detallesReserva ? (
                       <div className="space-y-4">
-                        <h4 className="font-bold text-gray-800 text-lg mb-4 flex items-center gap-2">
-                          <Package className="w-5 h-5 text-pink-500" />
-                          Detalles de la Reserva
-                        </h4>
+                        <h4 className="font-bold text-gray-800 text-lg mb-4 flex items-center gap-2"><Package className="w-5 h-5 text-pink-500" /> Detalles de la Reserva</h4>
 
                         {/* Tabla de productos */}
-                        {detallesReserva.Detalles && detallesReserva.Detalles.length > 0 && (
+                        {Array.isArray(detallesReserva.Detalles) && detallesReserva.Detalles.length > 0 && (
                           <div className="overflow-x-auto">
                             <table className="w-full">
                               <thead>
@@ -369,46 +401,77 @@ export default function ReservasGestion() {
                                 </tr>
                               </thead>
                               <tbody>
-                                {detallesReserva.Detalles.map((detalle, index) => (
+                                {detallesReserva.Detalles!.map((detalle, index) => (
                                   <tr key={index} className="border-b border-gray-200 hover:bg-gray-100">
                                     <td className="px-4 py-3">
                                       <div className="flex items-center gap-3">
-                                        <span className="text-2xl">{getCategoryIcon(detalle.CategoriaNombre || '')}</span>
+                                        <span className="text-2xl">{getCategoryIcon(detalle.CategoriaNombre)}</span>
                                         <div>
                                           <p className="font-semibold text-gray-800">{detalle.ProductoNombre}</p>
-                                          {detalle.ProductoDescripcion && (
-                                            <p className="text-sm text-gray-500">{detalle.ProductoDescripcion}</p>
-                                          )}
+                                          {detalle.ProductoDescripcion && <p className="text-sm text-gray-500">{detalle.ProductoDescripcion}</p>}
                                         </div>
                                       </div>
                                     </td>
                                     <td className="px-4 py-3">
-                                      <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-semibold">
-                                        {detalle.CategoriaNombre || 'Sin categoría'}
-                                      </span>
+                                      <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-semibold">{detalle.CategoriaNombre || 'Sin categoría'}</span>
                                     </td>
-                                    <td className="px-4 py-3 text-center font-semibold">
-                                      {detalle.Cantidad}
-                                    </td>
-                                    <td className="px-4 py-3 text-right font-bold text-green-600">
-                                      {formatPrice(detalle.Subtotal)}
-                                    </td>
+                                    <td className="px-4 py-3 text-center font-semibold">{detalle.Cantidad}</td>
+                                    <td className="px-4 py-3 text-right font-bold text-green-600">{formatPrice(detalle.Subtotal)}</td>
                                   </tr>
                                 ))}
                               </tbody>
                               <tfoot className="bg-green-100">
                                 <tr>
-                                  <td colSpan={3} className="px-4 py-4 text-right font-bold text-gray-800 text-lg">
-                                    TOTAL:
-                                  </td>
-                                  <td className="px-4 py-4 text-right font-bold text-green-700 text-xl">
-                                    {formatPrice(detallesReserva.Total)}
-                                  </td>
+                                  <td colSpan={3} className="px-4 py-4 text-right font-bold text-gray-800 text-lg">TOTAL:</td>
+                                  <td className="px-4 py-4 text-right font-bold text-green-700 text-xl">{formatPrice(detallesReserva.Total)}</td>
                                 </tr>
                               </tfoot>
                             </table>
                           </div>
                         )}
+
+                        {/* Cambio de estado */}
+                        <div className="flex items-center gap-3 mt-3">
+                          <label className="font-medium">Cambiar estado:</label>
+
+                          <select
+                            value={nuevoEstadoSeleccionado}
+                            onChange={(e) => setNuevoEstadoSeleccionado(e.target.value as EstadoReserva)}
+                            className="border p-2 rounded"
+                            disabled={updatingEstadoReserva}
+                          >
+                            {/* mantenemos las mismas opciones */}
+                            <option value="Pendiente">Pendiente</option>
+                            <option value="Confirmada">Confirmada</option>
+                            <option value="Lista">Lista</option>
+                            <option value="Entregada">Entregada</option>
+                            <option value="Cancelada">Cancelada</option>
+                          </select>
+
+                          <button
+                            onClick={handleConfirmEstadoChange}
+                            className={`px-4 py-2 rounded font-semibold ${updatingEstadoReserva ? 'bg-gray-300 text-gray-700' : 'bg-green-500 text-white hover:bg-green-600'}`}
+                            disabled={updatingEstadoReserva || nuevoEstadoSeleccionado === '' || nuevoEstadoSeleccionado === detallesReserva.Estado}
+                          >
+                            {updatingEstadoReserva ? 'Actualizando...' : 'Confirmar'}
+                          </button>
+
+                          {/* Botones rápidos (opcional) */}
+                          <div className="ml-auto flex gap-2">
+                            <button
+                              onClick={() => { setNuevoEstadoSeleccionado('Lista'); }}
+                              className="px-3 py-1 rounded bg-amber-100 text-amber-700 text-sm"
+                            >
+                              Marcar Lista
+                            </button>
+                            <button
+                              onClick={() => { setNuevoEstadoSeleccionado('Entregada'); }}
+                              className="px-3 py-1 rounded bg-gray-100 text-gray-700 text-sm"
+                            >
+                              Marcar Entregada
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     ) : (
                       <p className="text-gray-500 text-center">No se pudieron cargar los detalles</p>
