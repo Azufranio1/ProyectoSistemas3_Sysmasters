@@ -20,6 +20,7 @@ import PapeleraProductos from "../pages/manager/PapeleraProductos";
 import EmployeeDashboard from "../pages/EmployeeDashboard";
 import HomeE from "../pages/employee/Home";
 import VentasE from "../pages/employee/Ventas";
+import CatalogoE from "../pages/employee/Catalogo";
 import ReservasE from "../pages/employee/Reservas";
 
 
@@ -59,7 +60,9 @@ export default function AppRoutes() {
         >
           <Route path="home" element={<HomeE />} />
           <Route path="ventas" element={<VentasE />} />
+          <Route path="catalogo" element={<CatalogoE />} />
           <Route path="reservas" element={<ReservasE />} />
+         
         </Route>  
       <Route path="*" element={<NotFound />} />
     </Routes>
