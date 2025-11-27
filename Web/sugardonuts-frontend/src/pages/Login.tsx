@@ -1,3 +1,4 @@
+// src/pages/Login.tsx
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Mail, Lock, AlertCircle, Loader2, Eye, EyeOff } from 'lucide-react';
@@ -7,7 +8,7 @@ import logo from "../Resources/imgs/SugarDonutsTD.png";
 import donitas from "../Resources/imgs/donitas-bg.png";
 import { authService, type Empleado } from '../services/Emp-Auth';
 
-interface LoginFormData {
+interface LoginFormData { 
   correo: string;
   password: string;
   recordarme: boolean;
@@ -53,29 +54,64 @@ export default function LogIn() {
     const correoLimpio = data.correo.trim();
     const passwordLimpia = data.password.trim();
 
+    console.log('🔐 Intentando login...');
+    console.log('📧 Correo:', correoLimpio);
+    console.log('💾 Recordarme:', data.recordarme);
+
     try {
       const result = await authService.login(correoLimpio, passwordLimpia);
+      
+      console.log('📡 Respuesta del servidor:', result);
 
       if (result.success && result.empleado && result.token) {
+        console.log('✅ Login exitoso');
+        console.log('👤 Datos del empleado:', result.empleado);
+        console.log('🔑 Token recibido:', result.token);
+        
         const storage = data.recordarme ? localStorage : sessionStorage;
+        
+        // Guardar token
         storage.setItem('token', result.token);
+        console.log('✅ Token guardado en', data.recordarme ? 'localStorage' : 'sessionStorage');
+        
+        // Guardar empleado
         storage.setItem('empleado', JSON.stringify(result.empleado));
+        console.log('✅ Empleado guardado en', data.recordarme ? 'localStorage' : 'sessionStorage');
+        
+        // Verificar que se guardó correctamente
+        const tokenGuardado = storage.getItem('token');
+        const empleadoGuardado = storage.getItem('empleado');
+        
+        console.log('🔍 Verificación - Token guardado:', tokenGuardado);
+        console.log('🔍 Verificación - Empleado guardado:', empleadoGuardado);
+        
+        if (!tokenGuardado || !empleadoGuardado) {
+          console.error('❌ ERROR: Los datos NO se guardaron correctamente en storage');
+          setFormError('root', {
+            type: 'manual',
+            message: 'Error al guardar la sesión. Intenta de nuevo.'
+          });
+          return;
+        }
         
         if (data.recordarme) {
           localStorage.setItem('recordarCorreo', correoLimpio);
+          console.log('✅ Correo guardado para recordar');
         } else {
           localStorage.removeItem('recordarCorreo');
         }
 
+        console.log('🚀 Redirigiendo al dashboard...');
         redirectByRole(result.empleado);
       } else {
+        console.error('❌ Login fallido:', result.error);
         setFormError('root', {
           type: 'manual',
           message: result.error || 'Credenciales incorrectas'
         });
       }
     } catch (err) {
-      console.error(err);
+      console.error('❌ Error de conexión:', err);
       setFormError('root', {
         type: 'manual',
         message: 'Error de conexión. Verifica que el servidor esté activo.'
@@ -127,38 +163,25 @@ export default function LogIn() {
                   {...register('correo', {
                     required: 'El correo es requerido',
                     validate: {
-                      // 1. No puede estar vacío después del trim
                       notEmpty: (value) => value.trim() !== '' || 'El correo no puede estar vacío',
-                      
-                      // 2. Debe tener formato válido
                       validFormat: (value) => {
                         const trimmed = value.trim();
                         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                         return emailRegex.test(trimmed) || 'Formato de correo inválido';
                       },
-                      
-                      // 3. No permitir espacios
                       noSpaces: (value) => !/\s/.test(value) || 'El correo no puede contener espacios',
-                      
-                      // 4. Solo caracteres válidos antes del @ (SIN PUNTOS)
                       noSpecialCharsBeforeAt: (value) => {
                         const beforeAt = value.trim().split('@')[0];
-                        // Solo letras, números, guiones y guiones bajos (SIN PUNTOS)
                         const validChars = /^[a-zA-Z0-9_-]+$/;
                         return validChars.test(beforeAt) || 'El correo no puede contener puntos, espacios o caracteres especiales antes del @';
                       },
-                      
-                      // 5. Dominio válido (debe tener punto)
                       validDomain: (value) => {
                         const parts = value.trim().split('@');
                         if (parts.length !== 2) return 'Formato de correo inválido';
                         const domain = parts[1];
-                        // El dominio SÍ debe tener punto
                         const domainRegex = /^[a-zA-Z0-9][a-zA-Z0-9-]*\.[a-zA-Z]{2,}$/;
                         return domainRegex.test(domain) || 'Dominio de correo inválido';
                       },
-                      
-                      // 6. No puntos consecutivos en el dominio
                       noConsecutiveDots: (value) => {
                         const domain = value.split('@')[1];
                         if (domain) {
@@ -166,8 +189,6 @@ export default function LogIn() {
                         }
                         return true;
                       },
-                      
-                      // 7. Longitud máxima
                       maxLength: (value) => value.trim().length <= 100 || 'El correo es demasiado largo'
                     }
                   })}
@@ -179,12 +200,10 @@ export default function LogIn() {
                     const textBeforeCursor = input.value.substring(0, cursorPosition);
                     const hasAt = textBeforeCursor.includes('@');
                     
-                    // Prevenir espacios siempre
                     if (e.key === ' ') {
                       e.preventDefault();
                     }
                     
-                    // Prevenir punto ANTES del @
                     if (e.key === '.' && !hasAt) {
                       e.preventDefault();
                     }
@@ -261,7 +280,7 @@ export default function LogIn() {
                 <span className="text-sm text-gray-600">Recordarme</span>
               </label>
               <Link to="/recuperar-password" className="text-sm text-pink-600 hover:text-pink-700 font-medium hover:underline">
-                ¿Olvidaste tu contraseña? (Coming Soon)
+                ¿Olvidaste tu contraseña?
               </Link>
             </div>
 

@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import Index from "../pages/Index";
 import Login from "../pages/Login";
+import RecuperarPassword from "../pages/RecuperarPassword";
 import NotFound from "../pages/NotFound";
 
 import PrivateRoute from '../components/PrivateRoute';
@@ -30,6 +31,7 @@ export default function AppRoutes() {
     <Routes>
       <Route path="/" element={<Index />} />
       <Route path="/log-in" element={<Login />} />
+      <Route path="/recuperar-password" element={<RecuperarPassword />} />
       <Route
           path="/manager"
           element={
