@@ -425,6 +425,7 @@ export function CreateEmpleadoModal({ onClose, onSuccess, workMode = false }: Mo
     Apellido: '',
     Usuario: '',
     Correo: '',
+    CorreoPersonal: '',
     Keyword: '',
     FechaNacimiento: '',
     FechaContrato: new Date().toISOString().split('T')[0],
@@ -510,6 +511,15 @@ export function CreateEmpleadoModal({ onClose, onSuccess, workMode = false }: Mo
       newErrors.Correo = 'El correo no puede contener espacios';
     }
 
+    // Validar Correo Personal (opcional)
+    if (formData.CorreoPersonal.trim()) {
+      if (!isValidEmail(formData.CorreoPersonal)) {
+        newErrors.CorreoPersonal = 'El correo personal no es válido (ej: usuario@dominio.com)';
+      } else if (/\s/.test(formData.CorreoPersonal)) {
+        newErrors.CorreoPersonal = 'El correo personal no puede contener espacios';
+      }
+    }
+
     // Validar Contraseña
     if (!formData.Keyword) {
       newErrors.Keyword = 'La contraseña es requerida';
@@ -565,7 +575,7 @@ export function CreateEmpleadoModal({ onClose, onSuccess, workMode = false }: Mo
     } else if (name === 'Usuario') {
       // No permitir espacios en el usuario
       processedValue = value.replace(/\s/g, '');
-    } else if (name === 'Correo') {
+    } else if (name === 'Correo' || name === 'CorreoPersonal') {
       // No permitir espacios en el correo
       processedValue = value.replace(/\s/g, '');
     } else if (name === 'Keyword') {
@@ -597,6 +607,7 @@ export function CreateEmpleadoModal({ onClose, onSuccess, workMode = false }: Mo
         Apellido: trimExtraSpaces(formData.Apellido),
         Usuario: formData.Usuario.trim(),
         Correo: formData.Correo.trim().toLowerCase(),
+        CorreoPersonal: formData.CorreoPersonal.trim() ? formData.CorreoPersonal.trim().toLowerCase() : undefined,
         Keyword: formData.Keyword,
       };
       
@@ -689,7 +700,7 @@ export function CreateEmpleadoModal({ onClose, onSuccess, workMode = false }: Mo
                   value={formData.CI}
                   onChange={handleChange}
                   inputMode="numeric"
-                  maxLength={15}
+                  maxLength={8}
                   className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 transition-all outline-none ${
                     errors.CI
                       ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
@@ -808,10 +819,10 @@ export function CreateEmpleadoModal({ onClose, onSuccess, workMode = false }: Mo
                 {errors.Usuario && <p className="text-red-500 text-sm mt-1">{errors.Usuario}</p>}
               </div>
 
-              {/* Correo */}
+              {/* Correo Institucional */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Correo Electrónico *
+                  Correo Institucional *
                 </label>
                 <input
                   type="email"
@@ -824,12 +835,37 @@ export function CreateEmpleadoModal({ onClose, onSuccess, workMode = false }: Mo
                       ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
                       : 'border-gray-200 focus:border-pink-400 focus:ring-pink-100'
                   }`}
-                  placeholder="juan@ejemplo.com"
+                  placeholder="juan@sugardonuts.com"
                 />
                 <p className="text-xs text-gray-500 mt-1">
-                  ℹ️ Formato: usuario@dominio.com (sin espacios)
+                  ℹ️ Correo corporativo (sin espacios)
                 </p>
                 {errors.Correo && <p className="text-red-500 text-sm mt-1">{errors.Correo}</p>}
+              </div>
+
+              {/* Correo Personal */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <Mail className="w-4 h-4 inline mr-1" />
+                  Correo Personal (opcional)
+                </label>
+                <input
+                  type="email"
+                  name="CorreoPersonal"
+                  value={formData.CorreoPersonal}
+                  onChange={handleChange}
+                  maxLength={100}
+                  className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-4 transition-all outline-none ${
+                    errors.CorreoPersonal
+                      ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
+                      : 'border-gray-200 focus:border-pink-400 focus:ring-pink-100'
+                  }`}
+                  placeholder="juan@gmail.com"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  ℹ️ Para recuperación de contraseña
+                </p>
+                {errors.CorreoPersonal && <p className="text-red-500 text-sm mt-1">{errors.CorreoPersonal}</p>}
               </div>
 
               {/* Contraseña */}
