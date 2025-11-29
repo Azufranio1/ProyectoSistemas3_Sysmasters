@@ -1,3 +1,4 @@
+// src/pages/manager/Ventas.tsx
 import { useState, useEffect } from 'react';
 import { useOutletContext, useNavigate } from 'react-router-dom';
 import { Search, Archive, ChevronDown, ChevronUp, Calendar, User, DollarSign, Package, Loader2 } from 'lucide-react';
@@ -96,7 +97,9 @@ export default function Ventas() {
   };
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
+    const [year, month, day] = dateString.split('-').map(Number);
+    const date = new Date(year, month - 1, day); // month es 0-indexed
+    
     return date.toLocaleDateString('es-ES', { 
       year: 'numeric', 
       month: 'long', 

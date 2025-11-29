@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import Index from "../pages/Index";
 import Login from "../pages/Login";
+import RecuperarPassword from "../pages/RecuperarPassword";
 import NotFound from "../pages/NotFound";
 
 import PrivateRoute from '../components/PrivateRoute';
@@ -20,6 +21,7 @@ import PapeleraProductos from "../pages/manager/PapeleraProductos";
 import EmployeeDashboard from "../pages/EmployeeDashboard";
 import HomeE from "../pages/employee/Home";
 import VentasE from "../pages/employee/Ventas";
+import CatalogoE from "../pages/employee/Catalogo";
 import ReservasE from "../pages/employee/Reservas";
 
 
@@ -29,6 +31,7 @@ export default function AppRoutes() {
     <Routes>
       <Route path="/" element={<Index />} />
       <Route path="/log-in" element={<Login />} />
+      <Route path="/recuperar-password" element={<RecuperarPassword />} />
       <Route
           path="/manager"
           element={
@@ -59,7 +62,9 @@ export default function AppRoutes() {
         >
           <Route path="home" element={<HomeE />} />
           <Route path="ventas" element={<VentasE />} />
+          <Route path="catalogo" element={<CatalogoE />} />
           <Route path="reservas" element={<ReservasE />} />
+         
         </Route>  
       <Route path="*" element={<NotFound />} />
     </Routes>
