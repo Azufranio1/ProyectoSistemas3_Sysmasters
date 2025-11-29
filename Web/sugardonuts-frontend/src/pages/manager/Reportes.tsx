@@ -92,8 +92,8 @@ export default function Reportes() {
     const doc = new jsPDF();
     
     // Configuración de colores según workMode
-    const colorPrimario = workMode ? [75, 85, 99] : [236, 72, 153]; // gray-600 : pink-500
-    const colorSecundario = workMode ? [107, 114, 128] : [251, 146, 60]; // gray-500 : orange-400
+    const colorPrimario: [number, number, number] = workMode ? [75, 85, 99] : [236, 72, 153]; // gray-600 : pink-500
+    const colorSecundario: [number, number, number] = workMode ? [107, 114, 128] : [251, 146, 60]; // gray-500 : orange-400
 
     // Encabezado
     doc.setFontSize(18);

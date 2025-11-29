@@ -16,12 +16,6 @@ DROP TABLE IF EXISTS Sucursal;
 
 
 
-
-
-
-
-
-
 CREATE TABLE Sucursal (
     SucursalID VARCHAR(10) PRIMARY KEY NOT NULL,
     HoraApertura VARCHAR(10) NOT NULL,
