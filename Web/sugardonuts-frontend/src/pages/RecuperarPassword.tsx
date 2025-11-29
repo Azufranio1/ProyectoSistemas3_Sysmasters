@@ -168,6 +168,17 @@ export default function RecuperarPassword() {
     defaultValues: { nuevaPassword: '', confirmarPassword: '' }
   });
 
+  const validatePassword = (value: string) => {
+    const trimmedValue = value.trim();
+    return {
+      hasUpperCase: /[A-Z]/.test(trimmedValue),
+      hasSpecialChar: /[!@#$%^&*(),.?":{}|<>]/.test(trimmedValue),
+      hasNumber: /\d/.test(trimmedValue),
+      minLength: trimmedValue.length >= 8,
+      noSpaces: !/\s/.test(trimmedValue),
+    };
+  };
+
   const onSubmitStep3 = async (data: Step3Form) => {
     try {
       const response = await fetch(`${API_URL}/recuperar-password.php`, {
@@ -214,7 +225,7 @@ export default function RecuperarPassword() {
       {/* Contenedor principal */}
       <div className="relative z-10 w-full max-w-md">
         <div className="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl p-8 border border-pink-200">
-          
+
           {/* Header */}
           <div className="text-center mb-8">
             <div className="flex justify-center mb-6">
@@ -426,7 +437,7 @@ export default function RecuperarPassword() {
                 </div>
               )}
 
-              {step3Form.formState.isSubmitSuccessful && (
+              {step3Form.formState.isSubmitSuccessful  && (
                 <div className="p-4 bg-green-50 border-2 border-green-200 rounded-xl flex items-start gap-3">
                   <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"/>
                   <div>
@@ -454,17 +465,20 @@ export default function RecuperarPassword() {
                     type={showPassword ? 'text' : 'password'}
                     {...step3Form.register('nuevaPassword', {
                       required: 'La contraseña es requerida',
-                      minLength: {
-                        value: 6,
-                        message: 'Mínimo 6 caracteres'
-                      },
                       validate: {
-                        hasAlphanumeric: (value) => /[a-zA-Z]/.test(value) && /\d/.test(value) || 'Debe contener letras y números'
-                      }
+                        hasUpperCase: (value) => validatePassword(value).hasUpperCase || 'Debe contener al menos una letra mayúscula',
+                        hasSpecialChar: (value) => validatePassword(value).hasSpecialChar || 'Debe contener al menos un carácter especial',
+                        hasNumber: (value) => validatePassword(value).hasNumber || 'Debe contener al menos un número',
+                        minLength: (value) => validatePassword(value).minLength || 'Mínimo 8 caracteres',
+                        noSpaces: (value) => validatePassword(value).noSpaces || 'No debe contener espacios',
+                      },
                     })}
                     placeholder="••••••••"
                     disabled={step3Form.formState.isSubmitting}
                     className="w-full pl-12 pr-12 py-3 border-2 border-gray-200 rounded-xl focus:border-pink-400 focus:ring-4 focus:ring-pink-100 outline-none transition-all disabled:bg-gray-100"
+                    onInput={(e) => {
+                      e.currentTarget.value = e.currentTarget.value.replace(/\s/g, '');
+                    }}
                   />
                   <button
                     type="button"

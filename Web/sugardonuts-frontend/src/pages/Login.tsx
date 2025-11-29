@@ -196,9 +196,7 @@ export default function LogIn() {
                   disabled={isSubmitting}
                   onKeyDown={(e) => {
                     const input = e.currentTarget;
-                    const cursorPosition = input.selectionStart || 0;
-                    const textBeforeCursor = input.value.substring(0, cursorPosition);
-                    const hasAt = textBeforeCursor.includes('@');
+                    const hasAt = input.value.includes('@');
                     
                     if (e.key === ' ') {
                       e.preventDefault();
