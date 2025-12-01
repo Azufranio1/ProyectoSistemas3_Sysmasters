@@ -5,9 +5,8 @@ export interface PrediccionParams {
 }
 
 export const prediccionService = {
-  obtenerDatos: async (params: PrediccionParams) => {
-    const { tipo } = params;
-    const response = await fetch(`${API_URL}/predicciones.php?tipo=${tipo}`);
+  obtenerDatos: async (params: { tipo: string }) => {
+    const response = await fetch(`${API_URL}/predicciones.php?tipo=${params.tipo}`);
     return response.json();
   }
 };

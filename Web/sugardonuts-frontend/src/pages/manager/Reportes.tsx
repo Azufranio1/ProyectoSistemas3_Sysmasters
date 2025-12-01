@@ -10,8 +10,9 @@ import ReporteClientes from '../../components/reportes/ReporteClientes';
 import PrediccionVentas from '../../components/reportes/PrediccionVentas';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import PrediccionProductos from '../../components/reportes/PrediccionProductos';
 
-type TipoReporte = 'ventas' | 'productos' | 'clientes' | 'prediccion';
+type TipoReporte = 'ventas' | 'productos' | 'clientes' | 'prediccion-ventas' | 'prediccion-productos';
 
 export default function Reportes() {
   const { workMode } = useOutletContext<{ workMode: boolean }>();
@@ -25,9 +26,9 @@ export default function Reportes() {
 
   const handleGenerarReporte = async () => {
     // Si es predicción, no necesita fechas
-    if (tipoReporte === 'prediccion') {
-      setReporteData({ tipo: 'prediccion' });
-      setTipoReporteGenerado('prediccion');
+    if (tipoReporte === 'prediccion-ventas' || tipoReporte === 'prediccion-productos') {
+      setReporteData({ tipo: tipoReporte });
+      setTipoReporteGenerado(tipoReporte);
       return;
     }
 
@@ -79,9 +80,9 @@ export default function Reportes() {
     setError('');
     
     // Si es predicción, generar automáticamente
-    if (nuevoTipo === 'prediccion') {
-      setReporteData({ tipo: 'prediccion' });
-      setTipoReporteGenerado('prediccion');
+    if (nuevoTipo === 'prediccion-ventas' || nuevoTipo === 'prediccion-productos') {
+      setReporteData({ tipo: nuevoTipo });
+      setTipoReporteGenerado(nuevoTipo);
     }
   };
 
@@ -234,17 +235,20 @@ export default function Reportes() {
         return <ReporteProductos data={reporteData} workMode={workMode} />;
       case 'clientes':
         return <ReporteClientes data={reporteData} workMode={workMode} />;
-      case 'prediccion':
-        return <PrediccionVentas workMode={workMode} />;
+      case 'prediccion-ventas':
+       return <PrediccionVentas workMode={workMode} />;
+     case 'prediccion-productos':
+       return <PrediccionProductos workMode={workMode} />;
       default:
         return null;
     }
   };
 
-  const necesitaFechas = tipoReporte !== 'prediccion';
-  const puedeExportarPDF = reporteData && 
-                          tipoReporteGenerado === tipoReporte && 
-                          tipoReporteGenerado !== 'prediccion';
+  const necesitaFechas = tipoReporte !== 'prediccion-ventas' && tipoReporte !== 'prediccion-productos';
+  const puedeExportarPDF = reporteData &&
+                          tipoReporteGenerado === tipoReporte &&
+                          tipoReporteGenerado !== 'prediccion-ventas' &&
+                          tipoReporteGenerado !== 'prediccion-productos';
 
   return (
     <div className="space-y-6">
@@ -315,9 +319,10 @@ export default function Reportes() {
               }`}
             >
               <option value="ventas">📊 Ventas</option>
-              <option value="productos">📦 Productos</option>
-              <option value="clientes">👥 Clientes</option>
-              <option value="prediccion">🔮 Predicción de Ventas (IA)</option>
++              <option value="productos">📦 Productos</option>
++              <option value="clientes">👥 Clientes</option>
++              <option value="prediccion-ventas">🔮 Predicción de Ventas (IA)</option>
++              <option value="prediccion-productos">🎯 Predicción de Productos (IA)</option>
             </select>
           </div>
 
@@ -364,7 +369,7 @@ export default function Reportes() {
         </div>
 
         {/* Información adicional para predicción */}
-        {tipoReporte === 'prediccion' && (
+        {(tipoReporte === 'prediccion-ventas' || tipoReporte === 'prediccion-productos') && (
           <div className="mt-4 p-4 bg-purple-50 border-2 border-purple-200 rounded-xl flex items-start gap-3">
             <Brain className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
             <div>
@@ -377,7 +382,7 @@ export default function Reportes() {
         )}
 
         {/* Indicador de cambio de tipo */}
-        {reporteData && tipoReporteGenerado !== tipoReporte && tipoReporte !== 'prediccion' && (
+        {reporteData && tipoReporteGenerado !== tipoReporte && tipoReporte !== 'prediccion-ventas' && tipoReporte !== 'prediccion-productos' && (
           <div className="mt-4 bg-blue-50 border-2 border-blue-200 rounded-xl p-4">
             <p className="text-blue-700">
               ℹ️ Has cambiado el tipo de reporte. Haz clic en "Generar" para ver el nuevo reporte de <strong>{tipoReporte}</strong>.
