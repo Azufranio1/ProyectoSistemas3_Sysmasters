@@ -15,10 +15,6 @@ export interface ResultadoRegresion {
 }
 
 export class RegresionPolinomica {
-  /**
-   * Calcula el mejor grado polinomial (1-5) basado en R² ajustado
-   * Lanzará error si hay menos de 3 datos
-   */
   static calcularMejorGrado(datos: DatoRegresion[]): number {
     if (datos.length < 3) {
       throw new Error('Se necesitan al menos 3 datos para calcular la regresión.');
