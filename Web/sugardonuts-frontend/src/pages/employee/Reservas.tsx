@@ -264,7 +264,7 @@ export default function ReservasEmpleado(): React.ReactElement {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 px-6 bg-gradient-to-br from-yellow-50 to-pink-100">
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-gray-800">Gestión de Reservas</h1>
