@@ -159,7 +159,7 @@ const Home: React.FC = () => {
   }
 
   return (
-    <div className="min-h-[80vh] px-6 py-8 bg-gradient-to-br from-gray-50 to-pink-50">
+    <div className="min-h-[80vh] px-6 py-8 bg-gradient-to-br from-yellow-50 to-pink-100">
       {/* Encabezado */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-800 mb-2">
@@ -171,7 +171,7 @@ const Home: React.FC = () => {
       {/* Tarjetas principales */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8">
         {/* Ventas del mes */}
-        <div className="bg-white rounded-2xl shadow-md p-5 border-t-4 border-pink-400 hover:shadow-lg transition-shadow duration-300">
+        <div className="bg-white rounded-2xl shadow-md p-5 border-t-4 border-pink-500 hover:shadow-lg transition-shadow duration-300">
           <div className="flex justify-between items-center">
             <div>
               <p className="text-sm text-gray-500">Mis ventas este mes</p>
@@ -204,18 +204,18 @@ const Home: React.FC = () => {
         </div>
 
         {/* Ventas de hoy */}
-        <div className="bg-white rounded-2xl shadow-md p-5 border-t-4 border-amber-400 hover:shadow-lg transition-shadow duration-300">
+        <div className="bg-white rounded-2xl shadow-md p-5 border-t-4 border-rose-500 hover:shadow-lg transition-shadow duration-300">
           <div className="flex justify-between items-center">
             <div>
               <p className="text-sm text-gray-500">Ventas hoy</p>
               <h2 className="text-2xl font-bold text-gray-800 mt-1">
                 {estadisticas.ventasHoy.cantidad}
               </h2>
-              <p className="text-lg font-semibold text-amber-600 mt-1">
+              <p className="text-lg font-semibold text-rose-500 mt-1">
                 {formatearMonto(estadisticas.ventasHoy.monto)}
               </p>
             </div>
-            <DollarSign className="w-10 h-10 text-amber-500" />
+            <DollarSign className="w-10 h-10 text-rose-500" />
           </div>
           <p className="text-xs text-gray-400 mt-3">
             {estadisticas.ventasHoy.cantidad > 0
@@ -225,7 +225,7 @@ const Home: React.FC = () => {
         </div>
 
         {/* Reservas pendientes */}
-        <div className="bg-white rounded-2xl shadow-md p-5 border-t-4 border-rose-400 hover:shadow-lg transition-shadow duration-300">
+        <div className="bg-white rounded-2xl shadow-md p-5 border-t-4 border-amber-500 hover:shadow-lg transition-shadow duration-300">
           <div className="flex justify-between items-center">
             <div>
               <p className="text-sm text-gray-500">Reservas pendientes</p>
@@ -233,7 +233,7 @@ const Home: React.FC = () => {
                 {estadisticas.reservasPendientes}
               </h2>
             </div>
-            <ClipboardList className="w-10 h-10 text-rose-500" />
+            <ClipboardList className="w-10 h-10 text-amber-500" />
           </div>
           <p className="text-xs text-gray-400 mt-3">
             {estadisticas.reservasPendientes > 0
@@ -243,7 +243,7 @@ const Home: React.FC = () => {
         </div>
 
         {/* Producto más vendido */}
-        <div className="bg-white rounded-2xl shadow-md p-5 border-t-4 border-purple-400 hover:shadow-lg transition-shadow duration-300">
+        <div className="bg-white rounded-2xl shadow-md p-5 border-t-4 border-purple-500 hover:shadow-lg transition-shadow duration-300">
           <div className="flex justify-between items-center">
             <div className="flex-1">
               <p className="text-sm text-gray-500">Producto más vendido</p>
@@ -412,7 +412,7 @@ const Home: React.FC = () => {
           </div>
 
           {/* Mensaje motivacional */}
-          <div className="bg-gradient-to-br from-pink-100 via-purple-100 to-amber-100 rounded-2xl shadow-md p-5 border border-pink-200">
+          <div className="bg-gradient-to-br from-pink-200 to-amber-100 rounded-2xl shadow-md p-5 border border-pink-200">
             <div className="text-center">
               <div className="text-4xl mb-3">🍩</div>
               <h4 className="text-lg font-bold text-gray-800 mb-2">
@@ -433,14 +433,6 @@ const Home: React.FC = () => {
                         : "El esfuerzo constante traerá grandes resultados."
                     }`}
               </p>
-              {estadisticas.ventasMes.cantidad > 0 && (
-                <div className="mt-4 pt-4 border-t border-pink-300">
-                  <p className="text-xs text-gray-600 mb-1">Monto generado</p>
-                  <p className="text-xl font-bold text-pink-600">
-                    {formatearMonto(estadisticas.ventasMes.monto)}
-                  </p>
-                </div>
-              )}
             </div>
           </div>
         </div>

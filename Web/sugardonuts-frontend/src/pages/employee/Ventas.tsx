@@ -366,7 +366,7 @@ export default function Ventas(): React.ReactElement {
 
   // ---------------- Render ----------------
   return (
-    <div className="min-h-[80vh] px-6 py-8">
+    <div className="min-h-[80vh] px-6 py-8 bg-gradient-to-br from-yellow-50 to-pink-100">
       <h1 className="text-3xl font-bold mb-6">Ventas — <span className="text-pink-600">SugarDonuts</span></h1>
 
       {/* Mensajes (carrito) */}
@@ -374,130 +374,180 @@ export default function Ventas(): React.ReactElement {
       {successMsg && <div className="mb-4 p-3 bg-green-100 text-green-700 rounded border border-green-300">{successMsg}</div>}
 
       {/* ---------------- Selección cliente (MANTENIDO tal cual pediste) ---------------- */}
-      <div className="mb-4 bg-white rounded-2xl shadow-md p-4">
-        <label className="block font-medium text-gray-700 mb-1">Cliente:</label>
-        <div className="flex gap-2 mb-2">
-          <select
-            value={selectedCliente?.ClienteID || ""}
-            onChange={e => {
-              const cli = clientes.find(c => c.ClienteID === e.target.value) || null;
-              setSelectedCliente(cli);
-              setErrorMsg("");
-              setSuccessMsg("");
-            }}
-            className="border p-2 rounded flex-1"
-          >
-            <option value="">Selecciona un cliente</option>
-            {clientes.map(c => (
-              <option key={c.ClienteID} value={c.ClienteID}>
-                {c.Nombre} {c.Apellido} — {c.CINIT}
-              </option>
-            ))}
-          </select>
+      <div className="mb-4 bg-gradient-to-br from-pink-50 to-rose-100 rounded-2xl shadow-lg p-6 border border-pink-200">
+        <label className="block font-bold text-gray-800 mb-3 flex items-center gap-2 text-lg">
+          <User className="w-5 h-5 text-pink-600" /> Seleccionar Cliente
+        </label>
+        <div className="flex gap-3 mb-2">
+          <div className="relative flex-1">
+            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-pink-400 pointer-events-none" />
+            <select
+              value={selectedCliente?.ClienteID || ""}
+              onChange={e => {
+                const cli = clientes.find(c => c.ClienteID === e.target.value) || null;
+                setSelectedCliente(cli);
+                setErrorMsg("");
+                setSuccessMsg("");
+              }}
+              className="w-full pl-10 pr-4 py-3 border-2 border-pink-300 rounded-xl bg-white shadow-sm hover:border-pink-400 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 transition-all appearance-none cursor-pointer font-medium text-gray-700"
+            >
+              <option value="">🔍 Selecciona un cliente...</option>
+              {clientes.map(c => (
+                <option key={c.ClienteID} value={c.ClienteID}>
+                  👤 {c.Nombre} {c.Apellido} — CI/NIT: {c.CINIT}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-pink-400 pointer-events-none" />
+          </div>
 
           <button
             type="button"
-            className="bg-blue-500 text-white px-3 rounded hover:bg-blue-600"
+            className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-6 py-3 rounded-xl hover:from-pink-600 hover:to-rose-600 shadow-md hover:shadow-lg transition-all font-semibold flex items-center gap-2"
             onClick={() => setShowNewClientForm(prev => !prev)}
           >
-            Nuevo
+            <span className="text-lg">+</span> Nuevo
           </button>
         </div>
 
         {showNewClientForm && (
-          <div className="mt-2 p-3 border border-gray-300 rounded bg-gray-50">
-            <input
-              type="text"
-              placeholder="Nombre"
-              value={newClientName}
-              onChange={e => handleNewClientNameChange(e.target.value)}
-              className="border p-2 rounded w-full mb-2"
-              aria-label="Nombre cliente"
-            />
-            <input
-              type="text"
-              placeholder="Apellido"
-              value={newClientApellido}
-              onChange={e => handleNewClientApellidoChange(e.target.value)}
-              className="border p-2 rounded w-full mb-2"
-              aria-label="Apellido cliente"
-            />
-            <input
-              type="text"
-              placeholder="CINIT"
-              value={newClientCINIT}
-              onChange={e => handleNewClientCINITChange(e.target.value)}
-              className="border p-2 rounded w-full mb-2"
-              aria-label="CINIT cliente"
-              inputMode="numeric"
-              pattern="\d*"
-              maxLength={12}
-            />
-            <button
-              type="button"
-              onClick={createNewClient}
-              className="bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600"
-            >
-              Guardar cliente
-            </button>
+          <div className="mt-4 p-5 border-2 border-pink-300 rounded-xl bg-gradient-to-br from-white to-pink-50 shadow-inner">
+            <h3 className="font-bold text-gray-800 mb-3 flex items-center gap-2">
+              <span className="text-xl">👤</span> Nuevo Cliente
+            </h3>
+            <div className="space-y-3">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Nombre</label>
+                <input
+                  type="text"
+                  placeholder="Ingresa el nombre"
+                  value={newClientName}
+                  onChange={e => handleNewClientNameChange(e.target.value)}
+                  className="border-2 border-gray-300 p-3 rounded-xl w-full focus:border-pink-500 focus:ring-2 focus:ring-pink-200 transition-all"
+                  aria-label="Nombre cliente"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Apellido</label>
+                <input
+                  type="text"
+                  placeholder="Ingresa el apellido"
+                  value={newClientApellido}
+                  onChange={e => handleNewClientApellidoChange(e.target.value)}
+                  className="border-2 border-gray-300 p-3 rounded-xl w-full focus:border-pink-500 focus:ring-2 focus:ring-pink-200 transition-all"
+                  aria-label="Apellido cliente"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">CI/NIT</label>
+                <input
+                  type="text"
+                  placeholder="Ingresa el CI o NIT"
+                  value={newClientCINIT}
+                  onChange={e => handleNewClientCINITChange(e.target.value)}
+                  className="border-2 border-gray-300 p-3 rounded-xl w-full focus:border-pink-500 focus:ring-2 focus:ring-pink-200 transition-all"
+                  aria-label="CINIT cliente"
+                  inputMode="numeric"
+                  pattern="\d*"
+                  maxLength={12}
+                />
+              </div>
+              <button
+                type="button"
+                onClick={createNewClient}
+                className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-6 py-3 rounded-xl hover:from-pink-600 hover:to-rose-600 font-semibold shadow-md hover:shadow-lg transition-all w-full flex items-center justify-center gap-2"
+              >
+                <CheckCircle className="w-5 h-5" /> Guardar cliente
+              </button>
+            </div>
           </div>
         )}
       </div>
 
       {/* ---------------- Selección producto (MANTENIDO tal cual pediste) ---------------- */}
-      <div className="mb-6 bg-white rounded-2xl shadow-md p-6">
-        <h2 className="text-xl font-semibold mb-3 flex items-center gap-2">
-          <ShoppingBag className="w-5 h-5 text-pink-500" /> Carrito
+      <div className="mb-6 bg-gradient-to-br from-pink-50 to-rose-100 rounded-2xl shadow-lg p-6 border border-pink-200">
+        <h2 className="text-2xl font-bold mb-4 flex items-center gap-3">
+          <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl flex items-center justify-center shadow-md">
+            <ShoppingBag className="w-6 h-6 text-white" />
+          </div>
+          <span className="bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">Carrito de Compras</span>
         </h2>
 
-        <div className="flex gap-3 flex-wrap">
-          <select
-            value={selectedProduct?.ProductoID || ""}
-            onChange={e => {
-              const prod = productos.find(p => p.ProductoID === e.target.value) || null;
-              setSelectedProduct(prod);
-              setErrorMsg("");
-              setSuccessMsg("");
-            }}
-            className="border p-2 rounded flex-1"
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_auto] gap-3 mb-6">
+          <div className="relative">
+            <Package className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-pink-400 pointer-events-none" />
+            <select
+              value={selectedProduct?.ProductoID || ""}
+              onChange={e => {
+                const prod = productos.find(p => p.ProductoID === e.target.value) || null;
+                setSelectedProduct(prod);
+                setErrorMsg("");
+                setSuccessMsg("");
+              }}
+              className="w-full pl-10 pr-10 py-3 border-2 border-pink-300 rounded-xl bg-white shadow-sm hover:border-pink-400 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 transition-all appearance-none cursor-pointer font-medium text-gray-700"
+            >
+              <option value="">🍩 Selecciona un producto...</option>
+              {productos.map(p => (
+                <option key={p.ProductoID} value={p.ProductoID}>
+                  {p.Nombre} - 👛 Bs. {p.PrecioUnitario.toFixed(2)}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-pink-400 pointer-events-none" />
+          </div>
+
+          <div className="relative">
+            <input
+              type="number"
+              min={1}
+              max={100}
+              value={quantity}
+              onChange={e => {
+                const val = parseInt(e.target.value || "1", 10);
+                setQuantity(isNaN(val) ? 1 : Math.min(val, 100));
+              }}
+              className="w-full md:w-28 px-4 py-3 border-2 border-pink-300 rounded-xl text-center font-bold text-lg focus:border-pink-500 focus:ring-2 focus:ring-pink-200 transition-all"
+              placeholder="Cant."
+            />
+          </div>
+
+          <button 
+            onClick={addToCart} 
+            className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-6 py-3 rounded-xl hover:from-pink-600 hover:to-rose-600 shadow-md hover:shadow-lg transition-all font-bold flex items-center justify-center gap-2"
           >
-            <option value="">Selecciona un producto</option>
-            {productos.map(p => (
-              <option key={p.ProductoID} value={p.ProductoID}>
-                {p.Nombre} - Bs. {p.PrecioUnitario.toFixed(2)}
-              </option>
-            ))}
-          </select>
-
-          <input
-            type="number"
-            min={1}
-            max={100}
-            value={quantity}
-            onChange={e => {
-              const val = parseInt(e.target.value || "1", 10);
-              setQuantity(isNaN(val) ? 1 : Math.min(val, 100));
-            }}
-            className="border p-2 rounded w-24"
-          />
-
-          <button onClick={addToCart} className="bg-pink-500 text-white px-4 rounded hover:bg-pink-600">Agregar</button>
+            <ShoppingBag className="w-5 h-5" /> Agregar
+          </button>
         </div>
 
         {cart.length > 0 && (
-          <div className="mt-4">
-            <ul className="divide-y divide-gray-200 mb-3">
+          <div className="mt-6 bg-white rounded-xl p-5 shadow-inner border-2 border-pink-200">
+            <h3 className="font-bold text-gray-800 mb-3 flex items-center gap-2">
+              <span className="text-xl">🛒</span> Productos en el carrito
+            </h3>
+            <ul className="divide-y divide-pink-100 mb-4">
               {cart.map((item, idx) => (
-                <li key={idx} className="py-2 flex justify-between">
-                  <span>{item.Nombre} x{item.quantity}</span>
-                  <span>{formatPrice(item.quantity * item.PrecioUnitario)}</span>
+                <li key={idx} className="py-3 flex justify-between items-center hover:bg-pink-50 px-2 rounded transition-colors">
+                  <span className="font-medium text-gray-700">
+                    <span className="text-pink-600 font-bold">{item.quantity}x</span> {item.Nombre}
+                  </span>
+                  <span className="font-bold text-green-600">{formatPrice(item.quantity * item.PrecioUnitario)}</span>
                 </li>
               ))}
             </ul>
 
-            <div className="flex items-center gap-3">
-              <button onClick={checkout} className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Finalizar compra</button>
-              <button onClick={() => { setCart([]); setErrorMsg(""); setSuccessMsg(""); }} className="bg-gray-100 px-4 py-2 rounded hover:bg-gray-200">Vaciar carrito</button>
+            <div className="flex items-center gap-3 pt-3 border-t-2 border-pink-200">
+              <button 
+                onClick={checkout} 
+                className="flex-1 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-6 py-3 rounded-xl hover:from-green-600 hover:to-emerald-600 shadow-md hover:shadow-lg transition-all font-bold flex items-center justify-center gap-2"
+              >
+                <CheckCircle className="w-5 h-5" /> Finalizar compra
+              </button>
+              <button 
+                onClick={() => { setCart([]); setErrorMsg(""); setSuccessMsg(""); }} 
+                className="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold transition-all border-2 border-gray-300"
+              >
+                Vaciar
+              </button>
             </div>
           </div>
         )}
@@ -567,11 +617,11 @@ export default function Ventas(): React.ReactElement {
         ) : (
           <div className="space-y-4">
             {filteredVentas.map((venta: any) => (
-              <div key={venta.VentaID} className={`bg-white rounded-xl shadow-md hover:shadow-xl transition-all border-l-4 ${workMode ? 'border-gray-600' : 'border-green-400'}`}>
+              <div key={venta.VentaID} className={`bg-white rounded-xl shadow-md hover:shadow-xl transition-all border-l-4 ${workMode ? 'border-gray-600' : 'border-pink-400'}`}>
                 <div className="p-6">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4 flex-1">
-                      <div className={`w-16 h-16 rounded-full flex items-center justify-center shadow-lg ${workMode ? 'bg-gray-600' : 'bg-gradient-to-br from-green-400 to-emerald-500'}`}>
+                      <div className={`w-16 h-16 rounded-full flex items-center justify-center shadow-lg ${workMode ? 'bg-gray-600' : 'bg-gradient-to-br from-pink-100 to-pink-300'}`}>
                         <span className="text-white text-2xl">🛒</span>
                       </div>
 

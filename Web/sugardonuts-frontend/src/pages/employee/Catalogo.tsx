@@ -138,7 +138,7 @@ export default function Ventas(): React.ReactElement {
 
   // ---------------- Render ----------------
   return (
-    <div className="min-h-[80vh] px-6 py-8">
+    <div className="min-h-[80vh] px-6 py-8 bg-gradient-to-br from-yellow-50 to-pink-100">
       <h1 className="text-3xl font-bold mb-6">Catálogo — <span className="text-pink-600">SugarDonuts</span></h1>
 
       {errorMsg && <div className="mb-4 p-3 bg-red-100 text-red-700 rounded border border-red-300">{errorMsg}</div>}
