@@ -202,7 +202,7 @@ export default function LogIn() {
                       e.preventDefault();
                     }
                     
-                    if (e.key === '.' && !hasAt) {
+                    if (e.key === ',' && !hasAt) {
                       e.preventDefault();
                     }
                   }}
